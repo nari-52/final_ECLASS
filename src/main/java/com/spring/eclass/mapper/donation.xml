@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="donation">
+   <!-- 
+   <select id="donationList" resultType="com.spring.kimeh.model.DonStoryVO">
+      select donseq, subject, content, listMainImg, storyImg, donCnt
+           , to_char(donDate,'yyyy-mm-dd hh24:mi:ss') as donDate 
+           , donDueDate , donStatus , targetAmount, totalPayment,
+           ceil(donDueDate - donDate) as dDay, totalSupporter
+      from donStory      
+         order by donDate desc
+   </select> -->
+   
+   <select id="donationList" parameterType="HashMap" resultType="com.spring.kimeh.model.DonStoryVO">
+      select donseq, subject, content, listMainImg, storyImg, donCnt,donDate,
+                donDueDate , donStatus , targetAmount, totalPayment, dDay, totalSupporter
+      from
+      ( 
+      select row_number() over ( order by donseq desc) as rno,
+             donseq, subject, content, listMainImg, storyImg, donCnt,
+             to_char(donDate,'yyyy-mm-dd hh24:mi:ss') as donDate, 
+             donDueDate , donStatus , targetAmount, totalPayment,
+             ceil(donDueDate - donDate) as dDay, totalSupporter
+      from donStory
+      where donStatus = 1
+      <if test='searchWord != ""'>
+                 and lower(${searchType}) like '%'|| lower(#{searchWord})||'%'
+      </if>
+      order by donseq desc
+      )V
+      where rno between #{startRno} and #{endRno}   
+   </select>
+   
+   <!-- == 후원리스트(페이징처리를 위한 전체페이지 갯수)-->
+    <select id="getTotalCount" parameterType="HashMap" resultType="int">
+       select count(*)
+       from donStory
+       where donStatus = 1
+       <if test='searchWord != ""'>
+           and lower(${searchType}) like '%'|| lower(#{searchWord})||'%'
+       </if>
+    </select>
+   
+   <!-- == 후원리스트(검색어 입력시 자동글 완성) == -->
+    <select id="wordSearchShow" parameterType="HashMap" resultType="String">
+       select distinct ${searchType}
+      from donStory
+      where donStatus = 1 and lower(${searchType}) like '%'||lower(#{searchWord})||'%'   
+    </select>
+   
+   
+   <select id="donationStory" resultType="com.spring.kimeh.model.DonStoryVO" parameterType="String">
+      select S.donseq, S.subject, S.content, S.listMainImg, S.storyImg, S.donDate, S.donDueDate,
+             S.donStatus, S.targetAmount, 
+             (select nvl(sum(payment + point), 0) from donPayment where fk_donSeq = #{donseq}) as totalPayment, 
+             (select count(*) as totalSupporter from donPayment where fk_donSeq = #{donseq}) as totalSupporter, 
+             I.donImg, I.donImgseq,
+             ceil(donDueDate - donDate) as dDay
+      from donStory S left join donImg I
+      on S.donseq = I.fk_donSeq  
+      where S.donseq = #{donseq}
+   </select>
+   
+   <select id="donationSupporter" resultType="com.spring.kimeh.model.DonStoryVO" parameterType="String">
+      select S.donseq, S.subject, S.content, S.listMainImg, S.storyImg, S.donDate, S.donDueDate,
+             S.donStatus, S.targetAmount,
+             (select nvl(sum(payment + point), 0) from donPayment where fk_donSeq = #{donseq}) as totalPayment,
+             (select count(*) as totalSupporter from donPayment where fk_donSeq = #{donseq}) as totalSupporter,
+             ceil(S.donDueDate - S.donDate) as dDay,
+             I.payment, I.name, I.point, I.noName, I.noDonpmt,
+             (I.payment + I.point) as sumPayment,
+             to_char(I.paymentDate,'yyyy-mm-dd hh24:mi:ss') as paymentDate,
+             round(TO_NUMBER((SYSDATE - paymentDate) * (24 * 60)),0) as showDate  
+      from donStory S left join donPayment I
+      on S.donseq = I.fk_donSeq    
+      where S.donseq = #{donseq}   
+   </select>    
+       
+       
+    <!-- 1. 결제하기  -->
+    <insert id="donationPayment" parameterType="com.spring.kimeh.model.DonPaymentVO">
+       insert into donPayment(fk_donSeq, fk_userid, name, noName, noDonpmt, paymentDate, payment, point) 
+      values( #{fk_donSeq} , #{fk_userid} ,#{name}, default, default, default, #{payment}, default )
+    </insert>
+    
+    <!-- 2. 포인트 차감 -->
+    <update id="updateUsePoint" parameterType="com.spring.kimeh.model.DonPaymentVO">
+       update eclass_member set point = point - to_number(#{point})
+      where userid = #{fk_userid}    
+    </update>
+    
+    <!-- 3. AOP에서 사용하는 것으로 결제한 회원에게 포인트 증가  -->
+    <update id="pointPlus" parameterType="HashMap">
+       update eclass_member set point = point + to_number(#{pointPlus})
+      where userid = #{userid}
+    </update>
+    
+    
+    
+    
+
+</mapper>

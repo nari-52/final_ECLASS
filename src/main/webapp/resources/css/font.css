@@ -1,0 +1,16 @@
+@charset "UTF-8";
+
+@font-face {
+	font-family: 'NanumSquareRoundB';
+	src: url("/eclass/resources/font/NanumFontSetup_TTF_SQUARE_ROUND/NanumSquareRoundB.ttf") format('truetype');
+}
+
+@font-face {
+	font-family: 'NanumSquareRoundEB';
+	src: url("/eclass/resources/font/NanumFontSetup_TTF_SQUARE_ROUND/NanumSquareRoundEB.ttf") format('truetype');
+}
+
+
+.dropdown {
+	font-family: NanumSquareRoundEB;
+}

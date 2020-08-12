@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="mypage">
+
+   <select id="getSInfo" resultType="com.spring.nari.model.MemberVO" parameterType="HashMap">
+      select name, university, major, point
+      <if test="identity == 1">
+         , student_num
+      </if>
+       from eclass_member
+       where userid = #{userid}
+   </select>
+
+   <resultMap type="HashMap" id="subjectMap">
+      <result property="subName" column="subName" javaType="String"/>
+      <result property="fk_subseq" column="fk_subseq" javaType="String"/>
+      <result property="finalG" column="finalG" javaType="String"/>
+   </resultMap>
+   <select id="getSubjectList" parameterType="String" resultMap="subjectMap">
+       select subName, fk_subseq, finalG
+       from 
+           (select fk_subseq, finalG
+            from myPForS_tbl
+              where fk_userid = #{userid}
+           )M left join subject_tbl S
+       on M.fk_subSeq = S.subseq
+   </select>
+   
+   <select id="getAttandList" resultType="com.spring.moonsa.model.AttandVO" parameterType="HashMap">
+      select lecNum, attand
+       from attand_tbl
+       where fk_subseq = #{subjectSelect} and fk_userid = #{userid}
+   </select>
+   
+   <select id="getAttandOX" resultType="String" parameterType="HashMap">
+      select count(*) AS cnt
+       from attand_tbl
+       where fk_subseq = #{subjectSelect} and fk_userid = #{userid} and attand = 'O'
+   </select>
+   
+   <resultMap type="HashMap" id="subjectforPMap">
+      <result property="subName" column="subName" javaType="String"/>
+      <result property="subseq" column="subseq" javaType="String"/>
+   </resultMap>
+   <select id="getSubjectListforP" parameterType="String" resultMap="subjectforPMap">
+       select subName, subseq
+       from subject_tbl
+       where fk_userid = #{userid}
+   </select>
+   
+   <resultMap type="HashMap" id="studentPMap">
+      <result property="name" column="name" javaType="String"/>
+      <result property="fk_userid" column="fk_userid" javaType="String"/>
+      <result property="attandG" column="attandG" javaType="String"/>
+      <result property="examG" column="examG" javaType="String"/>
+      <result property="finalG" column="finalG" javaType="String"/>
+   </resultMap>
+   <select id="getStudentP" parameterType="String" resultMap="studentPMap">
+       select name, fk_userid, attandG, examG, finalG
+         from
+           (select fk_userid, attandG, examG, finalG
+             from myPForS_tbl
+             where fk_subseq = #{subjectSelect} 
+            )M left join eclass_member E
+        on M.fk_userid = E.userid
+   </select>
+   
+   <select id="getSName" resultType="String" parameterType="String">
+       select name
+       from eclass_member
+       where userid = #{userid}
+   </select>
+   
+   <update id="getChangeA" parameterType="HashMap" >
+   		update attand_tbl set attand = #{attand}
+    	where fk_userid = #{fk_userid}
+    	and fk_subSeq = #{fk_subSeq}
+    	and lecNum = #{lecNum}
+   </update>
+   
+   <update id="getChangeG" parameterType="HashMap" >
+   		update myPForS_tbl set finalG = #{finalG}
+    	where fk_userid = #{fk_userid}
+    	and fk_subSeq = #{fk_subSeq}
+   </update>
+   
+</mapper>

@@ -1,0 +1,37 @@
+@charset "UTF-8";
+
+#contentsWrap {	
+	width: 1080px;
+	margin: 0 auto;
+}
+
+#leture-title {
+	font-size: 20pt;
+	font-weight: bold;
+}
+
+#lecture-youtube {
+	margin: 50px 0;
+}
+
+#comContent {
+	resize: none;
+	width: 1000px;
+	height: 70px;
+}
+
+#btnCommentOK {
+	float: right;
+	margin-top: 20px;
+}
+
+#goList {
+	display: flex;
+	margin: 0 auto;
+	padding: 5px;
+}
+
+.lecture-comment {
+	margin: 20px 0;
+}
+

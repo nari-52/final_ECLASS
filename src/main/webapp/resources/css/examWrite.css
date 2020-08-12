@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+#contentsWrap {
+	width: 1080px;
+	margin: 0 auto;	
+}
+
+#register-title {
+	font-size: 20pt;
+	font-weight: bold;
+}
+
+#registerFrm {
+	margin-bottom: 50px;
+}
+
+#buttons {
+	float: right;
+}
+
+.border-line-box {
+    border-bottom: 1px solid #b5b5b5;
+}

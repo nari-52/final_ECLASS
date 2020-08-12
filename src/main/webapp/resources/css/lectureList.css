@@ -1,0 +1,52 @@
+@charset "UTF-8";
+
+#contentsWrap {
+	width: 1080px;
+	margin: 0 auto;	
+}
+
+.border-line-box {
+    border-top: 2px solid #1b778b;
+}
+
+.lecture-search {
+    margin: 40px 0;
+}
+
+#leture-title {
+	font-size: 20pt;
+	font-weight: bold;
+}
+
+.lecture-list thead {
+	vertical-align: middle;
+}
+.lecture-list th {
+	border-bottom: 1px solid #b5b5b5;
+}
+.lecture-list td {
+	border-bottom: 1px solid #fafafa;
+}
+tr.lectureList:hover {
+	cursor: pointer;
+}
+#tbl-no {
+	text-align: center;
+	width: 70px;
+	margin: 15px;
+}
+#tbl-title {
+	text-align: center;
+	width: 800px;
+	margin: 15px;
+}
+#tbl-day {
+	text-align: center;
+	width: 210px;
+	padding: 15px;
+}
+.tbl-name {
+	text-align: center;
+	font-weight: bold;
+	font-size: 12pt;
+}

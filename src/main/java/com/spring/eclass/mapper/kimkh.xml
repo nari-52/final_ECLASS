@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kimkh">
+
+	<!-- 디비에 교과목 insert시키기 -->
+	<insert id="MatterInsert" parameterType="com.spring.kimkh.model.LecutreMatterInsertVO">
+
+		insert into subject_tbl(subseq,fk_userid,status,subName,subContent,subImg,writeday)
+		values(seq_subseq.nextval, #{fk_userid},#{status},#{subName}, #{subContent},#{subImg}, sysdate)
+		
+	</insert>
+
+	<!-- 교과목 목록을 보여주기 -->
+	<select id="selectMatterList" resultType="com.spring.kimkh.model.LecutreMatterInsertVO" parameterType="com.spring.kimkh.model.LecutreMatterInsertVO">
+		select subseq,subName,subContent,subImg
+    	from subject_tbl
+	</select>
+	
+	<!-- 교과목 상세페이지 보여주기(한개만) -->
+	<select id="selectOnekh" resultType="com.spring.kimkh.model.LecutreMatterInsertVO" parameterType="String">
+		select subseq,subName,subContent,subImg
+    	from subject_tbl
+        where subseq = #{subseq}
+	</select>
+	
+	<!-- 수강신청 버튼 클릭시 학생마이페이지에 insert 시키기 -->
+	<insert id="sugangInsert" parameterType="HashMap">
+		insert into myPForS_tbl(mySSEq,fk_subSeq,fk_userid,finalG,examG,attandG)
+		values(seq_mySSeq.nextval,#{fk_subSeq},#{fk_userid},default,default,default)
+	</insert>
+	
+	<!-- 교과목 등록후 교수마이페이지에 insert 시키기 -->
+    <insert id="ForPInter" parameterType="HashMap">
+    	insert into myPForP_tbl(myPSeq,fk_userid,university)
+		values(seq_myPSeq.nextval,#{fk_userid},#{university})
+    </insert>
+	
+</mapper>
