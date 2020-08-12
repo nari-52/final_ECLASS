@@ -13,9 +13,32 @@
 	display: inline-block;
 	border: solid 0px red;
 	margin: 0 20px;
-	height: 500px;
+	color: gray;
 }
-
+#namecss{
+	color: #00BCD4;
+	font-weight: bold;
+}
+#mainCss{
+	font-size: 15pt;
+	background-color: #FAFAFA;
+	border: solid 1px #00BCD4;
+	padding: 10px;
+	margin-bottom: 10px;
+	width: 600px;
+	text-align: center;
+	border-radius: 10px;
+}
+#subjectSelect {
+	margin: 20px 0;
+}
+#tableCss{
+	text-align: center;
+	font-size: 15pt;
+}
+.sidecss{
+	color: white;
+}
 </style>
 <script type="text/javascript">
 
@@ -42,26 +65,26 @@
 		});
 		
 	}); // end of $(document).ready(function(){})-----------------
-	
-	
-	
+		
 </script>
 </head>
 <body>
 	<div id="test">
 	<form name ="attandFrm">
-		  <h2>${sessionScope.loginuser.name} 님의 출석현황</h2>
-			<select name="subjectSelect" id="subjectSelect">
-				<option value="0">교과목명</option>
-				<c:forEach var="sublist" items="${subjectList}">
-					<option value="${sublist.fk_subseq}">${sublist.subName}</option>
-				</c:forEach>
-			</select>
+	<div id="mainCss">
+	<span id="namecss">${sessionScope.loginuser.name}</span>님의 출석현황
+	  </div>
+		<select name="subjectSelect" id="subjectSelect">
+			<option value="0">교과목명</option>
+			<c:forEach var="sublist" items="${subjectList}">
+				<option value="${sublist.fk_subseq}">${sublist.subName}</option>
+			</c:forEach>
+		</select>
 		</form>
-		<table id="tblcss">
+		<table id="tableCss">
 			<tr style="background-color: #00BCD4;">
-				<th style="color: white;">챕터</th>
-				<th style="color: white;">출석현황</th>
+				<th class="sidecss">챕터</th>
+				<th class="sidecss">출석현황</th>
 			</tr>
 			<c:forEach var="AList" items="${attandList}">
 				<tr>
@@ -71,8 +94,8 @@
 			</c:forEach>
 			
 			<tr>
-				<td style="background-color: #E5E5E5;">총 출석수</td>
-				<td id="total">${attandOX}</td><!-- count로 총 개수 알아오기/ select count(*) from tbl_attendanct where attend = 1(출석) -->
+				<td style="background-color: #E5E5E5; border-top: solid 2px #E5E5E5;">총 출석수</td>
+				<td id="total" style="border-top: solid 2px #E5E5E5;">${attandOX}</td><!-- count로 총 개수 알아오기/ select count(*) from tbl_attendanct where attend = 1(출석) -->
 			</tr>
 			<tr>
 				<td style="background-color: #E5E5E5;">출석률 (%)</td>

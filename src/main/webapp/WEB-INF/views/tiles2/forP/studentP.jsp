@@ -13,13 +13,54 @@
 	display: inline-block;
 	border: solid 0px red;
 	margin: 0 20px;
-	height: 500px;
+	color: gray;
 }
-#changeG{
-	border: solid 0px red;
+#changeCss {
 	background-color: #fafafa;
-	margin: 20px;
+	width: 300px;
+	height: 150px;
+	border: solid 1px #00BCD4;
+	padding: 10px;
+	margin: 10px 0 0 75px;
+}
+#namecss{
+	color: #00BCD4;
 	font-weight: bold;
+}
+#mainCss{
+	font-size: 15pt;
+	background-color: #FAFAFA;
+	border: solid 1px #00BCD4;
+	padding: 10px;
+	margin-bottom: 10px;
+	width: 600px;
+	text-align: center;
+	border-radius: 10px;
+}
+#subjectSelect {
+	margin: 20px 0;
+}
+#tableCss{
+	text-align: center;
+	font-size: 13pt;
+}
+#tableCss td, #tableCss th{
+	padding: 10px;
+}
+.thCss {
+	background-color: #FAFAFA;
+	color: #00BCD4;
+}
+#btnCss {
+	margin-top: 10px; 
+}
+#ajaxtbl{
+	margin: 10px;
+}
+#ajaxtbl td, #ajaxtbl th {
+	border: solid 0px gray;
+	padding: 0 10px;
+	text-align: center;
 }
 </style>
 <script type="text/javascript">
@@ -60,19 +101,20 @@
 					dataType:"JSON",
 					success:function(json){
 						
-						var html = "<div id='changeG'>";
-							html +="<span>"+json.Sname+"학생 학점 수정</span><br/>";
+						var html = "<div id='changeCss'>";
+							html +="<span>[ "+json.Sname+"학생 학점 수정 ]</span><br/>";
 							
-							html +="<label for='gradeA'>A</label>&nbsp";
-							html +="<label for='gradeB'>B</label>&nbsp";
-							html +="<label for='gradeC'>C</label>&nbsp";
-							html +="<label for='gradeD'>D</label>&nbsp";
-							html +="<label for='gradeF'>F</label><br/>";
-							html +="<input type='radio' name='grade' class='grade' id='gradeA' value='A'/>";
-							html +="<input type='radio' name='grade' class='grade' id='gradeB' value='B'/>";
-							html +="<input type='radio' name='grade' class='grade' id='gradeC' value='C'/>";
-							html +="<input type='radio' name='grade' class='grade' id='gradeD' value='D'/>";
-							html +="<input type='radio' name='grade' class='grade' id='gradeF' value='F'/><br/>";
+							html +="<table id='ajaxtbl'><tr>";
+							html +="<th><label for='gradeA'>A</label></th>";
+							html +="<th><label for='gradeB'>B</label></th>";
+							html +="<th><label for='gradeC'>C</label></th>";
+							html +="<th><label for='gradeD'>D</label></th>";
+							html +="<th><label for='gradeF'>F</label></th></tr><tr>";
+							html +="<td><input type='radio' name='grade' class='grade' id='gradeA' value='A'/></td>";
+							html +="<td><input type='radio' name='grade' class='grade' id='gradeB' value='B'/></td>";
+							html +="<td><input type='radio' name='grade' class='grade' id='gradeC' value='C'/></td>";
+							html +="<td><input type='radio' name='grade' class='grade' id='gradeD' value='D'/></td>";
+							html +="<td><input type='radio' name='grade' class='grade' id='gradeF' value='F'/></td></tr></table>";
 							
 							html +="<button type='button' onclick='changeG();'>수정하기</button>";
 							html +="</div>";
@@ -174,7 +216,9 @@
 <body>
 	<div id="test">
 	<form name="studentPFrm">
-	  <h2>${sessionScope.loginuser.name} 교수님</h2>
+	<div id="mainCss">
+	<span id="namecss">${sessionScope.loginuser.name}</span>교수님의 학생관리 페이지
+	  </div>
   		<select name="subjectSelect" id="subjectSelect">
 			<option value="">교과목명</option>
 			<c:forEach var="sublist" items="${subjectListforP}">
@@ -182,18 +226,17 @@
 			</c:forEach>
 		</select>
 	</form>
-	  <h3></h3>
-		<table id="tblcss">
+		<table id="tableCss">
 			<c:if test="${empty studentP}">
-				교과목을 선택해 주세요!
+				<span style="color: red;">교과목을 선택해 주세요!</span>
 			</c:if>
 			<c:if test="${not empty studentP}">
 			<tr style="background-color: #00BCD4;">
-				<th style="color: white;">체크박스</th>
-				<th style="color: white;">학생명</th>
-				<th style="color: white;">출석점수(30점 만점)</th>
-				<th style="color: white;">시험점수</th>
-				<th style="color: white;">학점</th>
+				<th class="thCss"></th>
+				<th class="thCss">학생명</th>
+				<th class="thCss">출석점수(30점 만점)</th>
+				<th class="thCss">시험점수</th>
+				<th class="thCss">학점</th>
 			</tr>
 			<c:forEach var="SList" items="${studentP}" varStatus="status">
 				<tr>
@@ -206,8 +249,10 @@
 			</c:forEach>
 			</c:if>
 		</table>
-		<button type="button" onclick="go_changeA();">출석관리</button>
-		<button type="button" onclick="func_changeG();">학점수정</button>
+		<div id="btnCss">
+			<button type="button" onclick="go_changeA();">출석관리</button>
+			<button type="button" onclick="func_changeG();">학점수정</button>
+		</div>
 		<div id="changeG"></div>
 	</div> 
 </body>

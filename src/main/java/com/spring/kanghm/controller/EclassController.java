@@ -28,6 +28,8 @@ import com.spring.common.FileManager;
 import com.spring.common.MyUtil;
 import com.spring.kanghm.model.FreeCommentVO;
 import com.spring.kanghm.model.FreeboardVO;
+import com.spring.kanghm.model.NoticeboardVO;
+import com.spring.kanghm.model.QuestionVO;
 import com.spring.kanghm.service.InterEclassService;
 import com.spring.nari.model.MemberVO;
 
@@ -67,31 +69,378 @@ public class EclassController {
 		}
 							
 		// 공지사항 목록 
-		@RequestMapping(value="/notice.up")
-		public ModelAndView notice(ModelAndView mav) {
+		@RequestMapping(value="/board/notice.up")
+		public ModelAndView notice(HttpServletRequest request,ModelAndView mav) {
 			
+			List<NoticeboardVO> noticeboardList = null;
+			
+			String searchType = request.getParameter("searchType");
+		    String searchWord = request.getParameter("searchWord");
+		    String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+		    
+		    if(searchWord == null || searchWord.trim().isEmpty()) {
+		         searchWord = "";
+		    }
+		      
+		    if(searchType == null) {
+		         searchType = "";
+		    }
+		    
+		    
+		    HashMap<String, String> paraMap = new HashMap<>();
+		    paraMap.put("searchType", searchType);
+		    paraMap.put("searchWord", searchWord);
+		    
+		    // 먼저 총 게시물 건수(totalCount)를 구해와야 한다.
+		    // 총 게시물 건수(totalCount)는 검색조건이 있을 때와 없을때로 나뉘어진다.
+		    int totalCount = 0;       // 총게시물 건수
+		    int sizePerPage = 10;      // 한 페이지당 보여줄 게시물 건수
+		    int currentShowPageNo = 0;  // 현재 보여주는 페이지 번호로서, 초기치로는 1페이지로 설정함. 
+		    int totalPage =0;          // 총 페이지 수 (웹브라우저상에 보여줄 총 페이지 개수, 페이지바)
+	      
+		    int startRno = 0;         // 시작 행번호
+		    int endRno = 0;            // 끝 행번호
+			
+		    // 먼저 총 게시물 건수(totalCount)
+		    totalCount = service.getNoticeTotalCount(paraMap);
+		    
+		    totalPage = (int) Math.ceil ( (double)totalCount/sizePerPage );
+		    
+		    if(str_currentShowPageNo == null) {
+		         currentShowPageNo = 1; //   즉 초기화면인 /list.action은 /list.action?currentShowPageNo=1로 하겠다는 말이다.
+		      } else {
+		         try {
+		            currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+		            if(currentShowPageNo <= 0 || currentShowPageNo > totalPage) {
+		               currentShowPageNo = 1;
+		            }
+		         } catch(NumberFormatException e) {
+		            currentShowPageNo = 1;
+		         }
+		      }
+		    
+		    startRno = ((currentShowPageNo - 1 ) * sizePerPage) + 1;
+		    endRno = startRno + sizePerPage - 1; 
+
+		    paraMap.put("startRno", String.valueOf(startRno));
+		    paraMap.put("endRno", String.valueOf(endRno));	    
+		    
+		    // 공지사항 목록 가져오기
+		    noticeboardList = service.getNoticeboardList(paraMap);
+		    
+		    		    	    
+		    if(!"".equals(searchWord)) {
+		         mav.addObject("paraMap", paraMap);
+		      }
+		    
+		    // 페이지바 생성
+		    String pageBar = "<ul style='list-style:none;'>";
+		      
+		    int blockSize = 10;
+		    int loop = 1;
+		    int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+		    
+		    String url = "/board/notice.up";
+		    
+		    // === [이전] 만들기 ===
+		    if(pageNo != 1) {
+		    	pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+	      	}
+	      
+	      	while( !(loop > blockSize || pageNo > totalPage) ) {
+	         
+	         if(pageNo == currentShowPageNo) {
+	            pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
+	         }
+	         else {
+	            pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
+	         }
+	         
+	         loop++;
+	         pageNo++;
+	         
+	      	} // end of while -----------------------------------------------
+	      
+	      	// === [다음] 만들기 ===
+	      	if(!(pageNo > totalPage)) {
+	    	  pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+	      	}
+		      
+		    pageBar += "</ul>";
+		      
+		    mav.addObject("pageBar", pageBar);		        
+		    
+		    ////////////////////////////////
+		    String gobackURL = MyUtil.getCurrentURL(request);
+		    
+		    mav.addObject("gobackURL", gobackURL);    
+		    
+		    HttpSession session = request.getSession();
+		    session.setAttribute("readCountPermission", "yes");
+		    session.setAttribute("gobackURL", gobackURL);
+		    
+		    //////////////////////////////////////////
+		    
+		    mav.addObject("totalCount",totalCount);
+		    mav.addObject("noticeboardList",noticeboardList);
 			mav.setViewName("board/notice.tiles1");
 			
 			return mav;
 		}
 		
 		// 공지사항 글쓰기
-		@RequestMapping(value="/addnotice.up")
-		public ModelAndView addnotice(ModelAndView mav) {
+		@RequestMapping(value="/board/addnotice.up")
+		public ModelAndView addnotice(ModelAndView mav, HttpServletRequest request) {
 			
-			mav.setViewName("board/addnotice.tiles1");
+			HttpSession session = request.getSession();
+			MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+			
+			String userid = loginuser.getUserid();
+			
+			if(!userid.equals("admin")) {
+				String msg = "접근이 불가합니다";
+				String loc = "javascript:history.back()";
+				
+				mav.addObject("msg", msg);
+				mav.addObject("loc", loc);
+				mav.setViewName("msg");				
+			}
+			else {		
+				mav.setViewName("board/addnotice.tiles1");
+			}
+			return mav;
+		}
+		
+		
+		// 공지사항 글쓰기 요청
+		@RequestMapping(value="/addnoticeboardEnd.up", method= {RequestMethod.POST})
+		public String addnoticeboard(HashMap<String, String> paraMap,NoticeboardVO noticeboardvo, MultipartHttpServletRequest mrequest) {
+			
+			HttpSession session = mrequest.getSession();				
+			
+			// 첨부파일 여부 확인
+			MultipartFile attach =  noticeboardvo.getAttach();	
+			
+			if( !attach.isEmpty() ) { 
+				
+			
+			String root = session.getServletContext().getRealPath("/");
+			String path = root + "resources" + File.separator + "files";        
+			
+			
+			System.out.println("~~~ 확인용 path => " + path);
+			
+			 String newFileName = "";
+	         // WAS(톰캣)의 디스크에 저장할때 사용되는 용도
+	         
+	         byte[] bytes = null;
+	         // 첨부파일을 WAS(톰캣)의 디스크에 저장할 떄 사용되는 용도 // 첨부파일을 byte로 분해하여 보내준다.
+	         	         
+	         try {
+		            bytes = attach.getBytes();
+		            // getBytes() 메소드는 첨부된 파일(attach)을 바이트단위로 파일을 다 읽어오는 것이다. 
+		            // 예를 들어, 첨부한 파일이 "강아지.png" 이라면
+		            // 이파일을 WAS(톰캣) 디스크에 저장시키기 위해 byte[] 타입으로 변경해서 올린다.
+
+		            newFileName = fileManager.doFileUpload(bytes, attach.getOriginalFilename(), path);
+		            // 위에 것은 이제 파일 올리기를 해주는 것이다.
+		            // attach.getOriginalFilename() 은 첨부된 파일의 파일명(강아지.png)이다.
+		            
+		          //  System.out.println("~~~ >>> 확인용 newFileName :" + newFileName);
+		         //   System.out.println("~~~ >>> 확인용 OrgFilename :" + attach.getOriginalFilename());
+		            
+		            //   3. BoardVO boardvo에 fileName 값과 orgFilename 값과 fileSize 값을 넣어주어야 한다.
+		             
+		            noticeboardvo.setFileName(newFileName);
+		            // WAS(톰캣)에 저장될 파일명(20200725092715353243254235235234.png)
+		            
+		            noticeboardvo.setOrgFilename(attach.getOriginalFilename());
+		            // 게시판 페이지에서 첨부된 파일명(강아지.png)을 보여줄 때 및 
+		            // 사용자가 파일을 다운로드 할떄 사용되어지는 파일명
+		            
+		         } catch (Exception e) {
+		            e.printStackTrace();
+		         }
+		         	         
+			}
+			
+				// 첨부파일 알아오기 끝
+				
+				int n = 0;
+				
+				if(attach.isEmpty()) {
+					// 첨부파일이 존재하지 않는 경우
+					n = service.addNoticeboard(noticeboardvo);
+					
+				}			
+				else {
+			    	// 첨부파일이 존재하는 경우
+			    	n = service.addNoticeboard_withFile(noticeboardvo);
+			    }
+				
+				
+				if(n==1) {
+	
+					return "redirect:/board/notice.up";	
+				}
+				else {
+	
+					return "redirect:/board/addnotice.up";
+				}
+			
+			
+			
+		}// end of public String addnoticeboard()------------------------------
+		
+		
+		// 공지사항 게시판 글 상세보기
+		@RequestMapping(value="/board/noticeview.up")
+		public ModelAndView noticeview(HttpServletRequest request, ModelAndView mav) {
+			
+			String notice_seq = request.getParameter("notice_seq");
+
+			String gobackURL = request.getParameter("gobackURL");
+			mav.addObject("gobackURL",gobackURL);
+			
+			HttpSession session = request.getSession();
+			MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+			
+			String userid = null;
+			
+			if(loginuser != null) {
+				userid = loginuser.getUserid();
+				// userid 는 로그인 되어진 사용자의 userid 이다.
+			}
+			
+			NoticeboardVO noticeboardvo = null;
+			
+			if("yes".equals(session.getAttribute("readCountPermission"))) {
+				
+				// 조회수 증가와 함께 글 조회
+				noticeboardvo = service.getNoticeView(notice_seq,userid);
+				
+				session.removeAttribute("readCountPermission");
+			}
+			else {
+				noticeboardvo = service.getNoticeViewNoAdd(notice_seq);
+			}
+					
+			mav.addObject("noticeboardvo",noticeboardvo);
+			mav.setViewName("board/noticeview.tiles1");
+	
+			return mav;
+		}
+		
+		// 공지사항 첨부파일 다운로드
+		@RequestMapping(value="/board/noticedownload.up")
+		public void noticedownload(HttpServletRequest request, HttpServletResponse response) {
+			
+			String notice_seq = request.getParameter("notice_seq");	
+			
+			NoticeboardVO noticeboardvo = service.getNoticeViewNoAdd(notice_seq);
+			
+			String filename = noticeboardvo.getFileName();
+			String orgFilename = noticeboardvo.getOrgFilename();
+			
+			HttpSession session = request.getSession();
+			
+			String root = session.getServletContext().getRealPath("/"); 
+			String path = root + "resources"+File.separator+"files";
+			
+			boolean flag = false;
+			
+			flag = fileManager.doFileDownload(filename, orgFilename, path, response);
+			
+			if(!flag) {
+				// 다운로드가 실패할 경우 메시지를 띄워준다.
+				
+				response.setContentType("text/html; charset=UTF-8"); 
+				PrintWriter writer = null;
+				
+				try {
+					writer = response.getWriter();
+					// 웹브라우저상에 메시지를 쓰기 위한 객체생성.
+				} catch (IOException e) {
+					
+				}
+				
+				writer.println("<script type='text/javascript'>alert('파일 다운로드가 불가능합니다.!!')</script>");       
+				
+			}
+		}// end of download()------------------------------------------------------------
+		
+		
+		// 공지사항 글 수정하기	
+		@RequestMapping(value="/board/editNoticeboard.up")
+		public ModelAndView editNoticeboard(HttpServletRequest request, HttpServletResponse response,ModelAndView mav) {
+			
+			// 글 수정해야할 글번호 가져오기 
+			String notice_seq = request.getParameter("notice_seq");
+			
+			NoticeboardVO noticeboardvo = service.getNoticeViewNoAdd(notice_seq);
+			
+			HttpSession session = request.getSession();
+			MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+			
+			String userid = loginuser.getUserid();
+			
+			if(!userid.equals("admin")) {
+				String msg = "접근이 불가합니다";
+				String loc = "javascript:history.back()";
+				
+				mav.addObject("msg", msg);
+				mav.addObject("loc", loc);
+				mav.setViewName("msg");				
+			}
+			else {
+				mav.addObject("noticeboardvo", noticeboardvo);
+				mav.setViewName("board/editnotice.tiles1");
+			}
+			return mav;
+			
+		}
+		
+		// 공지사항 게시판 글 수정하기 완료하기
+		@RequestMapping(value="/board/editnoticeboardEnd.up", method= {RequestMethod.POST})
+		public ModelAndView editnoticeboardEnd(HttpServletRequest request, NoticeboardVO noticeboardvo, ModelAndView mav) {
+			
+			int n = service.editnoticeboardEnd(noticeboardvo);
+			
+			if(n == 0) {
+				mav.addObject("msg", "글 수정이 실패하였습니다.");
+			}
+			else {
+				mav.addObject("msg", "글이 수정되었습니다.");
+			}
+			
+			mav.addObject("loc", request.getContextPath()+"/board/noticeview.up?notice_seq="+noticeboardvo.getNotice_seq());
+			mav.setViewName("msg");
+			
+			return mav;
+		}
+
+		// 공지사항 게시판 글 삭제하기		
+		@RequestMapping(value="/board/delNoticeboard.up", method= {RequestMethod.POST})
+		public ModelAndView delNoticeboard(HttpServletRequest request, ModelAndView mav) throws Throwable{
+			
+			String notice_seq = request.getParameter("notice_seq");
+		
+			int n = service.delNoticeboard(notice_seq);
+			
+			if(n == 0) {
+				mav.addObject("msg", "글 삭제가 실패하였습니다.");
+				mav.addObject("loc", request.getContextPath()+"/freeboardview.up?notice_seq="+notice_seq);
+			}
+			else {
+				mav.addObject("msg", "글이 삭제 되었습니다.");
+				mav.addObject("loc", request.getContextPath()+"/board/notice.up"); 
+			}
+			
+			mav.setViewName("msg");
 			
 			return mav;
 		}
 		
-		// 공지사항 게시판 글 상세보기
-		@RequestMapping(value="/noticeview.up")
-		public ModelAndView noticeview(ModelAndView mav) {
-			
-			mav.setViewName("board/noticeview.tiles1");
-			
-			return mav;
-		}
 		
 		// 자유게시판 목록
 		@RequestMapping(value="/freeboard.up")
@@ -592,22 +941,234 @@ public class EclassController {
 		
 		
 		// Q&A게시판 목록
-		@RequestMapping(value="/question.up")
-		public ModelAndView question(ModelAndView mav) {
+		@RequestMapping(value="/board/question.up")
+		public ModelAndView questionBoard(HttpServletRequest request,ModelAndView mav) {
 			
+			List<QuestionVO> questionboardList = null;
+			
+			String searchType = request.getParameter("searchType");
+		    String searchWord = request.getParameter("searchWord");
+		    String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+		    
+		    if(searchWord == null || searchWord.trim().isEmpty()) {
+		         searchWord = "";
+		    }
+		      
+		    if(searchType == null) {
+		         searchType = "";
+		    }
+		    
+		    
+		    HashMap<String, String> paraMap = new HashMap<>();
+		    paraMap.put("searchType", searchType);
+		    paraMap.put("searchWord", searchWord);
+		    
+		    // 먼저 총 게시물 건수(totalCount)를 구해와야 한다.
+		    // 총 게시물 건수(totalCount)는 검색조건이 있을 때와 없을때로 나뉘어진다.
+		    int totalCount = 0;       // 총게시물 건수
+		    int sizePerPage = 10;      // 한 페이지당 보여줄 게시물 건수
+		    int currentShowPageNo = 0;  // 현재 보여주는 페이지 번호로서, 초기치로는 1페이지로 설정함. 
+		    int totalPage =0;          // 총 페이지 수 (웹브라우저상에 보여줄 총 페이지 개수, 페이지바)
+	      
+		    int startRno = 0;         // 시작 행번호
+		    int endRno = 0;            // 끝 행번호
+			
+		    // 먼저 총 게시물 건수(totalCount)
+		    totalCount = service.getQuestionTotalCount(paraMap);
+		    
+		    totalPage = (int) Math.ceil ( (double)totalCount/sizePerPage );
+		    
+		    if(str_currentShowPageNo == null) {
+		         currentShowPageNo = 1; 
+		      } else {
+		         try {
+		            currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+		            if(currentShowPageNo <= 0 || currentShowPageNo > totalPage) {
+		               currentShowPageNo = 1;
+		            }
+		         } catch(NumberFormatException e) {
+		            currentShowPageNo = 1;
+		         }
+		      }
+		    
+		    startRno = ((currentShowPageNo - 1 ) * sizePerPage) + 1;
+		    endRno = startRno + sizePerPage - 1; 
+
+		    paraMap.put("startRno", String.valueOf(startRno));
+		    paraMap.put("endRno", String.valueOf(endRno));
+		    
+		    
+		    // Q&A 게시판 목록 가져오기
+		    questionboardList = service.getQuestionboardList(paraMap);
+		    
+		    		    	    
+		    if(!"".equals(searchWord)) {
+		         mav.addObject("paraMap", paraMap);
+		      }
+		    
+		    // 페이지바 생성
+		    String pageBar = "<ul style='list-style:none;'>";
+		      
+		    int blockSize = 10;
+		    int loop = 1;
+		    int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+		    
+		    String url = "freeboard.up";
+		    
+		    // === [이전] 만들기 ===
+		    if(pageNo != 1) {
+		    	pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+	      	}
+	      
+	      	while( !(loop > blockSize || pageNo > totalPage) ) {
+	         
+	         if(pageNo == currentShowPageNo) {
+	            pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
+	         }
+	         else {
+	            pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
+	         }
+	         
+	         loop++;
+	         pageNo++;
+	         
+	      	} // end of while -----------------------------------------------
+	      
+	      	// === [다음] 만들기 ===
+	      	if(!(pageNo > totalPage)) {
+	    	  pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+	      	}
+		      
+		    pageBar += "</ul>";
+		      
+		    mav.addObject("pageBar", pageBar);		        
+		    
+		    ////////////////////////////////
+		    String gobackURL = MyUtil.getCurrentURL(request);
+		    
+		    mav.addObject("gobackURL", gobackURL);    
+		    
+		    HttpSession session = request.getSession();
+		    session.setAttribute("readCountPermission", "yes");
+		    session.setAttribute("gobackURL", gobackURL);
+		    
+		    //////////////////////////////////////////
+		    
+		    mav.addObject("totalCount",totalCount);
+		    mav.addObject("questionboardList",questionboardList);
 			mav.setViewName("board/question.tiles1");
 			
 			return mav;
 		}
 		
 		// Q&A게시판 글쓰기
-		@RequestMapping(value="/addquestion.up")
-		public ModelAndView addquestion(ModelAndView mav) {
+		@RequestMapping(value="/board/addQuestion.up")
+		public ModelAndView addquestion(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+			
+			String fk_seq = request.getParameter("fk_seq");
+			String groupno = request.getParameter("groupno");
+			String depthno = request.getParameter("depthno");
+			
+			mav.addObject("fk_seq",fk_seq);
+			mav.addObject("groupno",groupno);
+			mav.addObject("depthno",depthno);
 			
 			mav.setViewName("board/addquestion.tiles1");
 			
 			return mav;
-		}			
+		}
+		
+		/*
+		// Q&A 게시판 글쓰기 요청
+		@RequestMapping(value="/board/addquestionboardEnd", method= {RequestMethod.POST})
+		public String addquestionboardEnd(HashMap<String, String> paraMap,QuestionVO questionvo, MultipartHttpServletRequest mrequest) {
+			
+			
+			System.out.println(questionvo.getFk_userid());
+			System.out.println(questionvo.getName());
+			System.out.println(questionvo.getTitle());
+			System.out.println(questionvo.getPassword());
+			System.out.println(questionvo.getFk_userid());
+			System.out.println(questionvo.getFk_userid());
+			System.out.println(questionvo.getFk_userid());
+			
+			
+			
+			// 첨부파일 여부 확인
+			MultipartFile attach = questionvo.getAttach();			
+			
+			if( !attach.isEmpty() ) { 
+				
+			HttpSession session = mrequest.getSession();
+			String root = session.getServletContext().getRealPath("/");
+			String path = root + "resources" + File.separator + "files";        
+			
+			
+			System.out.println("~~~ 확인용 path => " + path);
+			
+			 String newFileName = "";
+	         // WAS(톰캣)의 디스크에 저장할때 사용되는 용도
+	         
+	         byte[] bytes = null;
+	         // 첨부파일을 WAS(톰캣)의 디스크에 저장할 떄 사용되는 용도 // 첨부파일을 byte로 분해하여 보내준다.
+	         	         
+	         try {
+		            bytes = attach.getBytes();
+		            // getBytes() 메소드는 첨부된 파일(attach)을 바이트단위로 파일을 다 읽어오는 것이다. 
+		            // 예를 들어, 첨부한 파일이 "강아지.png" 이라면
+		            // 이파일을 WAS(톰캣) 디스크에 저장시키기 위해 byte[] 타입으로 변경해서 올린다.
+
+		            newFileName = fileManager.doFileUpload(bytes, attach.getOriginalFilename(), path);
+		            // 위에 것은 이제 파일 올리기를 해주는 것이다.
+		            // attach.getOriginalFilename() 은 첨부된 파일의 파일명(강아지.png)이다.
+		            
+		          //  System.out.println("~~~ >>> 확인용 newFileName :" + newFileName);
+		         //   System.out.println("~~~ >>> 확인용 OrgFilename :" + attach.getOriginalFilename());
+		            
+		            //   3. BoardVO boardvo에 fileName 값과 orgFilename 값과 fileSize 값을 넣어주어야 한다.
+		             
+		            questionvo.setFileName(newFileName);
+		            // WAS(톰캣)에 저장될 파일명(20200725092715353243254235235234.png)
+		            
+		            questionvo.setOrgFilename(attach.getOriginalFilename());
+		            // 게시판 페이지에서 첨부된 파일명(강아지.png)을 보여줄 때 및 
+		            // 사용자가 파일을 다운로드 할떄 사용되어지는 파일명
+		            
+		         } catch (Exception e) {
+		            e.printStackTrace();
+		         }
+		         	         
+			}
+			
+			// 첨부파일 알아오기 끝
+				
+			int n = 0;
+			
+			if(attach.isEmpty()) {
+				// 첨부파일이 존재하지 않는 경우
+				n = service.addquestion(questionvo);
+				
+			}			
+			else {
+		    	// 첨부파일이 존재하는 경우
+		    	n = service.addquestion_withFile(questionvo);
+		    }
+			
+			
+			if(n==1) {
+
+				return "redirect:/board/question.up";	
+				//      /list.action 페이지로 redirect(페이지이동)해라는 말이다.
+			}
+			else {
+
+				return "redirect:/board/addfreeboard.up";
+	            //	   /add.action 페이지로 redirect(페이지이동)해라는 말이다.
+			}
+			
+
+		}
+		*/
 				
 		// Q&A게시판 글 상세보기
 		@RequestMapping(value="/questionview.up")

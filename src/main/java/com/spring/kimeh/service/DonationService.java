@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.spring.kimeh.model.DonPaymentVO;
 import com.spring.kimeh.model.DonStoryVO;
 import com.spring.kimeh.model.InterDonationDAO;
-import com.spring.nari.model.MemberVO;
-
 //=== #31. Service 선언 === 
 //트랜잭션 처리를 담당하는곳 , 업무를 처리하는 곳, 비지니스(Business)단
 @Service  

@@ -37,7 +37,7 @@
 	}
 	
 	#addedFile{
-		width: 1000px;
+		width: 1040px;
 		margin: 0 auto;
 		background-color: #f2f2f2;		
 	}
@@ -49,14 +49,14 @@
 	}
 	
 	#updownView{
-		width: 1000px;
+		width: 1040px;
 		margin: 0 auto;
 		background-color: white;
 		
 	}	
 	
 	table{
-		width: 1000px;
+		width: 1040px;
 	}
 	
 	 tr,th,td{
@@ -340,7 +340,7 @@
 	<div id="updownView" style="height: 40px; background-color: #fafafa;">
 		<span class="button" onclick="javascript:location.href='<%=ctxPath%>/board/editfreeboard.up?free_seq=${freeboardvo.free_seq}'">글수정</span>
 		<span class="button" onclick="javascript:location.href='<%=ctxPath%>/board/delfreeboard.up?free_seq=${freeboardvo.free_seq}'">글삭제</span>
-		<span class="button" onclick="javascript:location.href='<%=ctxPath%>/freeboard.up'">목록</span>
+		<span class="button" onclick="javascript:location.href='<%=ctxPath%>/${gobackURL}'">목록</span>
 	</div><br>
 	
 	<div id="addReply">

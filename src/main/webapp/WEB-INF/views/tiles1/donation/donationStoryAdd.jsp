@@ -18,9 +18,11 @@
 	}
 	
 	table,tr,th,td{
-		border: solid 1px black;
+		border: solid 1px #ccc;
 		border-collapse: collapse;
 		padding: 20px;
+		font-size: 10pt;
+		color : gray;
 	}
 	
 	th{
@@ -119,23 +121,15 @@
 	         // 폼(form) 을 전송(submit)
 	         var frm = document.addFrm;
 	         frm.method = "POST";
-	         frm.action = "<%= ctxPath%>/board/addquestionboardEnd.up";
+	         frm.action = "<%= ctxPath%>/addfreeboardEnd.up";
 	         frm.submit();
 	      });
-	  			
-	});// end of $(document).ready() -------------------
+	   
+	   
+		
+		
+	});
 
-	function secretChk(){
-		$("input:checkbox[id=secret]").is(":checked");	
-		/* alert($("input:checkbox[id=secret]").is(":checked")); */		
-		if($("input:checkbox[id=secret]").is(":checked")){
-			$(".secret").val("1");
-		}
-		else{
-			$(".secret").val("0");
-		}
-	}
-	
 </script>
 
 
@@ -143,7 +137,7 @@
 <div id ="container"><br>
 	<div id="wholeNotice">
 		<div style="text-align: center;">
-			<h3 style="color: #00BCD4; font-weight: bold;">Q&A</h3>
+			<h3 style="color: gray; font-size: 13pt;">후원스토리 등록</h3>
 		</div>	
 		<br>
 			
@@ -151,12 +145,8 @@
 		<form name="addFrm" enctype="multipart/form-data">
 			<table id="table" style="margin: 0 auto; width: 1040px; background-color: white;">
 				<tr>
-					<th>제목</th>
-					<td>
-						<input type="text" size="50" id="title" name="title"/>
-						<input type="checkbox" id="secret" onclick="secretChk();"><label for="secret">비밀글</label>
-						<input type="text" class="secret" name="secret" value="0"> 
-					</td>
+					<th>후원제목</th>
+					<td><input type="text" size="50" id="title" name="subject"/></td>
 				</tr>
 				
 				<tr>
@@ -165,24 +155,20 @@
 				</tr>
 				
 				<tr>
-					<th>유저id</th>
-					<td><input type="text" name="fk_userid" value="${sessionScope.loginuser.userid}"/></td>
+					<th>메인 이미지 첨부파일</th>
+					<td><input type="text" name="listMainImg" value=""/></td>
 				</tr>
 				
 				<tr>
-					<th>첨부파일</th>
-					<td><input type="file" name="attach"/></td>
+					<th>상세 이미지 첨부파일</th>
+					<td><input type="file" name="storyImg"/></td>
 				</tr>
 				
 				<tr>
-					<th>내용</th>
+					<th>후원내용</th>
 					<td><textarea rows="15" cols="110" id="content" name="content"></textarea></td>
 				</tr>
-				
-				<tr>
-					<th>암호</th>
-					<td><input type="text" id="password" name="password"/></td>
-				</tr>			
+										
 			</table>
 		</form>
 		

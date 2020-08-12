@@ -121,6 +121,7 @@
    <img class="logo" onclick="javascript:location.href='<%=ctxPath%>/index.up'" src="<c:url value="/resources/images/logo.png" />">
 
 <!-- 우측상단 미니메뉴바  -->
+
 <c:if test="${sessionScope.loginuser != null}">
 <span class="minimenu"><a href="<%=ctxPath%>/login/logout.up">로그아웃</a></span>
 </c:if>
@@ -140,14 +141,10 @@
    <!-- =====================================================================  -->
    
    <!-- 메뉴바가 담겨져 있는 div -->
-   <div style="width: 1000px; height:70px; margin: 0 auto; text-align: center; margin-top: 20px;">
+   <div style="width: 1000px; height:70px; margin: 0 auto; text-align: center; margin-top: 20px; position: relative; z-index:1;" >
       
       <div class="dropdown">
-        <span>강의리스트</span>
-        <div class="dropdown-content">
-           <p class="downmenu">내용</p>
-           <p class="downmenu">내용</p>
-        </div>
+        <span onclick="javascript:location.href='<%=ctxPath%>/SubjectMatterList.up'">강의목록</span>
       </div>      
       
       <div class="dropdown">
@@ -158,8 +155,7 @@
         <p class="downmenu">시험</p>
         
         <!-- 교수라면 -->
-        <p class="downmenu">강의 개설</p>
-        <p class="downmenu">시험 출제</p>
+        <p class="downmenu">강의 개설</p>        
         </div>
       </div>
       
@@ -167,39 +163,47 @@
         <span>커뮤니티</span>
         <div class="dropdown-content">
         <span class="downmenu"><a href="<%=ctxPath%>/freeboard.up">자유게시판</a></span><br>
-        <span class="downmenu"><a href="<%=ctxPath%>/notice.up">공지사항</a></span><br>
-        <span class="downmenu"><a href="<%=ctxPath%>/question.up">Q&A</a></span>
+        <span class="downmenu"><a href="<%=ctxPath%>/board/notice.up">공지사항</a></span><br>
+        <span class="downmenu"><a href="<%=ctxPath%>/board/question.up">Q&A</a></span>
         </div>
       </div>
       
       <div class="dropdown">
         <span>후원</span>
         <div class="dropdown-content">
-        <p class="downmenu">내용</p>
-        <p class="downmenu">내용</p>
+        <p class="downmenu"><a href="<%=ctxPath%>/donation/donationList.up">후원하기</a></p>
         </div>
       </div>
       
       <div class="dropdown">
         <span>마이페이지</span>
         <div class="dropdown-content">
-        <!-- 학생이라면 -->
+
+      	 <!-- 학생이라면 -->
          <c:if test="${sessionScope.loginuser.identity == 1}">
-               <p class="downmenu"><a href="<%=ctxPath%>/mypageMain.up">마이페이지</a></p>
+             <p class="downmenu"><a href="<%=ctxPath%>/mypageMain.up">마이페이지</a></p>
              <p class="downmenu"><a href="<%=ctxPath%>/attandS.up">출석현황</a></p>
              <p class="downmenu"><a href="<%=ctxPath%>/gradeS.up">성적관리</a></p>
-             <p class="downmenu"><a href="<%=ctxPath%>/">정보수정</a></p>
+             <p class="downmenu"><a href="<%=ctxPath%>/member/updateMember.up">정보수정</a></p>
+             <p class="downmenu"><a href="<%=ctxPath%>/member/delMember.up">회원탈퇴</a></p>
           </c:if>
         
         <!-- 교수라면 -->
         <c:if test="${sessionScope.loginuser.identity == 2}">
             <p class="downmenu"><a href="<%=ctxPath%>/mypageMain.up">마이페이지</a></p>
             <p class="downmenu"><a href="<%=ctxPath%>/studentP.up">학생관리</a></p>
-            <p class="downmenu"><a href="<%=ctxPath%>/">시험출제</a></p>
-            <p class="downmenu"><a href="<%=ctxPath%>/">강의등록</a></p>
-            <p class="downmenu"><a href="<%=ctxPath%>/">교과목등록</a></p>
-            <p class="downmenu"><a href="<%=ctxPath%>/">정보수정</a></p>
+            <p class="downmenu"><a href="<%=ctxPath%>/exam/examRegister.up">시험출제</a></p>
+            <p class="downmenu"><a href="<%=ctxPath%>/lecture/lectureRegister.up">강의등록</a></p>
+            <p class="downmenu"><a href="<%=ctxPath%>/SubjectMatter_insert.up">교과목등록</a></p>
+            <p class="downmenu"><a href="<%=ctxPath%>/member/updateMember.up">정보수정</a></p>
+            <p class="downmenu"><a href="<%=ctxPath%>/member/delMember.up">회원탈퇴</a></p>
           </c:if>
+          
+          <!-- 관리자 라면 -->
+           <c:if test="${sessionScope.loginuser.identity == 3}">
+                 <p class="downmenu"></p>
+           </c:if>
+
           
         </div>
       </div>

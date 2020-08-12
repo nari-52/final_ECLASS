@@ -17,14 +17,14 @@
 		background-color: #fafafa;
 	}
 	
-	tr,th,td{
+	table,tr,th,td{
 		border: solid 1px black;
 		border-collapse: collapse;
 		padding: 20px;
 	}
 	
 	th{
-		width: 200px;
+		width: 150px;
 	}
 </style>
 
@@ -109,17 +109,11 @@
 	            alert("글내용을 입력하세요");
 	            return;
 	         }
-	         // 글암호 유효성 검사 
-	         var pwVal = $("#password").val().trim();
-	         if(pwVal == "") {
-	            alert("글암호를 입력하세요");
-	            return;
-	         }
-	         
+	                 
 	         // 폼(form) 을 전송(submit)
 	         var frm = document.addFrm;
 	         frm.method = "POST";
-	         frm.action = "<%= ctxPath%>/addNoticeEnd.action";
+	         frm.action = "<%= ctxPath%>/addnoticeboardEnd.up";
 	         frm.submit();
 	      });
 	   
@@ -149,15 +143,14 @@
 				
 				<tr>
 					<th>첨부파일</th>
-					<td><input type="file"/></td>
+					<td><input type="file" name="attach"/></td>
 				</tr>
 				
 				<tr>
 					<th>내용</th>
 					<td><textarea rows="15" cols="110" id="content" name="content"></textarea></td>
 				</tr>
-				
-				
+		
 			</table>
 		</form>
 		</div>

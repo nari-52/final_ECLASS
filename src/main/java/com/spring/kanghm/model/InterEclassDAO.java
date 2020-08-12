@@ -49,5 +49,44 @@ public interface InterEclassDAO {
 	// 조회수 1증가 시키기
 	void addViewCount(String free_seq);
 
+	// 공지사항 총게시물 개수 구하기
+	int getNoticeTotalCount(HashMap<String, String> paraMap);
+
+	// 공지사항 목록 가져오기
+	List<NoticeboardVO> getNoticeboardList(HashMap<String, String> paraMap);
+
+	// 첨부파일이 존재하지 않는 공지사항 글쓰기
+	int addNoticeboard(NoticeboardVO noticeboardvo);
+
+	// 첨부파일이 존재하는 공지사항 글쓰기
+	int addNoticeboard_withFile(NoticeboardVO noticeboardvo);
+
+	// 공지사항 조회수 증가하며 글 조회하기
+	NoticeboardVO getNoticeView(String notice_seq);
+
+	// 공지사항 조회수 1증가 시키기
+	void addNoticeViewCount(String notice_seq);
+
+	// 공지사항 조회수 증가 없이 글 조회하기
+	NoticeboardVO getNoticeViewNoAdd(String notice_seq);
+
+	// 공지사항 게시판 글 수정하기 완료하기
+	int editnoticeboardEnd(NoticeboardVO noticeboardvo);
+
+	// 공지사항 게시판 글 삭제하기
+	int delNoticeboard(String notice_seq);
+
+	// Q&A 게시판 총게시물 개수 구하기
+	int getQuestionTotalCount(HashMap<String, String> paraMap);
+
+	// Q&A 게시판 목록 가져오기
+	List<QuestionVO> getQuestionboardList(HashMap<String, String> paraMap);
+
+	// 첨부파일이 존재하지 않는 Q&A 글쓰기
+	int addquestion(QuestionVO questionvo);
+
+	// 첨부파일이 존재하는 Q&A 글쓰기
+	int addquestion_withFile(QuestionVO questionvo);
+
 
 }

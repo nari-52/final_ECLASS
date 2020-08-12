@@ -278,7 +278,11 @@
 			
 			<%-- === 페이지바 === --%>
 			<div align="center" style="width:70%; border:solid 0px gray; margin:13px auto;">${pageBar}</div>
-			
+			<div>
+				<button type="button" style="margin-left: 700px; width: 100px; border:solid 1px #ddd; background-color:#fafafa; color:gray; border-radius:3px">
+					<a href="<%=ctxPath%>/donation/donationStoryAdd.up">글쓰기</a>
+				</button>
+			</div>	
 		
 			
 				</div>

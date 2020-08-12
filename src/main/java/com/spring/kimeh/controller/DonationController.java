@@ -266,6 +266,7 @@ public class DonationController {
 					jsonObj.put("noName", vo.getNoName()); //이름 비공개					
 					jsonObj.put("sumPayment", vo.getSumPayment()); //금액 공개
 					jsonObj.put("noDonpmt", vo.getNoDonpmt());     //금액 비공개
+					jsonObj.put("showDate", vo.getShowDate()); //결제시간 
 															
 					jsonArr.put(jsonObj);
 				}	
@@ -336,6 +337,19 @@ public class DonationController {
 			
 			mav.addObject("recieve",recieve);
 			mav.setViewName("pay");
+			return mav;
+			
+		}
+		
+		// == 후원하기 등록(관리자)
+		@RequestMapping(value="/donation/donationStoryAdd.up")
+		public ModelAndView donationStoryAdd(ModelAndView mav, HttpServletRequest request) {
+			
+			HttpSession session = request.getSession();
+			MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+			request.setAttribute("loginuser", loginuser);
+						
+			mav.setViewName("donation/donationStoryAdd.tiles1");
 			return mav;
 			
 		}

@@ -91,6 +91,23 @@
 	
 </style>
 
+<script type="text/javascript">
+
+	function delNotice(){
+		if(confirm("정말 삭제하시겠습니까?") == true){
+			var frm = document.delNoticeFrm;
+			frm.method = "POST";
+			frm.action = "<%= ctxPath%>/board/delNoticeboard.up";
+			frm.submit();			
+		}
+		else{
+			return;
+		}
+		
+	}
+
+</script>
+
 <div id ="container"><br>
 <div id="wholeNotice">
 	<div style="text-align: center;">
@@ -99,24 +116,16 @@
 	<br>
 	
 	<div id="viewHead">
-		<h3>공지사항 게시판 상세보기 페이지</h3>
-		<div style="float: right; margin:20px;">
-		<span style="font-weight: bold; font-size: 13pt;">작성자</span> <span>홍길동</span>&nbsp;
-		<span style="font-weight: bold; font-size: 13pt;">작성일</span> <span>2020.07.22</span>&nbsp;
-		<span style="font-weight: bold; font-size: 13pt;">조회수</span> <span>200</span>&nbsp;
+		<h3>${noticeboardvo.title }</h3>
+		<div style="float: right; margin:20px;">		
+		<span style="font-weight: bold; font-size: 13pt;">작성일 &nbsp;</span>${noticeboardvo.writedate} 
+		<span style="font-weight: bold; font-size: 13pt;">조회수&nbsp;</span>${noticeboardvo.viewcount} 
 		</div>
 	</div>
 	
 	<div id="viewContent">
 		<div>
-			안녕하세요 홍길동입니다. 이곳은 테스트페이지입니다.<br>
-			안녕하세요 홍길동입니다. 이곳은 테스트페이지입니다.<br>
-			안녕하세요 홍길동입니다. 이곳은 테스트페이지입니다.<br>
-			안녕하세요 홍길동입니다. 이곳은 테스트페이지입니다.<br>
-			안녕하세요 홍길동입니다. 이곳은 테스트페이지입니다.<br>
-			안녕하세요 홍길동입니다. 이곳은 테스트페이지입니다.<br>
-			안녕하세요 홍길동입니다. 이곳은 테스트페이지입니다.<br>
-			안녕하세요 홍길동입니다. 이곳은 테스트페이지입니다.<br>
+			${noticeboardvo.content}
 		</div>
 	</div>
 
@@ -124,7 +133,16 @@
 		<table>
 			<tr>
 				<th>첨부파일</th>
-				<td>첨부파일이 없습니다</td>
+				<td>
+					<c:if test="${not empty noticeboardvo.orgFilename}">
+						<a href="<%=request.getContextPath()%>/board/noticedownload.up?notice_seq=${noticeboardvo.notice_seq}">${noticeboardvo.orgFilename}</a>
+					</c:if>
+					
+					<c:if test="${empty noticeboardvo.orgFilename}">
+						첨부파일이 없습니다.
+					</c:if>
+					
+				</td>
 			</tr>
 		</table>
 	</div><br>
@@ -133,20 +151,25 @@
 		<table>
 			<tr>
 				<th>이전글</th>
-				<td>공지사항 게시판 테스트</td>
+				<td><span onclick="javascript:location.href='<%=ctxPath%>/board/noticeview.up?notice_seq=${noticeboardvo.previousseq}'">${noticeboardvo.previoussubject}</span></td>
 			</tr>
 			
 			<tr>
 				<th>다음글</th>
-				<td>공지사항 게시판 테스트</td>
+				<td><span onclick="javascript:location.href='<%=ctxPath%>/board/noticeview.up?notice_seq=${noticeboardvo.nextseq}'">${noticeboardvo.nextsubject}</span></td>
 			</tr>
 		</table>
 	</div><br>
 	
 	<div id="updownView" style="height: 40px; background-color: #fafafa;">
-		<span class="button">글수정</span>
-		<span class="button">글삭제</span>
-		<span class="button">목록</span>
+	<c:if test="${sessionScope.loginuser.userid == 'admin'}">
+		<span class="button" onclick="javascript:location.href='<%=ctxPath%>/board/editNoticeboard.up?notice_seq=${noticeboardvo.notice_seq}'">글수정</span>
+		<form name="delNoticeFrm">
+			<input type="hidden" name="notice_seq" value="${noticeboardvo.notice_seq}" >
+			<span class="button" onclick="delNotice();">글삭제</span>
+		</form>
+	</c:if>	
+		<span class="button" onclick="javascript:location.href='<%=ctxPath%>/${gobackURL}'">목록</span>
 	</div><br>
 	
 	<div id="addReply">

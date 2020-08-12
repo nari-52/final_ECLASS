@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
@@ -29,7 +30,7 @@ public class MoonsaController {
 	
 	// 메인페이지 요청
 	@RequestMapping(value="/mypageMain.up")
-	public ModelAndView index(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLogin_index(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
@@ -59,7 +60,7 @@ public class MoonsaController {
 	
 	// 출석현황 (학생)
 	@RequestMapping(value="/attandS.up")
-	public ModelAndView attandS(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLogin_attandS(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		String subjectSelect = request.getParameter("subjectSelect");
 		
@@ -93,7 +94,7 @@ public class MoonsaController {
 	
 	// 성적관리 (학생)
 	@RequestMapping(value="/gradeS.up")
-	public ModelAndView gradeS(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLogin_gradeS(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
@@ -111,7 +112,7 @@ public class MoonsaController {
 	
 	// 학생관리 (교수)
 	@RequestMapping(value="/studentP.up")
-	public ModelAndView studentP(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLogin_studentP(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
@@ -141,7 +142,7 @@ public class MoonsaController {
 	// 학생관리 (교수) ajax 부분
 	@ResponseBody // view단이 필요 없다는것. 여긴 ajax이므로 필요없음
 	@RequestMapping(value="/studentP2.up", produces="text/plain;charset=UTF-8")
-	public String studentP2(HttpServletRequest request) {
+	public String requiredLogin_studentP2(HttpServletRequest request, HttpServletResponse response) {
 		
 		String userid = request.getParameter("userid");
 		
@@ -157,7 +158,7 @@ public class MoonsaController {
 	// 출석수정 (교수)
 	@ResponseBody // view단이 필요 없다는것. 여긴 ajax이므로 필요없음
 	@RequestMapping(value="/changeAttand.up", produces="text/plain;charset=UTF-8")
-	public String changeAttand(HttpServletRequest request) {
+	public String requiredLogin_changeAttand(HttpServletRequest request, HttpServletResponse response) {
 		
 		String userid = request.getParameter("userid");
 		String subjectSelect = request.getParameter("subjectSelect");
@@ -171,7 +172,7 @@ public class MoonsaController {
 	
 	// 출석수정 (교수) 페이지 이동
 	@RequestMapping(value="/changeAttand2.up")
-	public ModelAndView changeAttand2(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLogin_changeAttand2(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		String userid = request.getParameter("userid");
 		String subjectSelect = request.getParameter("subjectSelect");
@@ -198,7 +199,7 @@ public class MoonsaController {
 	// 출석수정 (교수) -- 수정버튼 누른 후 ajax
 	@ResponseBody // view단이 필요 없다는것. 여긴 ajax이므로 필요없음
 	@RequestMapping(value="/changeAttandEnd.up", produces="text/plain;charset=UTF-8")
-	public String changeAttandEnd(HttpServletRequest request) {
+	public String requiredLogin_changeAttandEnd(HttpServletRequest request, HttpServletResponse response) {
 		
 		String lecNum = request.getParameter("lecNum");
 		String attand = request.getParameter("attand");
@@ -222,7 +223,7 @@ public class MoonsaController {
 	// 출석수정 (교수) -- 수정버튼 누른 후 ajax
 	@ResponseBody // view단이 필요 없다는것. 여긴 ajax이므로 필요없음
 	@RequestMapping(value="/changeGradeEnd.up", produces="text/plain;charset=UTF-8")
-	public String changeGradeEnd(HttpServletRequest request) {
+	public String requiredLogin_changeGradeEnd(HttpServletRequest request, HttpServletResponse response) {
 		
 		String finalG = request.getParameter("finalG");
 		String fk_userid = request.getParameter("fk_userid");

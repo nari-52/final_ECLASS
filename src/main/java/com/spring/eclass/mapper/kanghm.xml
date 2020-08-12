@@ -154,5 +154,172 @@
 		where free_seq = #{free_seq}
 	</update>
 	
+	<!-- 공지사항 총게시물 개수 구하기  -->
+	<select id="getNoticeTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from notice_board
+		where status = 1
+		<if test='searchWord != ""'>
+			and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		</if>	
+	</select>
+	
+	<!-- 공지사항 목록 가져오기 -->
+	<select id="getNoticeboardList" parameterType="HashMap" resultType="com.spring.kanghm.model.NoticeboardVO">
+		select rno,notice_seq,title,viewcount,writedate,filename
+		from
+		    (
+		    select rownum as rno,notice_seq,title,viewcount,writedate,filename
+		    from
+		        (
+		        select notice_seq,title,viewcount,to_char(writedate,'yyyy-mm-dd hh24:mi:ss') as writedate,filename
+		        from notice_board
+		        where status = 1
+		        	<if test='searchWord != "" '>
+			         and ${searchType} like '%'|| #{searchWord} ||'%'
+			        </if>
+		        order by notice_seq desc
+		        ) V
+		    ) T
+		where rno between #{startRno} and #{endRno}
+	</select>
+	
+	<!-- 첨부파일이 존재하지 않는 공지사항 글쓰기  -->
+	<insert id="addNoticeboard" parameterType="com.spring.kanghm.model.NoticeboardVO">
+	    insert into notice_board(notice_seq, title, content, viewcount, writedate, status)
+	    values(notice_seq.nextval, #{title}, #{content}, default, default, default) 
+	</insert>
+	
+	<!-- 첨부파일이 존재하는 공지사항 글쓰기 -->
+	<insert id="addNoticeboard_withFile" parameterType="com.spring.kanghm.model.NoticeboardVO">
+	    	insert into notice_board(notice_seq, title, content, viewcount, writedate, status, fileName, orgFilename)
+	    	values(notice_seq.nextval, #{title}, #{content}, default, default, default, #{fileName}, #{orgFilename})	     
+	</insert>
+	
+	
+	<!-- 공지사항 조회수 증가하며 글 조회하기  -->
+	<select id="getNoticeView" parameterType="String" resultType="com.spring.kanghm.model.NoticeboardVO">
+		select previousseq, previoussubject, notice_seq, title, content, viewcount, writedate
+		      ,nextseq, nextsubject, orgFilename, fileName
+		from
+		(
+		 select lag(notice_seq, 1) over(order by notice_seq desc) as previousseq  
+				           , nvl(lag(title, 1) over(order by notice_seq desc),'이전글이 없습니다')as previoussubject				           				           
+				           , notice_seq, title, content, viewcount
+				           , to_char(writedate, 'yyyy-mm-dd hh24:mi:ss') as writedate				         
+				           , lead(notice_seq, 1) over(order by notice_seq desc) as nextseq
+				           , nvl(lead(title, 1) over(order by notice_seq desc),'다음글이 없습니다.') as nextsubject
+		                   , orgFilename, fileName
+				      from notice_board
+				      where status = 1
+		) V
+		where notice_seq = #{notice_seq}
+	</select>
+	
+	<!-- 공지사항 조회수 1증가 시키기  -->
+	<update id="addNoticeViewCount" parameterType="String">
+		update notice_board set viewcount = viewcount + 1
+		where notice_seq = #{notice_seq}
+	</update>
+	
+	
+	<!-- 공지사항 조회수 증가 없이 글 조회하기 -->
+	<select id="getNoticeViewNoAdd" parameterType="String" resultType="com.spring.kanghm.model.NoticeboardVO">
+		select previousseq, previoussubject, notice_seq, title, content, viewcount, writedate
+		      ,nextseq, nextsubject, orgFilename, fileName
+		from
+		(
+		 select lag(notice_seq, 1) over(order by notice_seq desc) as previousseq  
+				           , nvl(lag(title, 1) over(order by notice_seq desc),'이전글이 없습니다')as previoussubject				           				           
+				           , notice_seq, title, content, viewcount
+				           , to_char(writedate, 'yyyy-mm-dd hh24:mi:ss') as writedate				         
+				           , lead(notice_seq, 1) over(order by notice_seq desc) as nextseq
+				           , nvl(lead(title, 1) over(order by notice_seq desc),'다음글이 없습니다.') as nextsubject
+		                   , orgFilename, fileName
+				      from notice_board
+				      where status = 1
+		) V
+		where notice_seq = #{notice_seq}
+	</select>
+	
+	<!-- 공지사항 게시판 글 수정하기 완료하기 -->
+	<update id="editnoticeboardEnd" parameterType="com.spring.kanghm.model.NoticeboardVO">
+		update notice_board set title = #{title}
+							 ,content = #{content}
+							 ,writedate = sysdate
+		where notice_seq = #{notice_seq}
+	</update>
+	
+	<!-- 공지사항 게시판 글 삭제하기 -->
+	<update id="delNoticeboard" parameterType="String">
+		update notice_board set status = 0
+		where notice_seq = #{notice_seq}
+	</update>
+	
+	
+	<!-- Q&A 게시판 총게시물 개수 구하기  -->
+	<select id="getQuestionTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from question_board
+		where status = 1
+		<if test='searchWord != ""'>
+			and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		</if>	
+	</select>
+	
+	
+	<!-- Q&A 게시판 목록 가져오기 -->
+	<select id="getQuestionboardList" parameterType="HashMap" resultType="com.spring.kanghm.model.QuestionVO">
+		 select question_seq, fk_userid, name, title, viewcount, writedate
+		     , groupno, fk_seq, depthno , filename
+			from 
+			(
+			    select rownum AS rno
+			         , question_seq, fk_userid, name, title, viewcount, writedate 
+			         , groupno, fk_seq, depthno ,filename
+			    from
+			    (
+			        select question_seq, fk_userid, name, title,  
+			               viewcount, to_char(writedate, 'yyyy-mm-dd hh24:mi:ss') as writedate,
+			               groupno, fk_seq, depthno, filename
+			        from question_board
+			        where status = 1
+			         <if test='searchWord != ""'>
+				      and ${searchType} like '%'|| #{searchWord} ||'%'
+				     </if>
+			        start with fk_seq = 0
+			        connect by prior question_seq = fk_seq
+			        order siblings by groupno desc, question_seq asc        
+			    ) V
+			) T
+			where rno between #{startRno} and #{endRno}
+	</select>
+	
+	<!-- 첨부파일이 존재하지 않는 Q&A 글쓰기  -->	
+	<insert id="addquestion" parameterType="com.spring.kanghm.model.QuestionVO">
+		<if test='fk_seq == "" '>
+	    	insert into question_board(question_seq, fk_userid, name, title, content, password, viewcount, writedate, status, groupno, fk_seq, depthno, secret)
+	    	values(question_seq.nextval, #{fk_userid}, #{name}, #{title}, #{content}, #{password}, default, default, default, #{groupno}, default, default, #{secret})
+	    </if>
+	    
+	    <if test='fk_seq != "" '>
+	    	insert into question_board(question_seq, fk_userid, name, title, content, password, viewcount, writedate, status, groupno, fk_seq, depthno, secret)
+	    	values(question_seq.nextval, #{fk_userid}, #{name}, #{title}, #{content}, #{password}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1, #{secret} )
+	    </if> 
+	</insert> 
+	
+	
+	<!-- 첨부파일이 존재하는 Q&A 글쓰기  -->
+	<insert id="addquestion_withFile" parameterType="com.spring.kanghm.model.QuestionVO">
+		<if test='fk_seq == "" '>
+	    	insert into question_board(question_seq, fk_userid, name, title, content, password, viewcount, writedate, status, groupno, fk_seq, depthno, fileName, orgFilename, secret)
+	    	values(question_seq.nextval, #{fk_userid}, #{name}, #{title}, #{content}, #{password}, default, default, default, #{groupno}, default, default ,#{fileName}, #{orgFilename}, #{secret})
+	    </if>
+	    
+	    <if test='fk_seq != "" '>
+	    	insert into question_board(question_seq, fk_userid, name, title, content, password, viewcount, writedate, status, groupno, fk_seq, depthno, fileName, orgFilename, secret)
+	    	values(question_seq.nextval, #{fk_userid}, #{name}, #{title}, #{content}, #{password}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1, #{fileName}, #{orgFilename}, #{secret})
+	    </if>
+	</insert>
 	
 </mapper>

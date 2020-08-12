@@ -181,6 +181,16 @@
 		background-color: #fafafa;
 		border-radius: 2px;
 	}
+	#end{ 
+		display:block;
+		font-size: 11pt;  
+		padding: 15px 0 10px 0;
+		color: #ccc;
+		height: 50px;
+		border : solid 0px #ccc;
+		text-align : center;
+		font-weight: 200;
+	}
     
 </style>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -260,8 +270,8 @@
 		    		//$("#displayHIT").html(html);
 		    		
 		    		// 더보기... 버튼의 비활성화 처리
-		    		$("#btnMoreHIT").attr("disabled", true).css("cursor","not-allowed");
-		    		$("#btnMoreHIT").hide;	
+		    		//$("#btnMoreHIT").attr("disabled", true).css("cursor","not-allowed");
+		    		//$("#btnMoreHIT").hide;	
 					}
 					else{
 						//데이터가 존재하는 경우 
@@ -271,7 +281,9 @@
 							 
 							if(item.noName==null){								
 								html +="<span style='color:gray; font-size:12pt;'>후원자가 없습니다..<br/>많은 관심 부탁드립니다 :)</span>"
-								$("#btnMoreHIT").html("");								
+								$("#btnMoreHIT").html("");	
+								$("#btnMoreHIT").css("background-color","#fff");
+								$("#btnMoreHIT").css("cursor","default");
 								return;
 							}else{
 								
@@ -287,16 +299,16 @@
 									html += Number(item.sumPayment).toLocaleString('en')+"원 후원하였습니다 "								
 								}
 						          
-								html += "<br/>"
-								html += "<span style='text-align:left; font-size:10pt; color:#bbb;'> "
-								if(Number(item.showDate)<60){								
-								  	html += Number(item.showDate)+"분전</span>";						
+								html += "<br/>"							
+								console.log(Number(item.showDate));								
+								if(Number(item.showDate)>1440){								
+								  	html += "<span style='text-align:left; font-size:10pt; color:#bbb;'> " + Math.floor((Number(item.showDate))/1440)+"일 전</span>";						
 								}
 								else if(60<Number(item.showDate)<1440){
-									html += parseInt(Number(item.showDate)/60)+"시간 전</span>";									
+									html += "<span style='text-align:left; font-size:10pt; color:#bbb;'> "+ Math.floor((Number(item.showDate))/60)+"시간 전</span>";									
 								}
 								else{
-									html += Math.floor(Number(item.showDate)/1440)+"일 전</span>";	
+									html += "<span style='text-align:left; font-size:10pt; color:#bbb;'> "+ Number(item.showDate)+"분 전</span>";	
 								}								
 							}
 							html +="</div>";
@@ -372,8 +384,10 @@
 							
 					        <div style="margin: 0;">
 								<span id="end" style="font-size: 12pt; font-weight:bold; color:gray;"> </span><br/>
+								<c:if test="${not empty donsupporterPage[0].name}">
 								<button type="button" id="btnMoreHIT" value="">더보기 ...</button>
-								<span id ="totalHITCount">{totalHITCount}</span>
+								</c:if>
+								<span id ="totalHITCount">${donsupporterPage[0].totalSupporter}</span>
 								<span id="countHIT">0</span>
 							</div>
 						</div>

@@ -13,9 +13,42 @@
 	display: inline-block;
 	border: solid 0px red;
 	margin: 0 20px;
-	height: 500px;
+	color: gray;
 }
-
+#namecss{
+	color: #00BCD4;
+	font-weight: bold;
+}
+#mainCss{
+	font-size: 15pt;
+	background-color: #FAFAFA;
+	border: solid 1px #00BCD4;
+	padding: 10px;
+	margin-bottom: 20px;
+	width: 600px;
+	text-align: center;
+	border-radius: 10px;
+}
+#tableCss{
+	text-align: center;
+	font-size: 15pt;
+}
+.sidecss{
+	color: white;
+}
+#selectCSS {
+	margin-top: 20px; 
+}
+#lectureSelect {
+	width: 100px;
+	margin-right: 20px;
+	height: 25px;
+}
+#attandSelect {
+	width: 100px;
+	margin-right: 13px;
+	height: 25px;
+}
 </style>
 <script type="text/javascript">
 
@@ -62,11 +95,13 @@
 </head>
 <body>
 	<div id="test">
-	  	<h3>수정할 학생명 : ${Sname}</h3>
-		<table id="tblcss" >
+	  <div id="mainCss">
+		수정할 학생명 : <span id="namecss">${Sname}</span>
+	  </div>
+		<table id="tableCss" >
 			<tr style="background-color: #00BCD4;">
-				<th style="color: white;">챕터</th>
-				<th style="color: white;">출석현황</th>
+				<th class="sidecss">챕터</th>
+				<th class="sidecss">출석현황</th>
 			</tr>
 			<c:forEach var="AList" items="${attandList}">
 				<tr>
@@ -75,32 +110,34 @@
 				</tr>
 			</c:forEach>
 			<tr>
-				<td style="background-color: #E5E5E5;">총 출석수</td>
-				<td id="total">${attandOX}</td><!-- count로 총 개수 알아오기/ select count(*) from tbl_attendanct where attend = 1(출석) -->
+				<td style="background-color: #E5E5E5; border-top: solid 2px #E5E5E5;">총 출석수</td>
+				<td id="total" style="border-top: solid 2px #E5E5E5;">${attandOX}</td><!-- count로 총 개수 알아오기/ select count(*) from tbl_attendanct where attend = 1(출석) -->
 			</tr>
 			<tr>
 				<td style="background-color: #E5E5E5;">출석률 (%)</td>
 				<td id="persent"></td>
 			</tr>
 		</table>
-		<select name="lectureSelect" id="lectureSelect">
-			<option value="1">1강</option>
-			<option value="2">2강</option>   
-			<option value="3">3강</option>
-			<option value="4">4강</option>
-			<option value="5">5강</option>
-			<option value="6">6강</option>
-			<option value="7">7강</option>
-			<option value="8">8강</option>
-			<option value="9">9강</option>
-			<option value="10">10강</option>
-		</select>
-		<select name="attandSelect" id="attandSelect">
-			<option value="O">O</option>
-			<option value="X">X</option>   
-		</select>
-		<button type="button" onclick="attandChange();">수정하기</button>
-		<button type="button" onclick="location.href='javascript:history.back()'">이전으로</button>
+		<div id="selectCSS">
+			<select name="lectureSelect" id="lectureSelect">
+				<option value="1">1강</option>
+				<option value="2">2강</option>   
+				<option value="3">3강</option>
+				<option value="4">4강</option>
+				<option value="5">5강</option>
+				<option value="6">6강</option>
+				<option value="7">7강</option>
+				<option value="8">8강</option>
+				<option value="9">9강</option>
+				<option value="10">10강</option>
+			</select>
+			<select name="attandSelect" id="attandSelect">
+				<option value="O">O</option>
+				<option value="X">X</option>
+			</select>
+			<button type="button" onclick="attandChange();">수정하기</button>
+			<button type="button" onclick="location.href='javascript:history.back()'">이전으로</button>
+	    </div>
 	</div>  
 </body>
 </html>

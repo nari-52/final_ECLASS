@@ -8,7 +8,6 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.spring.nari.model.MemberVO;
 
 //=== #32. DAO 선언 ===
 @Repository  

@@ -155,9 +155,11 @@
 	</form>
 	
 	<div>
+	<c:if test="${not empty sessionScope.loginuser.userid}">
 		<button type="button" style="margin-left: 980px;">
 			<a href="<%=ctxPath%>/addfreeboard.up">글쓰기</a>
 		</button>
+	</c:if>
 	</div>	
 	<br>
 	

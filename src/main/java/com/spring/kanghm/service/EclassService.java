@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.spring.kanghm.model.FreeCommentVO;
 import com.spring.kanghm.model.FreeboardVO;
 import com.spring.kanghm.model.InterEclassDAO;
+import com.spring.kanghm.model.NoticeboardVO;
+import com.spring.kanghm.model.QuestionVO;
 import com.spring.kimeh.model.DonStoryVO;
 
 //=== Service 선언 === 
@@ -121,6 +123,7 @@ public class EclassService implements InterEclassService {
 		return n;
 	}
 
+
 	// 자유게시판 조회수 증가하며 글 조회하기
 	@Override
 	public FreeboardVO getFreeView(String free_seq,String userid) {
@@ -136,6 +139,118 @@ public class EclassService implements InterEclassService {
 		}
 		
 		return freeboardvo;
+	}
+
+	// 공지사항 총게시물 개수 구하기
+	@Override
+	public int getNoticeTotalCount(HashMap<String, String> paraMap) {
+		
+		int noticeTotalCount = dao.getNoticeTotalCount(paraMap);
+		
+		return noticeTotalCount;
+	}
+
+	// 공지사항 목록 가져오기
+	@Override
+	public List<NoticeboardVO> getNoticeboardList(HashMap<String, String> paraMap) {
+		
+		List<NoticeboardVO> noticeboardList = dao.getNoticeboardList(paraMap);
+		
+		return noticeboardList;
+	}
+
+	// 첨부파일이 존재하지 않는 공지사항 글쓰기
+	@Override
+	public int addNoticeboard(NoticeboardVO noticeboardvo) {
+		
+		int n = dao.addNoticeboard(noticeboardvo);
+		
+		return n;
+	}
+
+	// 첨부파일이 존재하는 공지사항 글쓰기
+	@Override
+	public int addNoticeboard_withFile(NoticeboardVO noticeboardvo) {
+		
+		int n = dao.addNoticeboard_withFile(noticeboardvo);
+		
+		return n;
+	}
+
+	// 공지사항 조회수 증가하며 글 조회하기
+	@Override
+	public NoticeboardVO getNoticeView(String notice_seq, String userid) {
+		
+		NoticeboardVO noticeboardvo = dao.getNoticeView(notice_seq);			
+		
+		// 조회수 1 증가시키기
+		dao.addNoticeViewCount(notice_seq);
+	
+		return noticeboardvo;
+	}
+
+	// 공지사항 조회수 증가 없이 글 조회하기
+	@Override
+	public NoticeboardVO getNoticeViewNoAdd(String notice_seq) {
+		
+		NoticeboardVO noticeboardvo = dao.getNoticeViewNoAdd(notice_seq);
+		
+		return noticeboardvo;
+	}
+
+	
+	// 공지사항 게시판 글 수정하기 완료하기
+	@Override
+	public int editnoticeboardEnd(NoticeboardVO noticeboardvo) {
+		
+		int n = dao.editnoticeboardEnd(noticeboardvo);
+		
+		return n;
+	}
+	
+	// 공지사항 게시판 글 삭제하기
+	@Override
+	public int delNoticeboard(String notice_seq) {
+		
+		int n = dao.delNoticeboard(notice_seq);
+		
+		return n;
+	}
+
+	// Q&A 게시판 총게시물 개수 구하기
+	@Override
+	public int getQuestionTotalCount(HashMap<String, String> paraMap) {
+
+		int questionTotalCount = dao.getQuestionTotalCount(paraMap);
+		
+		return questionTotalCount;
+	}
+
+	// Q&A 게시판 목록 가져오기
+	@Override
+	public List<QuestionVO> getQuestionboardList(HashMap<String, String> paraMap) {
+		
+		List<QuestionVO> questionboardList = dao.getQuestionboardList(paraMap);
+		
+		return questionboardList;
+	}
+
+	// 첨부파일이 존재하지 않는 Q&A 글쓰기
+	@Override
+	public int addquestion(QuestionVO questionvo) {
+		
+		int n = dao.addquestion(questionvo);
+		
+		return n;
+	}
+
+	// 첨부파일이 존재하는 Q&A 글쓰기
+	@Override
+	public int addquestion_withFile(QuestionVO questionvo) {
+		
+		int n = dao.addquestion_withFile(questionvo);
+		
+		return n;
 	}
 
 	

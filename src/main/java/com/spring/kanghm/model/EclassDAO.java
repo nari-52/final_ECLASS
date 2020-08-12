@@ -136,5 +136,120 @@ public class EclassDAO implements InterEclassDAO{
 		sqlsession.update("kanghm.addViewCount",free_seq);
 		
 	}
+
+	// 공지사항 총게시물 개수 구하기
+	@Override
+	public int getNoticeTotalCount(HashMap<String, String> paraMap) {
+		
+		int noticeTotalCount = sqlsession.selectOne("kanghm.getNoticeTotalCount",paraMap);
+		
+		return noticeTotalCount;
+	}
+
+	// 공지사항 목록 가져오기
+	@Override
+	public List<NoticeboardVO> getNoticeboardList(HashMap<String, String> paraMap) {
+		
+		List<NoticeboardVO> noticeboardList = sqlsession.selectList("kanghm.getNoticeboardList",paraMap);
+		
+		return noticeboardList;
+	}
+
+	// 첨부파일이 존재하지 않는 공지사항 글쓰기
+	@Override
+	public int addNoticeboard(NoticeboardVO noticeboardvo) {
+		
+		int n = sqlsession.insert("kanghm.addNoticeboard", noticeboardvo);
+		
+		return n;
+	}
+
+	// 첨부파일이 존재하는 공지사항 글쓰기
+	@Override
+	public int addNoticeboard_withFile(NoticeboardVO noticeboardvo) {
+		
+		int n = sqlsession.insert("kanghm.addNoticeboard_withFile", noticeboardvo);
+		
+		return n;
+	}
+
+	// 공지사항 조회수 증가하며 글 조회하기
+	@Override
+	public NoticeboardVO getNoticeView(String notice_seq) {
+		
+		NoticeboardVO noticeboardvo = sqlsession.selectOne("kanghm.getNoticeView",notice_seq);
+		
+		return noticeboardvo;
+	}
+
+	// 공지사항 조회수 1증가 시키기
+	@Override
+	public void addNoticeViewCount(String notice_seq) {
+		
+		sqlsession.update("kanghm.addNoticeViewCount",notice_seq);
+	}
+
+	// 공지사항 조회수 증가 없이 글 조회하기
+	@Override
+	public NoticeboardVO getNoticeViewNoAdd(String notice_seq) {
+		
+		NoticeboardVO noticeboardvo = sqlsession.selectOne("kanghm.getNoticeViewNoAdd",notice_seq);
+		
+		return noticeboardvo;
+	}
+
+	// 공지사항 게시판 글 수정하기 완료하기
+	@Override
+	public int editnoticeboardEnd(NoticeboardVO noticeboardvo) {
+		
+		int n = sqlsession.update("kanghm.editnoticeboardEnd",noticeboardvo);
+		
+		return n;
+	}
+
+	// 공지사항 게시판 글 삭제하기
+	@Override
+	public int delNoticeboard(String notice_seq) {
+		
+		int n = sqlsession.update("kanghm.delNoticeboard",notice_seq);
+		
+		return n;
+	}
+
+	// Q&A 게시판 총게시물 개수 구하기
+	@Override
+	public int getQuestionTotalCount(HashMap<String, String> paraMap) {
+		
+		int questionTotalCount = sqlsession.selectOne("kanghm.getQuestionTotalCount",paraMap);
+		
+		return questionTotalCount;
+	}
+
+	// Q&A 게시판 목록 가져오기
+	@Override
+	public List<QuestionVO> getQuestionboardList(HashMap<String, String> paraMap) {
+		
+		List<QuestionVO> questionboardList = sqlsession.selectList("kanghm.getQuestionboardList",paraMap);
+		
+		return questionboardList;
+	}
+
+	// 첨부파일이 존재하지 않는 Q&A 글쓰기
+	@Override
+	public int addquestion(QuestionVO questionvo) {
+
+		int n = sqlsession.insert("kanghm.addquestion", questionvo);
+		
+		return n;
+	}
+
+	// 첨부파일이 존재하는 Q&A 글쓰기
+	@Override
+	public int addquestion_withFile(QuestionVO questionvo) {
+		
+		int n = sqlsession.insert("kanghm.addquestion_withFile", questionvo);
+		
+		return n;
+	}
 	
 }

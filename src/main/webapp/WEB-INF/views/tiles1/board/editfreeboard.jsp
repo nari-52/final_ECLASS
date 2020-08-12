@@ -17,14 +17,14 @@
 		background-color: #fafafa;
 	}
 	
-	table,tr,th,td{
+	tr,th,td{
 		border: solid 1px black;
 		border-collapse: collapse;
 		padding: 20px;
 	}
 	
 	th{
-		width: 150px;
+		width: 200px;
 	}
 </style>
 
@@ -54,7 +54,7 @@
 		
 	   
 	   // 작성버튼
-	      $("#write").click(function(){
+	      $("#edit").click(function(){
 	         
 	    	 <%-- 스마트에디터 --%>
 				//id가 content인 textarea에 에디터에서 대입
@@ -117,25 +117,17 @@
 	         }
 	         
 	         // 폼(form) 을 전송(submit)
-	         var frm = document.addFrm;
+	         var frm = document.editFrm;
 	         frm.method = "POST";
-	         frm.action = "<%= ctxPath%>/board/addquestionboardEnd.up";
+	         frm.action = "<%= ctxPath%>/editfreeboardEnd.up";
 	         frm.submit();
 	      });
-	  			
-	});// end of $(document).ready() -------------------
+	   
+	   
+		
+		
+	});
 
-	function secretChk(){
-		$("input:checkbox[id=secret]").is(":checked");	
-		/* alert($("input:checkbox[id=secret]").is(":checked")); */		
-		if($("input:checkbox[id=secret]").is(":checked")){
-			$(".secret").val("1");
-		}
-		else{
-			$(".secret").val("0");
-		}
-	}
-	
 </script>
 
 
@@ -143,25 +135,24 @@
 <div id ="container"><br>
 	<div id="wholeNotice">
 		<div style="text-align: center;">
-			<h3 style="color: #00BCD4; font-weight: bold;">Q&A</h3>
+			<h3 style="color: #00BCD4; font-weight: bold;">자유게시판</h3>
 		</div>	
 		<br>
 			
 		<div>
-		<form name="addFrm" enctype="multipart/form-data">
+		<form name="editFrm" enctype="multipart/form-data">
 			<table id="table" style="margin: 0 auto; width: 1040px; background-color: white;">
 				<tr>
 					<th>제목</th>
 					<td>
-						<input type="text" size="50" id="title" name="title"/>
-						<input type="checkbox" id="secret" onclick="secretChk();"><label for="secret">비밀글</label>
-						<input type="text" class="secret" name="secret" value="0"> 
+					<input type="hidden" size="50" id="title" name="free_seq" value="${freeboardvo.free_seq}"/>
+					<input type="text" size="50" id="title" name="title" value="${freeboardvo.title}"/>
 					</td>
 				</tr>
 				
 				<tr>
 					<th>작성자</th>
-					<td><input type="text" name="name" value="${sessionScope.loginuser.name}"/></td>
+					<td><input type="text" name="name" value="${freeboardvo.name}" readonly/></td>
 				</tr>
 				
 				<tr>
@@ -176,7 +167,7 @@
 				
 				<tr>
 					<th>내용</th>
-					<td><textarea rows="15" cols="110" id="content" name="content"></textarea></td>
+					<td><textarea rows="15" cols="110" id="content" name="content">${freeboardvo.content}</textarea></td>
 				</tr>
 				
 				<tr>
@@ -190,8 +181,8 @@
 		
 		<br>
 		<div style="margin: 0 auto; width: 300px;">
-			<button type="button" style="width: 140px;" id="write">작성</button>
-			<button type="reset" style="width: 140px;">취소</button>
+			<button type="button" style="width: 140px;" id="edit">수정</button>
+			<button type="button" style="width: 140px;" onclick="javascript:history.back()">취소</button>
 		</div>	
 		<br>		
 	</div>

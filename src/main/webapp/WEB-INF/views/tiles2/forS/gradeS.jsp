@@ -13,9 +13,32 @@
 	display: inline-block;
 	border: solid 0px red;
 	margin: 0 20px;
-	height: 500px;
+	color: gray;
 }
-
+#namecss{
+	color: #00BCD4;
+	font-weight: bold;
+}
+#mainCss{
+	font-size: 15pt;
+	background-color: #FAFAFA;
+	border: solid 1px #00BCD4;
+	padding: 10px;
+	margin-bottom: 10px;
+	width: 600px;
+	text-align: center;
+	border-radius: 10px;
+}
+#tableCss{
+	text-align: center;
+	font-size: 15pt;
+}
+.sidecss {
+	padding: 0 20px;
+}
+.sidecss2 {
+	padding: 0 10px;
+}
 </style>
 <script type="text/javascript">
 
@@ -46,6 +69,9 @@
 			case 'F':
 				total = total+0
 				break;
+			case '-':
+				total = total+0
+				break;
 			}
 		} 
 		
@@ -60,25 +86,27 @@
 </head>
 <body>
 	<div id="test">
-	  <h2>${sessionScope.loginuser.name} 님의 성적</h2>
-		<table id="tblcss" >
+	  <div id="mainCss">
+		<span id="namecss">${sessionScope.loginuser.name}</span>님의 성적
+	  </div>
+		<table id="tableCss">
 			<tr style="background-color: #00BCD4;">
-				<th style="color: white;">교과목명</th>
-				<th style="color: white;">학점</th>
+				<th style="color: white;" class="sidecss">교과목명</th>
+				<th style="color: white;" class="sidecss2">학점</th>
 			</tr>
 			<c:forEach var="GList" items="${gradeList}" varStatus="status" >
 				<tr>
-					<td>${GList.subName}</td>
-					<td id="finalG${status.index}" class="finalG">${GList.finalG}</td>
+					<td class="sidecss">${GList.subName}</td>
+					<td id="finalG${status.index}" class="finalG" class="sidecss2">${GList.finalG}</td>
 				</tr>
 			</c:forEach>
 			<tr>
-				<td style="background-color: #E5E5E5;">총 합계</td>
-				<td id ="Gtotal"></td>
+				<td style="background-color: #E5E5E5;" class="sidecss">총 합계</td>
+				<td id ="Gtotal" class="sidecss2"></td>
 			</tr>
 			<tr>
-				<td style="background-color: #E5E5E5;">학점 평균</td>
-				<td id="average"></td>
+				<td style="background-color: #E5E5E5;" class="sidecss">학점 평균</td>
+				<td id="average" class="sidecss2"></td>
 			</tr>
 		</table>
 	</div>  
