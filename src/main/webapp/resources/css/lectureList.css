@@ -27,7 +27,7 @@
 .lecture-list td {
 	border-bottom: 1px solid #fafafa;
 }
-tr.lectureList:hover {
+tr.lectureDetail:hover {
 	cursor: pointer;
 }
 #tbl-no {

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+
+<!-- #### 중요 #### 
+	 HashMap 타입으로 매개변수를 받아온 것을 꺼내서 사용할때 
+	 1. 데이터로 사용할때는 #{key명} 이고,
+	 2. 식별자(테이블명, 컬럼명)로 사용할때는 ${key명} 이고,
+	 3. myBatis 에서 제공하는 if 엘리먼트나 choose 엘리먼트 안에서 사용할때는 
+	       그냥 <if test="key명"> <when test="key명"> 으로 사용한다.
+-->
+
+<mapper namespace="lecture">
+
+	<!-- 강의 개설하기 -->
+	<insert id="lecture_insert" parameterType="HashMap">		
+		insert into lecture_tbl(lecNum, fk_subSeq, lecTitle, lecLink, lecStartday, lecEndday)
+		values (SEQ_LECSEQ.nextval, #{fk_subSeq}, #{lecTitle}, #{lecLink}, #{lecStartday}, #{lecEndday})		
+	</insert>
+	
+	<!-- 강의 목록 -->
+	<select id="ListSearch" resultType="com.spring.kimej.model.LectureVO">
+	    select lecNum, lecTitle, to_char(lecStartday, 'yyyy-mm-dd') AS lecStartday, to_char(lecEndday, 'yyyy-mm-dd') AS lecEndday, subName, fk_subSeq
+		from lecture_tbl A join subject_tbl B
+		on A.fk_subSeq = B.subSeq
+		where fk_subSeq = #{fk_subSeq}
+		<if test='searchWord != ""'>
+		and lecTitle like '%'|| #{searchWord} ||'%'
+		</if>
+		order by lecNum desc
+	</select>
+	
+	<!-- 강의 상세 페이지 -->
+	<select id="getView" parameterType="String" resultType="com.spring.kimej.model.LectureVO">
+		select lecTitle, lecLink, lecStartday, lecEndday
+		from lecture_tbl
+		where lecNum = #{lecSeq}
+	</select>
+	
+	<!-- 강의 댓글 -->
+	<insert id="addComment" parameterType="com.spring.kimej.model.LectureCommentVO">
+    	insert into lectureComment_tbl(lecComSeq, fk_lecSeq, fk_userid, comContent, writeday)
+        values(seq_lecComSeq.nextval, #{fk_lecSeq}, #{fk_userid}, #{comContent}, default)
+    </insert>
+
+</mapper>

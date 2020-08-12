@@ -73,7 +73,7 @@
 	function goSubmit() {
 		var frm = document.registerFrm;
         frm.method = "POST";
-        frm.action = "<%=ctxPath%>/exam/examRegisterEnd.up";
+        frm.action = "<%=ctxPath%>/lecture/lectureRegisterEnd.up";
         frm.submit(); 
 	}
 
@@ -87,15 +87,15 @@
 	<form id="registerFrm" name="registerFrm">
 		<span id="inputTitle" style="margin-right: 10px;">강의 제목</span><input type="text" name="lecTitle" style="width: 930px;">
 		<br><br>
-		<span id="inputTitle" style="margin-right: 10px;">강의 영상 주소</span>
+		<span id="inputUrl" style="margin-right: 10px;">강의 영상 주소</span>
 		<br>
-		<input type="text" name="lecLink" style="height: 200px; width: 1000px;" />
+		<textarea name="lecLink" placeholder=" 유튜브 url을 입력해주세요.&#13;&#10; ex) https://www.youtube.com/watch?v=0_zT9pFceqs" style="height: 100px; width: 1000px;"></textarea>
 		<br><br>
 		<span id="inputDate" style="margin-right: 10px;">시청 시작 일자</span><input type="text" class="datepicker" name="lecStartday"/>
 		<br><br>
 		<span id="inputDate" style="margin-right: 10px;">시청 마감 일자</span><input type="text" class="datepicker" name="lecEndday"/>
 		<br><br><div>--------------------- 여기밑에부터 hidden ---------------------</div><br>
-		<span style="margin-right: 10px;">교과목시퀀스</span><input type="text" name="subSeq" />
+		<span style="margin-right: 10px;">교과목시퀀스</span><input type="text" name="fk_subSeq" />
 	</form>
 	
 	<div id="buttons">

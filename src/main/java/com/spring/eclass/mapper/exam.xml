@@ -10,5 +10,23 @@
 		insert into exam(exam_seq, subSeq, userid, examTitle, examDate)
 		values(seq_exam_seq.nextval, #{subSeq}, #{userid}, #{examTitle}, #{examDate})
 	</insert>
+	
+	<select id="exam_select" parameterType="String" resultType="com.spring.kimej.model.ExamVO">
+		select exam_seq
+		from exam
+		where examTitle = #{examTitle}
+	</select>
+	
+	<insert id="question_insert" parameterType="HashMap">
+		insert into examQuestion(question_seq, exam_seq, question, answer)
+		values(seq_question_seq.nextval, #{exam_seq}, #{question}, #{answer})
+	</insert>
+	
+	<select id="questionList" parameterType="String" resultType="com.spring.kimej.model.ExamQuestionVO">
+		select question_seq, question, answer
+		from examQuestion
+		where exam_seq = #{exam_seq}
+		order by question_seq desc
+	</select>
 
 </mapper>

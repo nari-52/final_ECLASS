@@ -15,12 +15,27 @@ public class DonStoryVO {
 	private String totalPayment;    //후원총액
 	private String totalSupporter;  //후원총인원
 	
+	private String donImgseq; //후원이미지 번호
+	private String fk_donSeq; //후원글번호 
+	private String donImg; 
+	
+	private String dDay; //후원 종료날짜 
+	
+	//결제하기에서 가져옴 
+	private String name; 
+	private String payment;
+	private String point;
+	private String noName;
+	private String noDonpmt;
+	private String showDate; // 후원결제후 경과 시간 
+	private String sumPayment; //회원의 총후원금액(포인트+결제) 	
 	
 	public DonStoryVO() {};
 	
 	public DonStoryVO(String donseq, String subject, String content, String listMainImg, String storyImg, String donCnt,
 			String donDate, String donDueDate, String donStatus, String targetAmount, String totalPayment,
-			String totalSupporter) {
+			String totalSupporter, String donImgseq, String fk_donSeq, String donImg, String dDay, String name,
+			String payment, String point, String noName, String noDonpmt, String showDate, String sumPayment) {
 		super();
 		this.donseq = donseq;
 		this.subject = subject;
@@ -34,8 +49,27 @@ public class DonStoryVO {
 		this.targetAmount = targetAmount;
 		this.totalPayment = totalPayment;
 		this.totalSupporter = totalSupporter;
+		this.donImgseq = donImgseq;
+		this.fk_donSeq = fk_donSeq;
+		this.donImg = donImg;
+		this.dDay = dDay;
+		this.name = name;
+		this.payment = payment;
+		this.point = point;
+		this.noName = noName;
+		this.noDonpmt = noDonpmt;
+		this.showDate = showDate;
+		this.sumPayment = sumPayment;
 	}
-	
+
+	public String getdDay() {
+		return dDay;
+	}
+
+	public void setdDay(String dDay) {
+		this.dDay = dDay;
+	}
+
 	public String getDonseq() {
 		return donseq;
 	}
@@ -108,7 +142,79 @@ public class DonStoryVO {
 	public void setTotalSupporter(String totalSupporter) {
 		this.totalSupporter = totalSupporter;
 	}
+	public String getDonImgseq() {
+		return donImgseq;
+	}
+	public void setDonImgseq(String donImgseq) {
+		this.donImgseq = donImgseq;
+	}
+	public String getFk_donSeq() {
+		return fk_donSeq;
+	}
+	public void setFk_donSeq(String fk_donSeq) {
+		this.fk_donSeq = fk_donSeq;
+	}
+	public String getDonImg() {
+		return donImg;
+	}
+	public void setDonImg(String donImg) {
+		this.donImg = donImg;
+	}
 
-	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPayment() {
+		return payment;
+	}
+
+	public void setPayment(String payment) {
+		this.payment = payment;
+	}
+
+	public String getPoint() {
+		return point;
+	}
+
+	public void setPoint(String point) {
+		this.point = point;
+	}
+
+	public String getNoName() {
+		return noName;
+	}
+
+	public void setNoName(String noName) {
+		this.noName = noName;
+	}
+
+	public String getNoDonpmt() {
+		return noDonpmt;
+	}
+
+	public void setNoDonpmt(String noDonpmt) {
+		this.noDonpmt = noDonpmt;
+	}
+
+	public String getShowDate() {
+		return showDate;
+	}
+
+	public void setShowDate(String showDate) {
+		this.showDate = showDate;
+	}
+
+	public String getSumPayment() {
+		return sumPayment;
+	}
+
+	public void setSumPayment(String sumPayment) {
+		this.sumPayment = sumPayment;
+	}
 	
 }

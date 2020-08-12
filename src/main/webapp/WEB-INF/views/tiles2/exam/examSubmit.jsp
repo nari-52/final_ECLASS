@@ -11,7 +11,18 @@
 
 <script>
 
+	$(document).ready(function(){
+		
+		
+		
+	});
 
+	$("#submit").click(function(){
+	    var frm = document.registerFrm;
+	    frm.method = "POST";
+	    frm.action = "<%=ctxPath%>/exam/examSubmitEnd.up";
+	    frm.submit();	
+	});
 
 </script>
 
@@ -19,11 +30,18 @@
 
 	<div id="register-title">시험 제출</div>
 	
-	<form id="registerFrm" name="registerFrm">
-		<div id="view"></div>
-	</form>
+	<div id="view">
+		<c:if test="${not empty questionList}">
+			<c:forEach var="questionvo" items="${questionList}">
+				<input type="text" value="${questionList.question}">
+				<input type="text" value="${questionList.answer}">
+			</c:forEach>
+		</c:if>
+	</div>
 	
-	<input type="hidden" name="examG">;
+	<form id="registerFrm" name="registerFrm">
+		<input type="hidden" name="examG"><%-- 시험 점수 --%>
+	</form>
 	
 	<div id="buttons">
 		<button type="button" onclick="goSubmit();">제출</button>

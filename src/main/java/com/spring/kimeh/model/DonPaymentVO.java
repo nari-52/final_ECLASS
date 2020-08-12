@@ -9,11 +9,12 @@ public class DonPaymentVO {
 	private String noDonpmt;	//금액 비공개(Flag)
 	private String paymentDate; //결제날짜 
 	private String payment;     //결제금액 	
+	private String point; 		//포인트 사용액 
 	
 	public DonPaymentVO() {};
 	
 	public DonPaymentVO(String fk_donSeq, String fk_userid, String name, String noName, String noDonpmt,
-			String paymentDate, String payment) {
+			String paymentDate, String payment, String point) {
 		super();
 		this.fk_donSeq = fk_donSeq;
 		this.fk_userid = fk_userid;
@@ -22,7 +23,10 @@ public class DonPaymentVO {
 		this.noDonpmt = noDonpmt;
 		this.paymentDate = paymentDate;
 		this.payment = payment;
+		this.point = point;
 	}
+
+
 
 	public String getFk_donSeq() {
 		return fk_donSeq;
@@ -79,6 +83,15 @@ public class DonPaymentVO {
 	public void setPayment(String payment) {
 		this.payment = payment;
 	}
+
+	public String getPoint() {
+		return point;
+	}
+	
+	public void setPoint(String point) {
+		this.point = point;
+	}
+
 	
 	
 }

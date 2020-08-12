@@ -9,15 +9,19 @@ public class LectureVO {
 	private String lecStartday;
 	private String lecEndday;
 	
+	private String subName;
+	// 교과목 명
+	
 	public LectureVO() {}
 	
-	public LectureVO(String lecSeq, String fk_subSeq, String lecTitle, String lecLink, String lecStartday, String lecEndday) {
+	public LectureVO(String lecSeq, String fk_subSeq, String lecTitle, String lecLink, String lecStartday, String lecEndday, String subName) {
 		this.lecSeq = lecSeq;
 		this.fk_subSeq = fk_subSeq;
 		this.lecTitle = lecTitle;
 		this.lecLink = lecLink;
 		this.lecStartday = lecStartday;
 		this.lecEndday = lecEndday;
+		this.subName = subName;
 	}
 
 	public String getLecSeq() {
@@ -67,7 +71,14 @@ public class LectureVO {
 	public void setLecEndday(String lecEndday) {
 		this.lecEndday = lecEndday;
 	}
-	
+
+	public String getSubName() {
+		return subName;
+	}
+
+	public void setSubName(String subName) {
+		this.subName = subName;
+	}
 	
 
 }

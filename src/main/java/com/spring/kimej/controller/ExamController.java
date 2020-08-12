@@ -1,8 +1,10 @@
 package com.spring.kimej.controller;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,7 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.kimej.model.ExamQuestionVO;
+import com.spring.kimej.model.ExamVO;
 import com.spring.kimej.service.InterExamService;
+import com.spring.nari.model.MemberVO;
 
 
 //=== #30. 컨트롤러 선언 === 
@@ -23,7 +28,7 @@ import com.spring.kimej.service.InterExamService;
 @Controller
 public class ExamController {
 
-	// === #35. 의존객체 주입하기(DI: Dependency Injection) ===
+	// 의존객체 주입하기(DI: Dependency Injection)
 	@Autowired
 	private InterExamService service;
 	
@@ -38,8 +43,11 @@ public class ExamController {
 	@RequestMapping(value="/exam/examRegisterEnd.up")
 	public ModelAndView examRegisterEnd(HttpServletRequest request, ModelAndView mav) {		
 		
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+		
 		String subSeq = request.getParameter("subSeq");
-		String userid = request.getParameter("userid"); // session에서 loginuser받아오기
+		String userid = loginuser.getUserid();
 		String examTitle = request.getParameter("examTitle");
 		String examDate = request.getParameter("examDate");
 		
@@ -52,29 +60,82 @@ public class ExamController {
 		int n = service.exam_insert(paraMap);
 		
 		if (n>0) {
-			mav.setViewName("exam/examWrite.tiles2"); // 교수 마이페이지로 수정
+			
+			ExamVO examvo = service.exam_select(examTitle);
+			
+			mav.addObject("examvo", examvo);
+			mav.setViewName("exam/examWrite.tiles2");
+			// 시험 문제 출제 페이지로 이동
 		}
 		else {
-			mav.setViewName("exam/examRegister.tiles2");
+			mav.setViewName("exam/examRegister.tiles2"); // 교수 마이페이지로 수정
 		}
 		
 		return mav;
 	}
 	
-	// 시험 출제 페이지 보여주기 (교수가 시험 문제랑 정답 출제하는 것)
+	// 시험 문제 출제 페이지 보여주기 (교수가 시험 문제랑 정답 출제하는 것)
 	@RequestMapping(value="/exam/examWrite.up")
 	public ModelAndView examWrite(ModelAndView mav) {		
 		mav.setViewName("exam/examWrite.tiles2");		
 		return mav;
 	}
 	
-	// 시험 제출 페이지 보여주기 (학생이 시험 제출하는 것)
-	@RequestMapping(value="/exam/examSubmit.up")
-	public ModelAndView examSubmit(ModelAndView mav) {		
-		mav.setViewName("exam/examSubmit.tiles1");		
+	// 시험 문제 출제 페이지 !!완료!! 보여주기 (교수가 시험 문제랑 정답 출제하는 것)
+	@RequestMapping(value="/exam/examWriteEnd.up")
+	public ModelAndView examWriteEnd(HttpServletRequest request, ModelAndView mav) {
+				
+		String sQuestion = request.getParameter("sQuestion");
+		String sAnswer = request.getParameter("sAnswer");
+		String exam_seq = request.getParameter("exam_seq");
+		
+		String[] arrQuestion = sQuestion.split(",");
+		String[] arrAnswer = sAnswer.split(",");
+		
+		for (int i=0; i<arrQuestion.length; i++) {
+			HashMap<String,String> paraMap = new HashMap<>();
+			paraMap.put("question", arrQuestion[i]);
+			paraMap.put("answer", arrAnswer[i]);
+			paraMap.put("exam_seq", exam_seq);
+			
+			int n = service.question_insert(paraMap);
+		}
+		
+		mav.setViewName("exam/examSubmit.tiles2");
+		// 교수 마이페이지로 수정하기
+		
 		return mav;
 	}
 	
+
+	
+	//////////////////////////////////// 미완성. 0811 ////////////////////////////////////
+	/*
+	
+	// 시험 제출 페이지 보여주기 (학생이 시험 제출하는 것)
+	@RequestMapping(value="/exam/examSubmit.up")
+	public ModelAndView examSubmit(HttpServletRequest request, ModelAndView mav) {
+		
+		String exam_seq = request.getParameter("exam_seq");
+		List<ExamQuestionVO> questionList = service.questionList(exam_seq);
+		
+		mav.addObject("questionList", questionList);
+		mav.setViewName("exam/examSubmit.tiles2");		
+		return mav;
+	}
+	
+	
+	// 시험 제출 페이지 !!완료!! 보여주기 (학생이 시험 제출하는 것)
+	@RequestMapping(value="/exam/examSubmitEnd.up")
+	public ModelAndView examSubmitEnd(HttpServletRequest request, ModelAndView mav) {
+		
+		String examG = request.getParameter("examG");
+		
+		mav.setViewName("exam/examSubmit.tiles2");		
+		return mav;
+	}
+	
+	*/
 	
 	
 	

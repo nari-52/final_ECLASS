@@ -1,79 +1,77 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-    
+    pageEncoding="UTF-8"%>    
 <%	String ctxPath = request.getContextPath(); %>
 
 <link rel="stylesheet" type="text/css" href="<%=ctxPath%>/resources/css/reset.css" />
 <link rel="stylesheet" type="text/css" href="<%=ctxPath%>/resources/css/examWrite.css" />
 
 <script>
-
-	var cnt = 0;
-
-	document.addEventListener("DOMContentLoaded", function(event) { 
+	
+	$(document).ready(function(){
 		
-		var plusQ = document.getElementById("plusQ");
-		
-		plusQ.addEventListener('click', function() {
-			cnt = document.getElementById("cnt").value;
-			makeQ(cnt);		
-		});
-		
-		var submit = document.getElementById("submit");
-		
-		submit.addEventListener('click', function() {
-			cnt = document.getElementById("cnt").value;
+		$("#submit").click(function(){
 			
-			var questionArr = document.getElementsByClassName("question");
-			var answerArr = document.getElementsByClassName("answer");
+			var questionArr = new Array();
+			var answerArr = new Array();
 			
-			for(var i=0; i<questionArr.length; i++) {
-				console.log(questionArr[i]+answerArr[i]);
+			for(var i=0; i<7; i++) {
+				questionArr.push($(".question").eq(i).val());
+				answerArr.push($(".answer").eq(i).val());
 			}
-			
-			console.log(questionArr);
-			console.log(answerArr);
-			
 			var sQuestion = questionArr.join();
 			var sAnswer = answerArr.join();
 			
-			document.getElementById("sQuestion").value = sQuestion;
-			document.getElementById("sAnswer").value = sAnswer;
-			
+			$("input:hidden[name=sQuestion]").val(sQuestion);
+            $("input:hidden[name=sAnswer]").val(sAnswer);
+            
+            var frm = document.registerFrm;
+            frm.method = "POST";
+            frm.action = "<%=ctxPath%>/exam/examWriteEnd.up";
+            frm.submit(); 
+
 		});
 		
 	});
 
-	function makeQ(cnt) {
-		
-		var html = "";
-		var goplus = document.getElementById("goplus");
-		
-		for(var i=0; i<cnt; i++) {			
-			html += "<br><br><div class='border-line-box'></div><br><span>문제 </span><input type='text' class='question' name='question' style='height: 40px; width: 1000px;'>";
-			html += "<br><br>";
-			html += "<span>정답 </span><input type='text' class='answer' name='answer' style='height: 40px; width: 1000px;'/>";
-		}
-		
-		goplus.innerHTML = html;
-		
-	}
-
 </script>
 
-<div id="contentsWrap" style="width: 1080px; margin: 0 auto;">
+<div id="contentsWrap">
 
 	<div id="register-title">시험 문제 출제</div>
-	<br>
-	문항수 : <input type="text" id="cnt"><button type="button" id="plusQ">문제 추가</button>
 	<br><br>
+	
 	<form id="registerFrm" name="registerFrm">
-		<div id="goplus"></div>
-		<input type="text" id="sQuestion" name="sQuestion">
-		<input type="text" id="sAnswer" name="sAnswer">
+		<span>1번 문제&nbsp;&nbsp;</span><input type='text' class='question' name='question' style='height: 40px; width: 700px;'>
+		<br><br>
+		<span>1번 정답&nbsp;&nbsp;</span><input type='text' class='answer' name='answer' style='height: 40px; width: 700px;'/>
+		<br><br><div class='border-line-box'></div><br>
+		<span>2번 문제&nbsp;&nbsp;</span><input type='text' class='question' name='question' style='height: 40px; width: 700px;'>
+		<br><br>
+		<span>2번 정답&nbsp;&nbsp;</span><input type='text' class='answer' name='answer' style='height: 40px; width: 700px;'/>
+		<br><br><div class='border-line-box'></div><br>
+		<span>3번 문제&nbsp;&nbsp;</span><input type='text' class='question' name='question' style='height: 40px; width: 700px;'>
+		<br><br>
+		<span>3번 정답&nbsp;&nbsp;</span><input type='text' class='answer' name='answer' style='height: 40px; width: 700px;'/>
+		<br><br><div class='border-line-box'></div><br>
+		<span>4번 문제&nbsp;&nbsp;</span><input type='text' class='question' name='question' style='height: 40px; width: 700px;'>
+		<br><br>
+		<span>4번 정답&nbsp;&nbsp;</span><input type='text' class='answer' name='answer' style='height: 40px; width: 700px;'/>
+		<br><br><div class='border-line-box'></div><br>
+		<span>5번 문제&nbsp;&nbsp;</span><input type='text' class='question' name='question' style='height: 40px; width: 700px;'>
+		<br><br>
+		<span>5번 정답&nbsp;&nbsp;</span><input type='text' class='answer' name='answer' style='height: 40px; width: 700px;'/>
+		<br><br><div class='border-line-box'></div><br>
+		<span>6번 문제&nbsp;&nbsp;</span><input type='text' class='question' name='question' style='height: 40px; width: 700px;'>
+		<br><br>
+		<span>6번 정답&nbsp;&nbsp;</span><input type='text' class='answer' name='answer' style='height: 40px; width: 700px;'/>
+		<br><br><div class='border-line-box'></div><br>
+		<span>7번 문제&nbsp;&nbsp;</span><input type='text' class='question' name='question' style='height: 40px; width: 700px;'>
+		<br><br>
+		<span>7번 정답&nbsp;&nbsp;</span><input type='text' class='answer' name='answer' style='height: 40px; width: 700px;'/>
+		
+		<input type="hidden" id="sQuestion" name="sQuestion">
+		<input type="hidden" id="sAnswer" name="sAnswer">
+		<input type="hidden" id="exam_seq" name="exam_seq" value="${examvo.exam_seq}">
 	</form>
 	
 	<div id="buttons">
@@ -84,8 +82,3 @@
 	<div style="clear: both; margin-bottom: 50px;"></div>
 
 </div>
-
-
-
-
-
