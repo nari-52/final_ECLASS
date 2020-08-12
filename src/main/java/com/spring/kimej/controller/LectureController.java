@@ -57,7 +57,7 @@ public class LectureController {
 		    mav.addObject("subjectList", subjectList);
 	    }
 	    if("2".equals(identity)) {	    	
-		    mav.addObject("subjectList", subjectListforP);
+		    mav.addObject("subjectListforP", subjectListforP);
 	    }
 	    
 		mav.setViewName("lecture/myLecture.tiles1");
@@ -66,16 +66,19 @@ public class LectureController {
 	
 	// 강의 등록 페이지 보여주기 (교수용)
 	@RequestMapping(value="/lecture/lectureRegister.up")
-	public ModelAndView lectureRegister(ModelAndView mav) {		
+	public ModelAndView lectureRegister(HttpServletRequest request, ModelAndView mav) {
+		String fk_subSeq = request.getParameter("fk_subSeq");
+		mav.addObject("fk_subSeq", fk_subSeq);
 		mav.setViewName("lecture/lectureRegister.tiles1");		
 		return mav;
 	}
 	
 	// 강의 등록 !!완료!! 페이지 보여주기 (교수용)
 	@RequestMapping(value="/lecture/lectureRegisterEnd.up")
-	public String lectureRegisterEnd(HttpServletRequest request) {
+	public String lectureRegisterEnd(HttpServletRequest request, ModelAndView mav) {
 		
 		String fk_subSeq = request.getParameter("fk_subSeq");
+		String lecNum = request.getParameter("lecNum");
 		String lecTitle = request.getParameter("lecTitle");
 		String lecLink = request.getParameter("lecLink");
 		String lecStartday = request.getParameter("lecStartday");
@@ -83,6 +86,7 @@ public class LectureController {
 		
 		HashMap<String,String> paraMap = new HashMap<>();
 		paraMap.put("fk_subSeq", fk_subSeq);
+		paraMap.put("lecNum", lecNum);
 		paraMap.put("lecTitle", lecTitle);
 		paraMap.put("lecLink", lecLink);
 		paraMap.put("lecStartday", lecStartday);
@@ -91,13 +95,14 @@ public class LectureController {
 		int n = service.lecture_insert(paraMap);
 		
 		if (n>0) {
-			return "redirect:/lecture/lectureList.up";
+			return "redirect:/lecture/lectureList.up?fk_subSeq="+fk_subSeq;
 			// 강의 목록 페이지로 이동
 		}
 		else {
-			return "redirect:/mypageMain.up";
+			return "javascript:history.back()";
 			// 교수 마이페이지로 이동하는 걸로 수정
 		}
+		
 	}
 	
 	// 강의 목록 페이지 보여주기 (차수,제목)
@@ -105,7 +110,7 @@ public class LectureController {
 	public ModelAndView lectureList(ModelAndView mav, HttpServletRequest request) {
 		
 		String searchWord = request.getParameter("searchWord");
-		String fk_subSeq = request.getParameter("fk_subseq");
+		String fk_subSeq = request.getParameter("fk_subSeq");
 		
 		if(searchWord == null || searchWord.trim().isEmpty()) {
 			searchWord = "";
@@ -121,7 +126,7 @@ public class LectureController {
 			mav.addObject("paraMap", paraMap);
 		}
 		
-		mav.addObject("lectureList",lectureList);
+		mav.addObject("lectureList", lectureList);
 		mav.setViewName("lecture/lectureList.tiles1");		
 		return mav;
 		

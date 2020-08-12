@@ -21,9 +21,8 @@
 	}); //////////////////////////////////////////////////////////////////////////////////////
 	
 	function goView(lecSeq){
-		var frm = document.goViewFrm;
+		var frm = document.goFrm;
 		frm.lecSeq.value = lecSeq;
-		
 		frm.method="GET";
 		frm.action="<%=ctxPath%>/lecture/lectureDetail.up";
 		frm.submit();		 
@@ -36,6 +35,7 @@
 		frm.action = "<%=ctxPath%>/lecture/lectureList.up";
 		frm.submit();
 	} // end of function goSearch()-------------------------
+	
 
 </script>
 
@@ -67,7 +67,7 @@
 			<tbody>
 				<c:forEach var="lecturevo" items="${lectureList}">
 					<tr class="lectureDetail">
-						<td id="tbl-no" class="seq">${lecturevo.lecSeq}</td>
+						<td id="tbl-no" class="num">${lecturevo.lecNum}</td>
 						<td id="tbl-title"><span class="subject" onclick="goView('${lecturevo.lecSeq}')">${lecturevo.lecTitle}</span></td>
 						<td id="tbl-day">${lecturevo.lecStartday} ~ ${lecturevo.lecEndday}</td>
 					</tr>
@@ -76,7 +76,7 @@
 		</table>
 	</div>
 	
-	<form name="goViewFrm">
+	<form name="goFrm">
 		<input type="hidden" name="lecSeq"/>
 	</form>
 

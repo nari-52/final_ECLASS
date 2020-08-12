@@ -29,8 +29,8 @@ public class LectureService implements InterLectureService {
 	// 강의 목록 페이지 보여주기 (차수,제목)
 	@Override
 	public List<LectureVO> lectureListSearch(HashMap<String, String> paraMap) {
-		List<LectureVO> boardList = dao.lectureListSearch(paraMap);
-		return boardList;
+		List<LectureVO> lectureList = dao.lectureListSearch(paraMap);
+		return lectureList;
 	}
 
 	// 강의 상세 페이지 보여주기 (유튜브영상, 댓글)

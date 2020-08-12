@@ -236,8 +236,8 @@
 					<%-- <input type="hidden" name="identity" id="identity" value="${identity}"/> --%>
 					<div id="mailbtn">인증번호 받기</div>
 					
-					<input type="text" id="useridcheck" value="${SessionScope.loginuser.userid}" /> <!-- 로그인 세션에서 불러와도 될듯 -->
-					<input type="text" id="pwdcheck" value="${SessionScope.loginuser.pwd}" />
+					<input type="text" id="useridcheck" value="${sessionScope.loginuser.userid}" /> <!-- 로그인 세션에서 불러와도 될듯 -->
+					<input type="text" id="pwdcheck" value="${sessionScope.loginuser.pwd}" />
 
 					
 					<div id="delMemberbtn" >회원 탈퇴하기</div>

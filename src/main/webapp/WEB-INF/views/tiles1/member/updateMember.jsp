@@ -300,15 +300,7 @@
 			}
 		});
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
 		
 		// 이메일 수정 불가 -------------------------------
 		$("#email").mouseover(function(){ 
@@ -372,14 +364,7 @@
 		});
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
+
 		
 		$("#goRegister").click(function(){ 
 			
@@ -405,41 +390,12 @@
 	<div id="signuptitle">
 		<section>
 			<div id="signup_head">
-				<h1 id="head_main">회원가입</h1>
+				<h1 id="head_main">회원정보 수정</h1>
 			</div>
 		</section>	
 	</div>
 	
 	<div id="signupcontent">
-		<div id="processBar">
-			<ul class="processBar">
-				<li class="processBar currentProcess ">
-					<div class="pracessTitle">step 01</div>
-					<div class="processContent">약관동의</div>
-				</li>
-				<li class="processBar">
-					<img src="/eclass/resources/images/nari/process_arrow.png" />
-				</li>
-				<li class="processBar currentProcess">
-					<div class="pracessTitle">step 02</div>
-					<div class="processContent">본인인증</div>
-				</li>
-				<li class="processBar">
-					<img src="/eclass/resources/images/nari/process_arrow.png" />
-				</li>
-				<li class="processBar currentProcess currentstep">
-					<div class="pracessTitle">step 03</div>
-					<div class="processContent">정보입력</div>
-				</li>
-				<li class="processBar">
-					<img src="/eclass/resources/images/nari/process_arrow.png" />
-				</li>
-				<li class="processBar currentProcess">
-					<div class="pracessTitle">step 04</div>
-					<div class="processContent">가입완료</div>
-				</li>
-			</ul>
-		</div>
 		<br/>
 	
 		

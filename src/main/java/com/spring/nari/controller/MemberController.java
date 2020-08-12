@@ -629,6 +629,14 @@ public class MemberController {
 		return mav;
 	}
 	
+	// 회원정보  수정하기 페이지 보여주기
+	@RequestMapping (value="/member/updateMember.up")
+	public ModelAndView updateMember(HttpServletRequest request, ModelAndView mav) {
+		
+		mav.setViewName("/member/updateMember.tiles1");
+		
+		return mav;
+	}
 	
 				
 				

@@ -85,6 +85,8 @@
 	<div id="register-title">강의 등록</div>
 	
 	<form id="registerFrm" name="registerFrm">
+		<span id="inputTitle" style="margin-right: 10px;">강의 차수</span><input type="text" name="lecNum" style="width: 100px;">
+		<br><br>
 		<span id="inputTitle" style="margin-right: 10px;">강의 제목</span><input type="text" name="lecTitle" style="width: 930px;">
 		<br><br>
 		<span id="inputUrl" style="margin-right: 10px;">강의 영상 주소</span>
@@ -93,9 +95,8 @@
 		<br><br>
 		<span id="inputDate" style="margin-right: 10px;">시청 시작 일자</span><input type="text" class="datepicker" name="lecStartday"/>
 		<br><br>
-		<span id="inputDate" style="margin-right: 10px;">시청 마감 일자</span><input type="text" class="datepicker" name="lecEndday"/>
-		<br><br><div>--------------------- 여기밑에부터 hidden ---------------------</div><br>
-		<span style="margin-right: 10px;">교과목시퀀스</span><input type="text" name="fk_subSeq" />
+		<span id="inputDate" style="margin-right: 10px;">시청 마감 일자</span><input type="text" class="datepicker" name="lecEndday"/>		
+		<input type="hidden" name="fk_subSeq" value="${fk_subSeq}"/>
 	</form>
 	
 	<div id="buttons">

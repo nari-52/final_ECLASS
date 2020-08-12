@@ -28,8 +28,13 @@
 	}
 	
 	// 강의목록으로 이동
-	function goLectureList() {
-		location.href="<%=ctxPath%>/lecture/lectureList.up";
+		function goLectureList(fk_subSeq){
+		var frm = document.goViewFrm;
+		frm.fk_subSeq.value = fk_subSeq;
+		
+		frm.method="GET";
+		frm.action="<%=request.getContextPath()%>/lecture/lectureList.up";
+		frm.submit();		 
 	}
 	
 	// === 댓글쓰기 === //
@@ -181,13 +186,13 @@
 	
 	<div id="lecture-youtube"><%-- 유튜브 영상이 들어오는 곳 --%></div>
 	
-	<button id="goList" type="button" onclick="goLectureList();">강의목록</button>
+	<button id="goList" type="button" onclick="goLectureList('${lecturevo.fk_subSeq}');">강의목록</button>
 
 	<div class="lecture-comment">	
 	
     	<form name="commentFrm">
 	   		<div style="margin-bottom: 10px;">댓글 작성&nbsp;(<span id="counting">0</span>자)</div>
-	   		<div><input type="text" value="${sessionScope.loginuser}" readonly/></div>
+	   		<div><input type="text" value="아이디들어오기" readonly/></div>
 			<div class="commentContent">
 				<textarea name="comContent" id="comContent" placeholder=" 댓글 내용을 작성해주세요." onkeyup="counter()" required></textarea>
 				<!-- 댓글에 달리는 원게시물 글번호(즉, 댓글의 부모글 글번호) -->
@@ -202,7 +207,10 @@
 		<!-- 댓글 페이징 처리 -->
     	<div id="pageBar" style="border:solid 0px gray; width: 70%; margin: 10px auto; text-align: center;"></div>
     	
-
 	</div>
+	
+	<form name="goViewFrm">
+		<input type="hidden" name="fk_subSeq"/>
+	</form>
 
 </div>

@@ -17,27 +17,27 @@
 
 	<!-- 강의 개설하기 -->
 	<insert id="lecture_insert" parameterType="HashMap">		
-		insert into lecture_tbl(lecNum, fk_subSeq, lecTitle, lecLink, lecStartday, lecEndday)
-		values (SEQ_LECSEQ.nextval, #{fk_subSeq}, #{lecTitle}, #{lecLink}, #{lecStartday}, #{lecEndday})		
+		insert into lecture_tbl(lecSeq, lecNum, fk_subSeq, lecTitle, lecLink, lecStartday, lecEndday)
+		values (SEQ_LECSEQ.nextval, #{lecNum}, #{fk_subSeq}, #{lecTitle}, #{lecLink}, #{lecStartday}, #{lecEndday})		
 	</insert>
 	
 	<!-- 강의 목록 -->
 	<select id="ListSearch" resultType="com.spring.kimej.model.LectureVO">
-	    select lecNum, lecTitle, to_char(lecStartday, 'yyyy-mm-dd') AS lecStartday, to_char(lecEndday, 'yyyy-mm-dd') AS lecEndday, subName, fk_subSeq
+	    select lecSeq, lecNum, lecTitle, to_char(lecStartday, 'yyyy-mm-dd') AS lecStartday, to_char(lecEndday, 'yyyy-mm-dd') AS lecEndday, subName, fk_subSeq
 		from lecture_tbl A join subject_tbl B
 		on A.fk_subSeq = B.subSeq
 		where fk_subSeq = #{fk_subSeq}
 		<if test='searchWord != ""'>
 		and lecTitle like '%'|| #{searchWord} ||'%'
 		</if>
-		order by lecNum desc
+		order by lecSeq desc
 	</select>
 	
 	<!-- 강의 상세 페이지 -->
 	<select id="getView" parameterType="String" resultType="com.spring.kimej.model.LectureVO">
-		select lecTitle, lecLink, lecStartday, lecEndday
+		select lecTitle, lecLink, lecStartday, lecEndday, fk_subSeq
 		from lecture_tbl
-		where lecNum = #{lecSeq}
+		where lecSeq = #{lecSeq}
 	</select>
 	
 	<!-- 강의 댓글 -->
