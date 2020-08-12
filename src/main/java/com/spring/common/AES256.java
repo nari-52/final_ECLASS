@@ -11,24 +11,26 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 
-// === #43. 양방향 암호화 알고리즘인 AES256 암호화를 지원하는 클래스 생성하기=== //
-//			bean으로 올리기 위해서는 기본생성자가 있어야 한다.
-// 			(기본 생성자가 없으므로 @Component를 쓰면 오류가 발생한다.
-//			 그래서 servlet-context.xml 파일에 직접 파라미터가 있는 생성자로 bean 등록을 해주었다.)
+// === #43. �뼇諛⑺뼢 �븫�샇�솕 �븣怨좊━利섏씤 AES256 �븫�샇�솕瑜� 吏��썝�븯�뒗 �겢�옒�뒪 �깮�꽦�븯湲�=== //
+//			bean�쑝濡� �삱由ш린 �쐞�빐�꽌�뒗 湲곕낯�깮�꽦�옄媛� �엳�뼱�빞 �븳�떎.
+// 			(湲곕낯 �깮�꽦�옄媛� �뾾�쑝誘�濡� @Component瑜� �벐硫� �삤瑜섍� 諛쒖깮�븳�떎.
+//			 洹몃옒�꽌 servlet-context.xml �뙆�씪�뿉 吏곸젒 �뙆�씪誘명꽣媛� �엳�뒗 �깮�꽦�옄濡� bean �벑濡앹쓣 �빐二쇱뿀�떎.)
 
 
 /**
- * 양방향 암호화 알고리즘인 AES256 암호화를 지원하는 클래스
+ * �뼇諛⑺뼢 �븫�샇�솕 �븣怨좊━利섏씤 AES256 �븫�샇�솕瑜� 吏��썝�븯�뒗 �겢�옒�뒪
  */
 public class AES256 {
     private String iv;
     private Key keySpec;
 
     /**
-     * 16자리의 키값을 입력하여 객체를 생성한다.
-     * @param key 암호화/복호화를 위한 키값
-     * @throws UnsupportedEncodingException 키값의 길이가 16이하일 경우 발생
+     * 16�옄由ъ쓽 �궎媛믪쓣 �엯�젰�븯�뿬 媛앹껜瑜� �깮�꽦�븳�떎.
+     * @param key �븫�샇�솕/蹂듯샇�솕瑜� �쐞�븳 �궎媛�
+     * @throws UnsupportedEncodingException �궎媛믪쓽 湲몄씠媛� 16�씠�븯�씪 寃쎌슦 諛쒖깮
      */
+    
+    // 가나다가나다
     public AES256(String key) throws UnsupportedEncodingException {
         this.iv = key.substring(0, 16);
         byte[] keyBytes = new byte[16];
@@ -44,8 +46,8 @@ public class AES256 {
     }
 
     /**
-     * AES256 으로 암호화 한다.
-     * @param str 암호화할 문자열
+     * AES256 �쑝濡� �븫�샇�솕 �븳�떎.
+     * @param str �븫�샇�솕�븷 臾몄옄�뿴
      * @return
      * @throws NoSuchAlgorithmException
      * @throws GeneralSecurityException
@@ -60,8 +62,8 @@ public class AES256 {
     }
 
     /**
-     * AES256으로 암호화된 txt 를 복호화한다.
-     * @param str 복호화할 문자열
+     * AES256�쑝濡� �븫�샇�솕�맂 txt 瑜� 蹂듯샇�솕�븳�떎.
+     * @param str 蹂듯샇�솕�븷 臾몄옄�뿴
      * @return
      * @throws NoSuchAlgorithmException
      * @throws GeneralSecurityException
