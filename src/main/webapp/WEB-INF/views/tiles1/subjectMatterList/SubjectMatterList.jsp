@@ -5,7 +5,6 @@
     
     <% String ctxPath = request.getContextPath(); %>
 <!DOCTYPE html>
-<html>
 <head>
    <title>Home</title>
    
@@ -47,16 +46,14 @@
    }
    
       .atag1{
-      		font-size: 16pt !important;
+      		font:16px/16px "NanumSquareRound", "Nanum Gothic", "돋움", Dotum, "굴림", Gulim, Arial, sans-serif !important;
 	        text-decoration: none !important;
-	         font-weight: bold !important;
-	        color: #00BCD4 !important;
+	         color: black !important; 
+	        margin-right:50px;
 	      }
       
      .atag1:hover {
         color: #00BCD4 !important;
-        font-weight: bold !important;
-        font-size:20pt !important;
 		text-decoration: none !important;
       }
    
@@ -143,43 +140,108 @@
       border: solid 0px skyblue;
       overflow: hidden;
    }
-   
-   .sugangBtn {
-		text-decoration:none !important;
+
+	/* .sugangBtn {
+		font-weight:bold;
+		text-decoration:none;
 		font-family:Arial;
-		box-shadow:inset #ffffff 0px 5px 8px -1px,#d6d6d6 1px 3px 2px;
-		o-box-shadow:inset #ffffff 0px 5px 8px -1px,#d6d6d6 1px 3px 2px;
-		-moz-box-shadow:inset #ffffff 0px 5px 8px -1px,#d6d6d6 1px 3px 2px;
-		-webkit-box-shadow:inset #ffffff 0px 5px 8px -1px,#d6d6d6 1px 3px 2px;
-		background:#545fff;
-		background:-o-linear-gradient(90deg, #545fff, #3b9ceb);
-		background:-moz-linear-gradient( center top, #545fff 5%, #3b9ceb 100% );
-		background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #545fff), color-stop(1, #3b9ceb) );
-		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#545fff', endColorstr='#3b9ceb');
-		background:-webkit-linear-gradient(#545fff, #3b9ceb);
-		background:-ms-linear-gradient(#545fff, #3b9ceb);
-		background:linear-gradient(#545fff, #3b9ceb);
+		background:linear-gradient(#2ef1ff, #3b9ceb);
 		text-indent:0px;
-		line-height:30px;
 		-moz-border-radius:25px;
 		-webkit-border-radius:25px;
 		border-radius:25px;
 		text-align:center;
-		margin-left:80px;
-		margin-top:40px;
-		font-size:23px;
+		vertical-align:middle;
+		display:inline-block;
+		font-size:20px;
 		color:#ffffff;
-		width:173px;
-		height:30px;
+		width:223px;
+		margin-left:25px;
+		margin-top:-12px;
 		padding:13px;
 		text-shadow:#6daac2 2px 2px 0px;
-		border-color:#659dab;
+		
 		border-width:2px;
 		border-style:solid;
 	}
+
+	.sugangBtn:active {
+	box-shadow:inset #ffffff 0px 5px 8px -1px,#d6d6d6 1px 0 2px;
+	o-box-shadow:inset #ffffff 0px 5px 8px -1px,#d6d6d6 1px 0 2px;
+	-moz-box-shadow:inset #ffffff 0px 5px 8px -1px,#d6d6d6 1px 0 2px;
+	-webkit-box-shadow:inset #ffffff 0px 5px 8px -1px,#d6d6d6 1px 0 2px;
+	position:relative;
+	top:3px;
+	text-decoration: none;
+	
+	}
+	
+	.sugangBtn:hover {
+		background:#3b9ceb;
+		background:-o-linear-gradient(90deg, #3b9ceb, #2ef1ff);
+		background:-moz-linear-gradient( center top, #3b9ceb 5%, #2ef1ff 100% );
+		background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #3b9ceb), color-stop(1, #2ef1ff) );
+		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#3b9ceb', endColorstr='#2ef1ff');
+		background:-webkit-linear-gradient(#3b9ceb, #2ef1ff);
+		background:-ms-linear-gradient(#3b9ceb, #2ef1ff);
+		background:linear-gradient(#3b9ceb, #2ef1ff);
+		text-decoration: none;
+		color:#ffffff;
+		
+	} */
+	
+	
+	#main_feed{
+		margin-right: 120px;
+		margin-bottom:50px;
+	}
+	.sugangBtn {
+	font-family:monospace !important;
+	    display: inline-block;
+	    width: 230px;
+	    height: 52px;
+	    padding-top: 12px;
+	    text-align: center;
+	    background-color: #00BCD4;
+		font-size: 20px;
+    font-weight: 600;
+	    border-radius: 5px;
+	    margin-left:23px;
+	    margin-top: -199px;
+	    cursor: pointer;
+	    margin-bottom:400px;
+	}
+	
 </style>        
    
+    <script>
+    	
+    	$(document).ready(function(){
+    		
+    		$("#searchWord").keydown(function(event){
+    			if(event.keyCode == 13){
+    				//엔터를 했을경우
+    				goSearch();
+    			}
+    		});
+    		
+    		//검색시 검색조건 및 검색어 값유지시키기
+    		if(${paraMap != null}){
+    			$("#searchType").val("${paraMap.searchType}");
+    			$("#searchWord").val("${paraMap.searchWord}");
+    		}
+    		
+    		
+    		function goSearch() {
+    			var frm = document.searchFrm;
+    			frm.method = "GET";
+    			frm.action = "<%= ctxPath%>/SubjectMatterList.up";
+    			frm.submit();
+    		 }// end of function goSearch()-------------------------
+    		
+    	});
     
+    </script>
    
     <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -189,19 +251,16 @@
 
 
 </head>
-<body>
 
    <div id="container1">
    
     <section id="contents">
-      <aside id="side_menu">
+     <%--  <aside id="side_menu">
          <ul id="side_nav" >
-            <li><a class="atag1" href="">전공</a></li>
-            <li><a class="atag1" href="">교양</a></li> 
-            <li><a class="atag1" href="">일반</a></li>
+          
   
          </ul>
-      </aside>
+      </aside> --%>
    
       <article id="main_feed" >
           
@@ -245,31 +304,72 @@
     </section>
 
        <div style="display:inline-block !important;" >
+ 
+           <div style=" margin-bottom:-40px; margin-right:90px;;" align=center >
+           	<a class="atag1" href="<%=request.getContextPath()%>/SubjectMatterList.up">전체</a>  <a class="atag1" href="<%=request.getContextPath()%>/SubjectMatterList.up?status1=1">전공</a> <a class="atag1" href="<%=request.getContextPath()%>/SubjectMatterList.up?status1=2">교양</a> <a class="atag1" href="<%=request.getContextPath()%>/SubjectMatterList.up?status1=3">일반</a>
+           </div>
            
-           <hr style="border:solid 1px gray; width:100%; margin-top: 70px">
+           <hr style="border:solid 1px gray; margin-left:20px;width:90%; margin-top: 70px">
            
-           <div class="ctext" style="display:inline-block !important;">
+           <div class="ctext" style="display:inline-block !important;" >
+           
+           
+		           <%-- === #99. 글검색 폼 추가하기 : 글제목, 글쓴이로 검색을 하도록 한다. === --%> 
+		           <div style="margin-right:100px;">
+			<form name="searchFrm" style="margin-top: -15px; margin-bottom: 15px; float:right;">
+			
+				<select name="searchType" id="searchType" style="height: 26px;">
+					<option value="subName">과목명</option>
+				</select>
+				<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" /> 
+				<button type="button" class="btn" onclick="goSearch()">검색</button>
+			</form>
+			</div>
+			<%-- 
+			검색어 입력시 자동완성 하기
+			<div id="displayList" style="border:solid 1px gray; width:316px; height:100px; margin-left: 70px; margin-top:-1px; overflow:auto;">
+				
+			</div> --%>
+           
+           
            <div class="chart" >
                 <ul class="list_li" style="display:inline-block !important;">
                 <c:if test="${empty lmivList}">
-                	<span style="font-size:20pt; align-text:center;">현재 개설된 교과목이 없습니다.</span>
+                <div style="text-align: center; margin: 50px 50px 50px 0">
+                	<span style="font-size:20pt; ">현재 개설된 교과목이 없습니다.</span>
+                	</div>
                 </c:if>
                 <c:if test="${not empty lmivList}">
                 
                     
                     	<c:forEach var="lmivList" items="${lmivList}" >
-                    	<li class="igan" style="display:inline-block !important;  margin-bottom:60px;">
-                        <div class="cimg" style="display:inline-block !important;">
-                            <a href='<%= ctxPath%>/SubjectMatterDetail.up?subseq=${lmivList.subseq}'><img style="width:278px; height:180px;" src="<%= ctxPath %>/resources/images/${lmivList.subImg}"/></a>
+                    	<li class="igan" style="display:inline-block !important; border-radius: 5px;  margin-bottom:60px;">
+                        <div class="cimg" style="display:inline-block !important;">                            
+                             <c:if test="${empty lmivList.saveSubImg}">
+	                             <a href='<%= ctxPath%>/SubjectMatterDetail.up?subseq=${lmivList.subseq}'>
+	                           	 <img style="width:278px; height:180px;" src="<%= ctxPath%>/resources/images/${lmivList.subImg}"/> 
+	                           	 </a>
+                           	 </c:if>
+                             <c:if test="${not empty lmivList.saveSubImg}">
+	                           	 <a href='<%= ctxPath%>/SubjectMatterDetail.up?subseq=${lmivList.subseq}'>
+	                           	 <img style="width:278px; height:180px;" src="<%= ctxPath%>/resources/files/${lmivList.saveSubImg}"/> 
+	                           	 </a>
+                            </c:if>
                         </div>
                         
                         <div class="nayong" style="display:inline-block !important;">
-                            <div class="title"><a class="test" href='<%= ctxPath%>/SubjectMatterDetail.up?subseq=${lmivList.subseq}'> ${lmivList.subName} </a></div>
-                            <div class="text" style="font-weight:bold; overflow: hidden; height:39px !important;"> ${lmivList.subContent}</div>
+                            <div class="title" style="font-family:Monospace; overflow: hidden; height:20px !important; margin-top:8px; text-align:center; "><a style="overflow: hidden; height:10px !important;"class="test" href='<%= ctxPath%>/SubjectMatterDetail.up?subseq=${lmivList.subseq}'> ${lmivList.subName} </a></div>
+                            <div class="text" style="font-weight:300; font-family:Monospace !important; overflow: hidden; height:39px !important; padding-left: 10px; padding-right: 10px;"> ${lmivList.subContent}</div>
                         </div>
-                        <hr style="border:solid 1px #e6e6e6; width:80%; margin-top: 10px">
+                        <hr style="border:solid 1px #e6e6e6; width:80%; margin-top: 10px; margin-bottom:-10px;">
                         <div class="suBtn" style="margin-top:30px;">
-                        	<a href='<%= ctxPath%>/SubjectMatterDetail.up?subseq=${lmivList.subseq}' class='sugangBtn' >수강신청</a>
+                        	 <c:if test="${sessionScope.loginuser.identity != 2 || empty sessionScope.loginuser}">
+                        		<h2 style="margin-bottom: 20px;color:#00BCD4 "><a href='<%= ctxPath%>/SubjectMatterDetail.up?subseq=${lmivList.subseq}' class="sugangBtn" style="color:white !important;  text-decoration: none !important;">수강신청</a></h2>
+                        
+                        	 </c:if>
+                        	<c:if test="${sessionScope.loginuser.identity == 2}">
+                        		<h2 style="margin-bottom: 20px; color:#00BCD4 "><a href='<%= ctxPath%>/SubjectMatterDetail.up?subseq=${lmivList.subseq}' class="sugangBtn" style="color:white !important; text-decoration: none !important;">상세보기</a></h2>
+                        	</c:if>
                         </div>
                         </li>
                         </c:forEach>
@@ -280,13 +380,22 @@
            
            </div>
            
-           <!-- <div class="pagebar" align="center";>
-            1 2 3 4 5 [다음]
-           </div> -->
+          <!-- // == #119.페이지바 만들기 == -->
+	
+	<div align="center" style="margin-right:120px;">
+		${pageBar}
+	</div>
+	
+	
+	
+	 <!-- 돌아갈 페이지를 알려주기위해 현재 페이지 주소를 뷰단으로 넘겨준다 -->
+		<form name="goViewFrm">
+			<input type="hidden" name="seq"/>
+			<input type="hidden" name="gobackURL" value="${gobackURL}"/>
+		</form> 
            
         </div>
         
     </div>
 
-</body>
-</html>
+

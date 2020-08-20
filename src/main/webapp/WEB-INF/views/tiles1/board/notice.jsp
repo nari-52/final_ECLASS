@@ -9,18 +9,19 @@
 
 <style>
 	#container{
-		background-color: #fafafa;
+	/* 	background-color: #fafafa; */
 	}
 
 	#wholeNotice{
 		width: 1080px;
 		margin: 0 auto;
 		/* border: solid 1px black; */
-		background-color: #fafafa;
+	/* 	background-color: #fafafa; */
 	}
 	
 	table,tr,th,td{
-		border: solid 1px black;
+		border-top : solid 1px #ccc;
+		border-bottom : solid 1px #ccc;
 		border-collapse: collapse;
 		text-align: center;
 		padding: 20px;
@@ -102,21 +103,21 @@
 <div id ="container"><br>
 <div id="wholeNotice">
 
-	<div style="text-align: center;">
-		<h2 style="color: #00BCD4; font-weight: bold;">공지사항</h2>
+	<div style=" width: 100%;">
+		<h2 style="color: black; font-weight: bold; margin-left: 40px;">공지사항</h2><span style="float: left; margin-left: 40px; font-weight: bold; color:black; ">ECLASS의 각종 공지사항들을 확인하실수 있습니다.</span><br>
 	</div>	
 	<br>
 	
-	<span style="margin-left: 40px; color: black;">Total: ${totalCount}</span>
+	<div style="margin-left: 40px; margin-bottom:10px; color: black;">Total: ${totalCount}</div>
 	
 	<div>
 		<table style="margin: 0 auto; width: 1000px; background-color: white;">
 			<tr style="background-color: #f2f2f2">
-				<th>번호</th>
-				<th>제목</th>
-				<th>날짜</th>
-				<th>조회수</th>
-				<th>첨부파일</th>
+				<th style="width: 40px;">NO</th>
+				<th >제목</th>
+				<th style="width: 120px;">날짜</th>
+				<th style="width: 70px;">조회수</th>
+				<th style="width: 90px;">첨부파일</th>
 			</tr>
 			
 				<c:forEach var="boardList" items="${noticeboardList}" varStatus="status">
@@ -126,7 +127,7 @@
 						<td align="center">${boardList.writedate}</td>
 						<td align="center">${boardList.viewcount}</td>
 						<c:if test="${not empty boardList.fileName}">
-							<td align="center"><img src="<c:url value="/resources/images/disk.gif" />"></td>
+							<td align="center"><img src="<c:url value="/resources/images/index/disk.gif" />"></td>
 						</c:if>
 						
 						<c:if test="${empty boardList.fileName}">
@@ -143,6 +144,14 @@
 			
 	</div>
 	
+	<div>
+	<c:if test="${sessionScope.loginuser.userid == 'admin'}">
+		<button type="button" style="margin-left: 980px;">
+			<a href="<%=ctxPath%>/board/addnotice.up">글쓰기</a>
+		</button>
+	</c:if>
+	</div>	
+	
 	<form name="searchFrm" style="margin-top: 20px; margin-left: 40px;">
 		<select name="searchType" id="searchType" style="height: 26px;">
 			<option value="title">글제목</option>
@@ -151,13 +160,7 @@
 		<button type="button" onclick="goSearch()">검색</button>
 	</form>
 	
-	<div>
-	<c:if test="${sessionScope.loginuser.userid == 'admin'}">
-		<button type="button" style="margin-left: 980px;">
-			<a href="<%=ctxPath%>/board/addnotice.up">글쓰기</a>
-		</button>
-	</c:if>
-	</div>	
+	
 	<br>
 	
 	<form name="goViewFrm">

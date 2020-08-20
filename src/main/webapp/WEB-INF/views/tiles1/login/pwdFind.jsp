@@ -7,7 +7,7 @@
 
 <style type="text/css">
 	div#signuptitle {
-		border: solid 1px gray;
+		/* border: solid 1px gray; */
 		max-width: 1080px;
 		height: 100px;
 		margin: 0 auto;
@@ -26,9 +26,9 @@
 	/* 진행상황 시작 ------------------------------------------ */
 	
 	div#pwdFindcontent {
-		border: solid 1px red;
+		/* border: solid 1px red; */
 		width: 100%;
-		height: 1500px;
+		height: 700px;
 		background: #fafafa;
 		display: inline-block;
 		
@@ -39,7 +39,7 @@
 	div#pwdFind_content {
 		/* border: solid 1px red; */
 		width: 100%;
-		height: 800px;
+		height: 600px;
 		background: #fafafa;
 		display: inline-block;
 		margin: 0 auto;
@@ -49,7 +49,7 @@
 	div#pwdFind_back {
 		border: solid 1px #ddd;
 		width: 1080px;
-		height: 570px;
+		height: 480px;
 		background: white;
 		margin: 0 auto;
 		padding-top: 50px; /* form 태그 위에 padding 주기 */
@@ -71,21 +71,34 @@
 	
 	/* 가입하기 버튼 */
 	div#pwdFind {
-		border: solid 1px blue;
+		/* border: solid 1px blue; */
 		margin: 0 auto;
 		width: 620px;
-		height: 40px;
+		height: 30px;
 		background-color: #00bcd4;
 		color: white;
-		font-size: 13pt;
+		font-size: 12pt;
+		font-weight: bold;
+		text-align: center;
+		padding-top: 10px;
+	}
+	/* 비밀번호 찾기 버튼 */
+	div#pwdFindbtn {
+		/* border: solid 1px blue; */
+		margin: 0 auto;
+		width: 620px;
+		height: 30px;
+		background-color: #00bcd4;
+		color: white;
+		font-size: 12pt;
 		font-weight: bold;
 		text-align: center;
 		padding-top: 10px;
 	}
 	
-	/* 메일 인증번호 받기 */
-	div#pwdFindbtn {
-		border: solid 1px blue;
+	/* 휴대폰 인증번호 받기 */
+	div#mobilebtn {
+		/* border: solid 1px blue; */
 		margin: 0 auto;
 		width: 140px;
 		height: 100px;
@@ -98,6 +111,7 @@
 		padding-top: 10px;
 		float: right;
 		margin-top: -125px;
+		
 	}
 	
 </style>
@@ -106,86 +120,68 @@
 <script type="text/javascript">
 
 	$(document).ready(function(){ 
+
 		
-		// AJAX로 메일 인증번호 받기
+		// 휴대전화 인증번호 받기
 		$("#mobilebtn").click(function(){
 			
-			var nameVal = $("#name").val().trim();
-			var emailVal = $("#email").val().trim();
+			alert("인증번호가 발송되었습니다. 인증번호를 확인해주세요.");
+			alert("인증서비스 종료.");
+			// 유효성 검사
+			var useridVal = $("#userid").val().trim();
+			var mobileVal = $("#mobile").val().trim();
 			
-			// alert(nameVal);
-						
-			if(nameVal != "" && emailVal != "") {
-				// alert("이름, 이메일 작성 성공!")
-				alert(nameVal+ "님, 인증번호가 발송되었습니다. 입력하신 메일의 인증번호를 작성해주세요.");
- 				
-				$.ajax({
-					url: "<%=ctxPath%>/login/pwdFind_mail.up",
-					data: {"name" : nameVal,
-						   "email" : emailVal},
-					type: "POST",
-					dataType:"JSON",
-					success: function(json) {	
-						$("#mailmessage").val(json.mailmessage);
-						$("#namecheck").val(json.name);
-						$("#emailcheck").val(json.email);
-						$("#userid").val(json.userid);
-					},
-					error: function(request, status, error){
-						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-					}
-				}); 
-			} 
-			else {
-				alert("이름과 메일주소를 확인해주세요!");				
-			}
+			
+			// gopwdFind_mobile();
+			
+
 
 		}); // end of  $("#mobilebtn").click(function()-------------------------------
 		
 				
 		// 비밀번호 찾기 버튼 클릭 시 확인하기
 		$("#pwdFindbtn").click(function(){ 
-			/* 
-			// 1. 이름과 메일주소가 공란인지 확인한다. -------------------------------------------- 
-			var nameVal = $("#name").val().trim();
-			var emailVal = $("#email").val().trim();
 			
-			if (nameVal == "" || emailVal == "") {
-				alert("이름과 이메일을 입력해주세요!");
+			// 1. 아이디와 전화번호가 공란인지 확인한다. -------------------------------------------- 
+			var useridVal = $("#userid").val().trim();
+			var mobileVal = $("#mobile").val().trim();
+			
+			if (useridVal == "" || mobileVal == "") {
+				alert("아이디와 전화번호를 입력해주세요!");
 				return;
 			}
 			
 			// 2. 발송한 인증번호 일치 여부 확인한다. -----------------------------------------------
-			var mailmessageCheckVal = $("#mailmessageCheck").val().trim(); // 회원이 입력한 인증번호
-			var mailmessageVal = $("#mailmessage").val().trim(); // 메일 발송된 인증번호
+			var mobilemessageCheckVal = $("#mobilemessageCheck").val().trim(); // 회원이 입력한 인증번호
+			var mobilemessageVal = $("#mobilemessage").val().trim(); // 발송된 인증번호
 			
-			if(mailmessageVal == "") {
-				alert("메일 인증을 진행해주세요.");
+			if(mobilemessageVal == "") {
+				alert("핸드폰 인증을 진행해주세요.");
 				return;
 			}
 			
-			if (mailmessageCheckVal != mailmessageVal) {
+			if (mobilemessageCheckVal != mobilemessageVal) {
 				alert("인증번호가 일치하지 않습니다. \n인증번호를 확인해주세요.");
 				return;
 			}
 			
-			// 3. 인증받은 이름과 이메일이 동일한지 확인한다. ---------------------------------------------
-			var namecheckVal = $("#namecheck").val().trim();
-			var emailcheckVal = $("#emailcheck").val().trim();
+			// 3. 인증받은 아이디와 번호가 동일한지 확인한다. ---------------------------------------------
+			var useridcheckVal = $("#useridcheck").val().trim();
+			var mobilecheckVal = $("#mobilecheck").val().trim();
 			
-			if (nameVal != namecheckVal) {
-				alert("메일인증 시 작성한 이름과 일치하지 않습니다.");
+			if (useridVal != useridcheckVal) {
+				alert("핸드폰 인증 시 작성한 아이디와 일치하지 않습니다.");
 				return;
 			}
-			if (emailVal != emailcheckVal) {
-				alert("메일인증 시 작성한 이메일과 일치하지 않습니다.");
+			if (mobileVal != mobilecheckVal) {
+				alert("핸드폰 인증 시 작성한 번호와 일치하지 않습니다.");
 				return;
 			}
-			 */
+			 
 
 			 
 			 // alert("userid : " + userid);
-			 gopwdFind(); // 아이디찾기
+			 gopwdFind(); // 비밀번호 변경하기
 			
 			
 			
@@ -195,6 +191,17 @@
 		
 	}); // end of $(document).ready(function() -----------
 
+	// 휴대전화 인증번호 받기 함수		
+	function gopwdFind_mobile() {
+		
+		var frm = document.pwdFind_form;
+		
+		frm.method = "POST";
+		frm.action = "<%= ctxPath%>/login/pwdFind_mobile.up";
+		frm.submit();
+		
+	}
+			
 	// 비밀번호 찾기 클릭 함수		
 	function gopwdFind() {
 		
@@ -235,20 +242,20 @@
 					</ul>
 					<%-- <input type="hidden" name="identity" id="identity" value="${identity}"/> --%>
 					<div id="mobilebtn">인증번호 받기</div>
+				
+					<input type="hidden" id="useridcheck" name="userid" value="${userid}" />
+					<input type="hidden" id="mobilecheck" name="mobilecheck" value="${mobile}" />
 					
-					<input type="hidden" id="namecheck" value="" />
-					<input type="hidden" id="emailcheck" value="" />
-					<input type="text" id="userid" name="userid" value="" />
-					
-					<label style="padding: 10px 50px 0px 40px; line-height: 50px">인증번호</label><input type="text" id="mailmessageCheck" name="mailmessageCheck" required placeholder="인증번호를 입력해주세요." style="border: solid 1px #ddd; width: 450px; height: 50px; vertical-align: middle; padding-left: 10px; font-size: 11pt; margin-top: 10px;"/>
-					<input type="text" id="mailmessage" name="mailmessage" value="${mailmessage}" />
+					<label style="padding: 10px 50px 0px 40px; line-height: 50px">인증번호</label><input type="text" id="mobilemessageCheck" name="mobilemessageCheck" required placeholder="인증번호를 입력해주세요." style="border: solid 1px #ddd; width: 450px; height: 50px; vertical-align: middle; padding-left: 10px; font-size: 11pt; margin-top: 10px;"/>
+					<input type="hidden" id="mobilemessage" name="mobilemessage" value="${mobilemessage}" />
 					
 
 					
-					<div id="pwdFindbtn" >비밀번호 찾기</div>
+					<div id="pwdFindbtn" style="margin-top: 30px; cursor: pointer;" >비밀번호 변경하기</div>
 				
-					<div style="color: #888; margin-top: 30px;">※ 인증메일 발송에 약간의 시간이 소요됩니다.</div>
-					<div style="color: #888;">※ 회원가입시 사용하신 메일주소를 입력해주세요.</div>
+					<div style="color: #888; margin-top: 30px;">※ 인증번호 받기 버튼은 한번만 눌러주세요.</div>
+					<div style="color: #888;">※ 회원가입 시 사용하신 아이디와 핸드폰번호를 입력해주세요.</div>
+					<div style="color: #888;">※ 비밀번호 변경하기 버튼을 누르면 새로운 비밀번호로 변경 가능합니다.</div>
 
 				</form>
 			</div>

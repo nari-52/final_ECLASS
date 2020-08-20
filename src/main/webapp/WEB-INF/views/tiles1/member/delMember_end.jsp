@@ -8,7 +8,7 @@
 <style type="text/css">
 	
 	div#singupend_container {
-		border: solid 1px gray;
+		/* border: solid 1px gray; */
 		max-width: 1080px;
 		height: 100px;
 		margin: 0 auto;
@@ -29,7 +29,7 @@
 	div#singupend_content {
 		/* border: solid 1px red; */
 		width: 100%;
-		height: 800px;
+		height: 500px;
 		background: #fafafa;
 		display: inline-block;
 		margin: 0 auto;
@@ -39,7 +39,7 @@
 	div#singupend_back {
 		border: solid 1px  #ddd;
 		width: 1080px;
-		height: 450px;
+		height: 300px;
 		background: white;
 		margin: 0 auto;
 		margin-top: 50px;
@@ -51,17 +51,14 @@
 		margin: 0 auto;
 	}
 	
-	
 	ul.input_text {
 		list-style: none;
 		padding: 0;
 		border: solid 0px;
 	}
 	
-
-
 	div#loginbtn{
-		border: solid 1px blue;
+		border: solid 1px #ddd;
 		margin: 0 auto;
 		width: 320px;
 		height: 30px;
@@ -72,10 +69,11 @@
 		text-align: center;
 		padding-top: 10px;
 		display: inline block;
+		cursor: pointer;
 	}
 	
 	div#mainbtn{
-		border: solid 1px blue;
+		border: solid 1px #ddd;
 		margin: 0 auto;
 		width: 320px;
 		height: 30px;
@@ -86,6 +84,7 @@
 		text-align: center;
 		padding-top: 10px;
 		display: inline block;	
+		cursor: pointer;
 	}
 
 </style>
@@ -126,14 +125,15 @@
 	<div id="singupend_content">	
 		<div id="singupend_back">
 			<div id="singupend">
-			
-				<div style="text-align: center; font-size: 16pt; font-weight: bold; margin-bottom: 10px;">ECLASS 회원 탈퇴가 완료되었습니다.</div>
-				<div style="text-align: center; font-size: 12pt; font-weight: bold; color: gray; margin-bottom: 15px;"> 그동안 이용해 주셔서 감사합니다.</div>
 				
-				<hr>
+				<h3 style="text-align: center;">ECLASS 회원 탈퇴가 완료되었습니다.</h3>
+				<hr style="margin-bottom: 30px; width: 620px;">
+				<div style="text-align: center; font-size: 11pt; margin-bottom: 15px;"> 그동안 이용해 주셔서 감사합니다.</div>
+				
+				
 	
 				
-				<div id="mainbtn" >메인으로</div>
+				<div id="mainbtn" style="margin-top: 70px;">메인으로</div>
 		
 			</div>
 

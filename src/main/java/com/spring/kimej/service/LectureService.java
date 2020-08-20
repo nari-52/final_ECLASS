@@ -20,6 +20,7 @@ public class LectureService implements InterLectureService {
 	@Autowired
 	private InterLectureDAO dao;
 
+	// 강의 등록 페이지 보여주기
 	@Override
 	public int lecture_insert(HashMap<String, String> paraMap) {
 		int n = dao.lecture_insert(paraMap);
@@ -44,6 +45,13 @@ public class LectureService implements InterLectureService {
 	@Override
 	public int addComment(LectureCommentVO commentvo) {
 		int n = dao.addComment(commentvo);
+		return n;
+	}
+	
+	// 댓글 지우기
+	@Override
+	public int lectureCommentDelete(String lecComSeq) {
+		int n = dao.lectureCommentDelete(lecComSeq);
 		return n;
 	}
 
@@ -73,6 +81,34 @@ public class LectureService implements InterLectureService {
 		return subjectListforP;
 	}
 
+	// 강의 수정 페이지 보여주기 (유튜브영상)
+	@Override
+	public int lectureEdit(HashMap<String, String> paraMap) {
+		int n = dao.lectureEdit(paraMap);
+		return n;
+	}
+
+	// 강의 삭제하기
+	@Override
+	public int lectureDelete(String lecSeq) {
+		int n = dao.lectureDelete(lecSeq);
+		return n;
+	}
+
+	// 댓글 달리면 바로 출석 'O'로 변경하고 총 출석점수 +3점 해주기
+	@Override
+	public void changeAttandC(HashMap<String, String> paraMap) {
+		dao.getchangeAttandO(paraMap);
+		dao.getchangeAttand3(paraMap);
+		
+	}
+
+	// 이미 출석이 되어있는지 확인하기
+	@Override
+	public String findA(HashMap<String, String> paraMap) {
+		String findA = dao.findA(paraMap);
+		return findA;
+	}
 
 
 

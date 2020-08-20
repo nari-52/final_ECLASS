@@ -1,6 +1,7 @@
 package com.spring.nari.model;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -79,6 +80,40 @@ public class MemberDAO implements InterMemberDAO {
 	public int delMember(String userid) {
 		int n = sqlsession.update("member.delMember", userid);
 		return n;
+	}
+
+
+	// 회원정보 수정하기 위한 정보 가져오기
+	@Override
+	public MemberVO select_updateMember(String userid) {
+		
+		MemberVO mvo = sqlsession.selectOne("member.select_updateMember", userid);
+		
+		return mvo;
+	}
+
+
+	// 회원정보 수정하기
+	@Override
+	public int updateMember(MemberVO mvo) {
+		int n = sqlsession.update("member.updateMember", mvo);
+		return n;
+	}
+
+
+	// 관리자페이지 학생관리 보여주기
+	@Override
+	public List<MemberVO> member_studentList() {
+		List<MemberVO> memberList = sqlsession.selectList("member.member_studentList");
+		return memberList;
+	}
+
+
+	// 관리자페이지 교수관리 보여주기
+	@Override
+	public List<MemberVO> member_professorList() {
+		List<MemberVO> memberList = sqlsession.selectList("member.member_professorList");
+		return memberList;
 	}
 	
 	

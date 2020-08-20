@@ -9,24 +9,21 @@
 
 <style>
 	
-	#container{
-		background-color: #fafafa;
-	}
 	
 	#wholeNotice{
 		width: 1080px;
 		margin: 0 auto;
 		/* border: solid 1px black; */
-		background-color: #fafafa;
+		/* background-color: #fafafa; */
 	}
 	
 	#viewHead{
 		width: 1000px;
 		margin: 0 auto;
 		background-color: white;
-		padding: 20px 0 20px 40px;
-		border-bottom: solid 1px gray;
-		height: 130px;
+		padding: 20px 0 0 0;
+		border-bottom: solid 1px #ccc;
+		height: 160px;
 	}
 	
 	#viewContent{
@@ -39,31 +36,31 @@
 	#addedFile{
 		width: 1000px;
 		margin: 0 auto;
-		background-color: #f2f2f2;		
+		background-color: white;		
 	}
 	
 	#addReply{
 		width: 1000px;
 		margin: 0 auto;
-		background-color: #f2f2f2;	
+		background-color: white;	
 	}
 	
 	#updownView{
 		width: 1000px;
 		margin: 0 auto;
-		background-color: white;
-		
+		background-color: white;		
 	}	
 	
 	table{
 		width: 1000px;
+		border-collapse: collapse;
 	}
 	
 	 tr,th,td{
 		text-align: center;
 		padding: 10px;
-		border-bottom: solid 1px #5E5E5E;
-		border-top: solid 1px #5E5E5E;
+		border-bottom: solid 1px #ccc;
+		border-top: solid 1px #ccc;
 	} 
 	
 	#goReply{
@@ -111,12 +108,12 @@
 <div id ="container"><br>
 <div id="wholeNotice">
 	<div style="text-align: center;">
-		<h3 style="color: #00BCD4; font-weight: bold;">공지사항</h3>
+		<h2 style="color: black; font-weight: bold; margin-left: 40px;">공지사항</h2>
 	</div>	
 	<br>
 	
 	<div id="viewHead">
-		<h3>${noticeboardvo.title }</h3>
+		<h3 style="border-top: solid 1px #ccc; width: 100%;"><br>&nbsp;&nbsp;${noticeboardvo.title}</h3>
 		<div style="float: right; margin:20px;">		
 		<span style="font-weight: bold; font-size: 13pt;">작성일 &nbsp;</span>${noticeboardvo.writedate} 
 		<span style="font-weight: bold; font-size: 13pt;">조회수&nbsp;</span>${noticeboardvo.viewcount} 
@@ -124,16 +121,18 @@
 	</div>
 	
 	<div id="viewContent">
-		<div>
+		<div style="height: 50%;">
+			<br>
 			${noticeboardvo.content}
+			<br><br><br>
 		</div>
 	</div>
 
 	<div id="addedFile">
 		<table>
 			<tr>
-				<th>첨부파일</th>
-				<td>
+				<th style="background-color: #e0e0e0; float: left; width: 200px;">첨부파일</th>
+				<td style="text-align: left;">
 					<c:if test="${not empty noticeboardvo.orgFilename}">
 						<a href="<%=request.getContextPath()%>/board/noticedownload.up?notice_seq=${noticeboardvo.notice_seq}">${noticeboardvo.orgFilename}</a>
 					</c:if>
@@ -148,20 +147,20 @@
 	</div><br>
 	
 	<div id="updownView">
-		<table>
+		<ta"C:/Users/user1/Desktop/7de3bc0979694d3bb818da4cc3f86a06.jpg"ble>
 			<tr>
-				<th>이전글</th>
-				<td><span onclick="javascript:location.href='<%=ctxPath%>/board/noticeview.up?notice_seq=${noticeboardvo.previousseq}'">${noticeboardvo.previoussubject}</span></td>
+				<th style="background-color: #e0e0e0; float: left; width: 200px;">이전글</th>
+				<td><span style="float: left;" onclick="javascript:location.href='<%=ctxPath%>/board/noticeview.up?notice_seq=${noticeboardvo.previousseq}'">${noticeboardvo.previoussubject}</span></td>
 			</tr>
 			
 			<tr>
-				<th>다음글</th>
-				<td><span onclick="javascript:location.href='<%=ctxPath%>/board/noticeview.up?notice_seq=${noticeboardvo.nextseq}'">${noticeboardvo.nextsubject}</span></td>
+				<th style="background-color: #e0e0e0; float: left; width: 200px;">다음글</th>
+				<td><span style="float: left;" onclick="javascript:location.href='<%=ctxPath%>/board/noticeview.up?notice_seq=${noticeboardvo.nextseq}'">${noticeboardvo.nextsubject}</span></td>
 			</tr>
 		</table>
 	</div><br>
 	
-	<div id="updownView" style="height: 40px; background-color: #fafafa;">
+	<div id="updownView" style="height: 40px; background-color: white;">
 	<c:if test="${sessionScope.loginuser.userid == 'admin'}">
 		<span class="button" onclick="javascript:location.href='<%=ctxPath%>/board/editNoticeboard.up?notice_seq=${noticeboardvo.notice_seq}'">글수정</span>
 		<form name="delNoticeFrm">
@@ -171,15 +170,6 @@
 	</c:if>	
 		<span class="button" onclick="javascript:location.href='<%=ctxPath%>/${gobackURL}'">목록</span>
 	</div><br>
-	
-	<div id="addReply">
-		<table style="margin: 0 auto;">
-			<tr>
-				<td><textarea rows="5" cols="110" style="height: 100px;"></textarea></td>
-				<td><span id="goReply">댓글달기</span></td>
-			</tr>
-		</table>
-	</div>
 	<br>
 </div>	
 </div>

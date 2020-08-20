@@ -16,6 +16,11 @@
 #leture-title {
 	font-size: 20pt;
 	font-weight: bold;
+	margin: 50px 0;
+}
+
+.lecture-list{
+	margin: 100px 0;
 }
 
 .lecture-list thead {

@@ -8,7 +8,7 @@
 <style type="text/css">
 	
 	div#login_container {
-		border: solid 1px gray;
+		/* border: solid 1px gray; */
 		max-width: 1080px;
 		height: 100px;
 		margin: 0 auto;
@@ -29,7 +29,7 @@
 	div#login_content {
 		/* border: solid 1px red; */
 		width: 100%;
-		height: 800px;
+		height: 600px;
 		background: #fafafa;
 		display: inline-block;
 		margin: 0 auto;
@@ -65,7 +65,7 @@
 	}
 
 	div#loginbtn{
-		border: solid 1px blue;
+		/* border: solid 1px blue; */
 		margin: 0 auto;
 		width: 620px;
 		height: 30px;
@@ -75,20 +75,9 @@
 		font-weight: bold;
 		text-align: center;
 		padding-top: 10px;
+		cursor: pointer;
 	}
-	
-	div#delMemberbtn {
-		border: solid 1px blue;
-		margin: 0 auto;
-		width: 620px;
-		height: 30px;
-		background-color: #00bcd4;
-		color: white;
-		font-size: 12pt;
-		font-weight: bold;
-		text-align: center;
-		padding-top: 10px;
-	}
+
 	
 	div.login_footer {
 		border: solid 1px #ddd;
@@ -165,12 +154,12 @@
 		
 		// 아이디 저장
 		if ($("input:checkbox[name=saveID]").prop("checked")) {
-			alert("아이디 저장 체크");
+			// alert("아이디 저장 체크");
 			
 			localStorage.setItem('saveID', $("#userid").val());
 		}
 		else{
-			alert("아이디 저장 체크 안함");
+			// alert("아이디 저장 체크 안함");
 			localStorage.removeItem('saveID');
 		}
 		
@@ -180,18 +169,6 @@
 		frm.method = "POST";
 		frm.submit();
 	}
-	
-	
-	// 회원탈퇴 함수
-	function func_delMember(){
-		var frm = document.DelMemberFrm;
-		
-		frm.action = "<%=ctxPath%>/member/delMember.up";
-		frm.method = "POST";
-		frm.submit();
-		
-	}
-
 
 </script>
 
@@ -220,14 +197,14 @@
 						</li>
 						
 						<li class="saveID">
-							<input type="checkbox" name="saveID" id="saveID"/>
-							<label for="saveID">아이디 저장</label>
+							<input type="checkbox" name="saveID" id="saveID" style="cursor: pointer;"/>
+							<label for="saveID" style="cursor: pointer;">아이디 저장</label>
 						</li>
 						
 					</ul>
 					
 					<div id="loginbtn" >로그인</div>
-					<div id="delMemberbtn" >회원탈퇴</div>
+					<!-- <div id="delMemberbtn" >회원탈퇴</div> -->
 					<div class="login_footer">
 						<a href="/eclass/login/idFind.up">아이디찾기</a><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
 						<a href="/eclass/login/pwdFind.up">비밀번호 찾기</a><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
@@ -239,8 +216,8 @@
 		</div>
 
 		<form name="DelMemberFrm">
-			<input type="text" name="delPwd" value="${sessionScope.loginuser.pwd}" />
-			<input type="text" name="delUserid" value="${sessionScope.loginuser.userid}" />
+			<input type="hidden" name="delPwd" value="${sessionScope.loginuser.pwd}" />
+			<input type="hidden" name="delUserid" value="${sessionScope.loginuser.userid}" />
 			
 		</form>
 		<!-- <iframe src=“http://www.career.go.kr/cnet/front/base/major/FunivMajorList.iframe?apiKey=0466dca798e7b31756c6da4c354bf75b&svcType=frm&svcCode=MAJOR" scrolling="no" name="ce" width="680" height="1080" frameborder="0" style="border-width:0px;border-color:white; border-style:solid;"> </iframe> 

@@ -76,16 +76,46 @@
    </select>
    
    <update id="getChangeA" parameterType="HashMap" >
-   		update attand_tbl set attand = #{attand}
-    	where fk_userid = #{fk_userid}
-    	and fk_subSeq = #{fk_subSeq}
-    	and lecNum = #{lecNum}
+         update attand_tbl set attand = #{attand}
+       where fk_userid = #{fk_userid}
+       and fk_subSeq = #{fk_subSeq}
+       and lecNum = #{lecNum}
    </update>
    
    <update id="getChangeG" parameterType="HashMap" >
-   		update myPForS_tbl set finalG = #{finalG}
-    	where fk_userid = #{fk_userid}
-    	and fk_subSeq = #{fk_subSeq}
+         update myPForS_tbl set finalG = #{finalG}
+       where fk_userid = #{fk_userid}
+       and fk_subSeq = #{fk_subSeq}
    </update>
    
+   <update id="getChangeAtotal"  parameterType="HashMap" >
+         update myPForS_tbl set attandG = 
+         <if test='attand =="O"'>attandG+3</if>
+         <if test='attand =="X"'>attandG-3</if>
+       where fk_subSeq = #{fk_subSeq}
+       and fk_userid = #{fk_userid}
+   </update>
+   
+   <update id="getchangeAttandO"  parameterType="HashMap" >
+         update attand_tbl set attand = 'O'
+       where fk_userid = #{fk_userid}
+       and fk_subSeq = #{fk_subSeq}
+       and lecNum = #{lecNum}
+   </update>
+   
+   <update id="getchangeAttand3"  parameterType="HashMap" >
+       update myPForS_tbl set attandG = attandG+3
+       where fk_subSeq = #{fk_subSeq}
+       and fk_userid = #{fk_userid}
+   </update>
+   
+      <select id="AAA" parameterType="HashMap" resultType="String">
+       select A.attand
+       from myPForS_tbl M left join attand_tbl A
+       on M.fk_userid = A.fk_userid
+       where M.fk_subSeq = #{fk_subSeq}
+       and A.lecNum = #{lecNum}
+       and M.fk_userid = #{fk_userid}
+       and A.attand = 'X'
+   </select>
 </mapper>

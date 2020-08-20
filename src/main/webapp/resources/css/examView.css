@@ -1,0 +1,34 @@
+@charset "UTF-8";
+
+#contentsWrap {
+	width: 1080px;
+	margin: 0 auto;
+	height: 100vh;
+}
+
+#mainCss {
+    font-size: 20pt;
+    font-weight: bold;
+    text-align: center;
+    background-color: #FAFAFA;
+    border: solid 1px #00BCD4;
+    padding: 10px;
+    width: 1000px;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+.button {
+    height: 40px;
+    border: none;
+    background-color: #00BCD4;
+    color: white;
+    font-weight: bold;
+    font-size: 15pt;
+}
+
+#tbl-subName {
+	width: 880px;
+    height: 60px;
+    font-size: 15pt;
+}

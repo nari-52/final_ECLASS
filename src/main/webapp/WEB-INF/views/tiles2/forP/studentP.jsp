@@ -12,7 +12,7 @@
 #test{
 	display: inline-block;
 	border: solid 0px red;
-	margin: 0 20px;
+	margin: 0 0 0 20px;
 	color: gray;
 }
 #changeCss {
@@ -33,7 +33,7 @@
 	border: solid 1px #00BCD4;
 	padding: 10px;
 	margin-bottom: 10px;
-	width: 600px;
+	width: 850px;
 	text-align: center;
 	border-radius: 10px;
 }
@@ -61,6 +61,10 @@
 	border: solid 0px gray;
 	padding: 0 10px;
 	text-align: center;
+}
+#myS {
+	color: white;
+	background-color: #00BCD4;
 }
 </style>
 <script type="text/javascript">
@@ -243,7 +247,10 @@
 					<td><input type="radio" name="slist" class="slist" /></td>
 					<td>${SList.name}<input type="hidden" name="slistuserid" id="id${status.count}" value="${SList.fk_userid}" /></td>
 					<td>${SList.attandG}</td>
-					<td>${SList.examG}</td>
+					<td>
+						<c:if test="${SList.examG == -1}">0</c:if>
+						<c:if test="${SList.examG != -1}">${SList.examG}</c:if>
+					</td>
 					<td>${SList.finalG}</td> 
 				</tr>
 			</c:forEach>

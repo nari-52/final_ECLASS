@@ -47,5 +47,99 @@ public class ExamService implements InterExamService {
 		return questionList;
 	}
 
+	// 시험 제목 보여주기 페이지
+	@Override
+	public List<ExamVO> examList(String fk_subSeq) {
+		List<ExamVO> examList = dao.examList(fk_subSeq);
+		return examList;
+	}
+
+	// 시험 상세 정보
+	@Override
+	public ExamVO examDetail(String exam_seq) {
+		ExamVO examvo = dao.examDetail(exam_seq);
+		return examvo;
+	}
+
+	// 시험 수정하기
+	@Override
+	public int examEdit(HashMap<String, String> paraMap) {
+		int n = dao.examEdit(paraMap);
+		return n;
+	}
+
+	// 시험 삭제하기
+	@Override
+	public int examDelete(String exam_seq) {
+		int n = dao.examDelete(exam_seq);
+		return n;
+	}
+
+	// 시험 제출하기 (시험 점수 DB에 입력)
+	@Override
+	public int examG_insert(HashMap<String, String> paraMap) {
+		int n = dao.examG_insert(paraMap);
+		return n;
+	}
+	
+	// 시험 날짜 알아오기
+	@Override
+	public ExamVO examDate(String fk_subSeq) {
+		ExamVO examvo = dao.examDate(fk_subSeq);
+		return examvo;
+	}
+
+	// 시험 문제들 알아오기
+	@Override
+	public List<String> getQuestions(String exam_seq) {
+		List<String> questionArr = dao.getQuestions(exam_seq);
+		return questionArr;
+	}
+
+	// 시험 정답들 알아오기
+	@Override
+	public List<String> getAnswers(String exam_seq) {
+		List<String> answerArr = dao.getAnswers(exam_seq);
+		return answerArr;
+	}
+	
+	// 시험문제시퀀스들 알아오기
+	@Override
+	public List<String> getQuestionSeqs(String exam_seq) {
+		List<String> question_seqArr = dao.getQuestionSeqs(exam_seq);
+		return question_seqArr;
+	}
+
+	// 시험 문제 수정하기
+	@Override
+	public int question_update(HashMap<String, String> paraMap) {
+		int n = dao.question_update(paraMap);
+		return n;
+	}
+
+	// 시험 점수 알아오기
+	@Override
+	public String examG_select(HashMap<String, String> paraMap) {
+		String examG = dao.examG_select(paraMap);
+		return examG;
+	}
+
+	// 출석 점수 알아오기
+	@Override
+	public String getAttandG(HashMap<String, String> paraMap) {
+		String attandG = dao.getAttandG(paraMap);
+		return attandG;
+	}
+
+	// 최종 성적 입력하기
+	@Override
+	public int finalG_insert(HashMap<String, String> paraMap) {
+		int n = dao.finalG_insert(paraMap);
+		return n;
+	}
+
+
+
+
 	
 }

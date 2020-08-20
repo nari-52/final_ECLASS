@@ -2,17 +2,18 @@
     pageEncoding="UTF-8"%>
     
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-    
+   
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title></title>
 <style>
+
 #test{
 	display: inline-block;
 	border: solid 0px red;
-	margin: 0 20px;
+	margin: 0 0 0 20px;
 	color: gray;
 }
 .sidecss {
@@ -20,28 +21,44 @@
 	background-color: #FAFAFA;
 	padding: 10px;
 	color: #00BCD4;
+	text-align: center;
 }
 #namecss{
 	color: #00BCD4;
 	font-weight: bold;
 }
 #tableCss{
-	text-align: center;
 	font-size: 13pt;
+	width: 850px;
 }
 #mainCss{
 	font-size: 15pt;
 	background-color: #FAFAFA;
 	border: solid 1px #00BCD4;
 	padding: 10px;
-	width: 600px;
+	width: 850px;
 	margin-bottom: 10px;
 	border-radius: 10px;
 }
 .sidecss2{
 	padding: 10px;
 }
+#myM {
+	color: white;
+	background-color: #00BCD4;
+}
+
 </style>
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+	}); // end of $(document).ready(function()--------------
+	
+	function go_subject(fk_subSeq){
+		
+		location.href="lecture/lectureList.up?fk_subSeq="+fk_subSeq;
+	}
+</script>
 </head>
 <body>
 	<div id="test">
@@ -68,12 +85,17 @@
 			</tr>
 			<tr>
 				<tr>
-				<td class="sidecss">교과목 목록</td>
+				<td class="sidecss">수강중인 교과목</td>
 				<td class="sidecss2">
 					<c:if test="${not empty subjectList}">
+						<ul style="margin-left: -20px;">
 						<c:forEach var="sublist" items="${subjectList}">
-							${sublist.subName}<br/>
+							<li>
+								${sublist.subName}
+								<button type="button" onclick="go_subject('${sublist.fk_subseq}');">강의 보기!</button>
+							</li>
 						</c:forEach>
+						</ul>
 					</c:if>
 					<c:if test="${empty subjectList}">
 						교과목 없음

@@ -1,13 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-    
 <%	String ctxPath = request.getContextPath(); %>
 
 <link rel="stylesheet" type="text/css" href="<%=ctxPath%>/resources/css/reset.css" />
-<link rel="stylesheet" type="text/css" href="<%=ctxPath%>/resources/css/examRegister.css" />
+<link rel="stylesheet" type="text/css" href="<%=ctxPath%>/resources/css/lectureRegister.css" />
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -85,13 +82,26 @@
 	<div id="register-title">강의 등록</div>
 	
 	<form id="registerFrm" name="registerFrm">
-		<span id="inputTitle" style="margin-right: 10px;">강의 차수</span><input type="text" name="lecNum" style="width: 100px;">
+		<span id="inputTitle" style="margin-right: 10px;">강의 차수</span>
+		<select name="lecNum" style="height: 20px;">
+			<option value="1">1강</option>
+			<option value="2">2강</option>
+			<option value="3">3강</option>
+			<option value="4">4강</option>
+			<option value="5">5강</option>
+			<option value="6">6강</option>
+			<option value="7">7강</option>
+			<option value="8">8강</option>
+			<option value="9">9강</option>
+			<option value="10">10강</option>
+		</select>
 		<br><br>
-		<span id="inputTitle" style="margin-right: 10px;">강의 제목</span><input type="text" name="lecTitle" style="width: 930px;">
+		<span id="inputTitle" style="margin-right: 10px;">강의 제목</span>
+		<input type="text" name="lecTitle" style="width: 913px; height: 25px;">
 		<br><br>
-		<span id="inputUrl" style="margin-right: 10px;">강의 영상 주소</span>
+		<span id="inputUrl" style="margin-right: 10px;">강의글 내용<br></span>
 		<br>
-		<textarea name="lecLink" placeholder=" 유튜브 url을 입력해주세요.&#13;&#10; ex) https://www.youtube.com/watch?v=0_zT9pFceqs" style="height: 100px; width: 1000px;"></textarea>
+		<textarea name="lecLink" placeholder=" 유튜브 url을 입력해주세요.&#13;&#10; ex) https://www.youtube.com/watch?v=0_zT9pFceqs" style="height: 100px; width: 1000px; resize: none;"></textarea>
 		<br><br>
 		<span id="inputDate" style="margin-right: 10px;">시청 시작 일자</span><input type="text" class="datepicker" name="lecStartday"/>
 		<br><br>

@@ -1,0 +1,42 @@
+@charset "UTF-8";
+
+#contentsWrap {
+	width: 1080px;
+	height: 100vh;
+	margin: 0 auto;	
+}
+
+#mainCss {
+    font-size: 20pt;
+    font-weight: bold;
+    color: #00BCD4;
+    padding-bottom: 50px;
+    margin: 0 auto;
+
+}
+
+.button {
+    height: 40px;
+    width: 120px;
+    border: none;
+    background-color: #00BCD4;
+    color: white;
+    font-weight: bold;
+    font-size: 11pt;
+    border-radius: 7px;
+}
+
+#tbl-subName {
+	width: 690px;
+	font-size: 15pt;
+	height: 60px;
+	text-align: center;
+}
+
+.lecture-list th {
+	border-bottom: 2px solid #00BCD4;
+	background-color: #fafafa;
+}
+.lecture-list td {
+	border-bottom: 1px solid #ccc;
+}

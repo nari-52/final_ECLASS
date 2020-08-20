@@ -8,20 +8,20 @@
 	<!-- 디비에 교과목 insert시키기 -->
 	<insert id="MatterInsert" parameterType="com.spring.kimkh.model.LecutreMatterInsertVO">
 
-		insert into subject_tbl(subseq,fk_userid,status,subName,subContent,subImg,writeday)
-		values(seq_subseq.nextval, #{fk_userid},#{status},#{subName}, #{subContent},#{subImg}, sysdate)
+		insert into subject_tbl(subseq,fk_userid,status,subName,subContent,subImg,saveSubImg,writeday)
+		values(seq_subseq.nextval, #{fk_userid},#{status},#{subName}, #{subContent},#{subImg},#{saveSubImg}, sysdate)
 		
 	</insert>
 
 	<!-- 교과목 목록을 보여주기 -->
 	<select id="selectMatterList" resultType="com.spring.kimkh.model.LecutreMatterInsertVO" parameterType="com.spring.kimkh.model.LecutreMatterInsertVO">
-		select subseq,subName,subContent,subImg
+		select subseq,subName,subContent,subImg,saveSubImg
     	from subject_tbl
 	</select>
 	
 	<!-- 교과목 상세페이지 보여주기(한개만) -->
 	<select id="selectOnekh" resultType="com.spring.kimkh.model.LecutreMatterInsertVO" parameterType="String">
-		select subseq,subName,subContent,subImg
+		select subseq,subName,subContent,subImg,saveSubImg,fk_userid
     	from subject_tbl
         where subseq = #{subseq}
 	</select>
@@ -29,13 +29,110 @@
 	<!-- 수강신청 버튼 클릭시 학생마이페이지에 insert 시키기 -->
 	<insert id="sugangInsert" parameterType="HashMap">
 		insert into myPForS_tbl(mySSEq,fk_subSeq,fk_userid,finalG,examG,attandG)
-		values(seq_mySSeq.nextval,#{fk_subSeq},#{fk_userid},default,default,default)
+		values(seq_mySSeq.nextval,#{fk_subSeq},#{userid},default,default,default)
 	</insert>
 	
 	<!-- 교과목 등록후 교수마이페이지에 insert 시키기 -->
     <insert id="ForPInter" parameterType="HashMap">
-    	insert into myPForP_tbl(myPSeq,fk_userid,university)
-		values(seq_myPSeq.nextval,#{fk_userid},#{university})
+    	insert into myPForP_tbl(myPSeq,fk_userid)
+		values(seq_myPSeq.nextval,#{userid})
     </insert>
+    
+    <!-- 검색기능  -->
+	<select id="getTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		 	from subject_tbl
+     		where 1=1
+     		<if test='searchWord != ""'>
+     		and ${searchType} like '%'||#{searchWord}||'%'
+     		</if>
+     		<if test='status != ""'>
+     			and status =  #{status}
+     		</if>
+	</select>
+	
+	<!-- 검색기능된 교과목 목록 보여주기 -->
+	<select id="searchwWithPaging" parameterType="HashMap" resultType="com.spring.kimkh.model.LecutreMatterInsertVO">
+		select subseq,subName,subContent,subImg,saveSubImg
+		      from 
+		      (
+			      select  row_number() over(order by subseq desc) AS rno,
+			                           subseq,subName,subContent,subImg,saveSubImg
+			       from subject_tbl
+			      where 11=11
+			      <if test='searchWord != ""'>
+                	 and lower(${searchType}) like '%'|| lower(#{searchWord})||'%'
+      			  </if>
+      			  <if test='status != ""'>
+      			  	and status = #{status}
+      			  </if>
+			     order by subseq desc              
+     		) V
+		where V.rno between #{startRno} and #{endRno}   
+	</select>
+	
+	<!-- 학생마이페이지에 10번 x인서트하기 -->
+	<insert id="insertAttand" parameterType="HashMap">
+		insert into attand_tbl (attandSeq, fk_subSeq, lecNum, fk_userid)
+		values(seq_attandSeq.nextval, #{fk_subSeq}, #{i}, #{userid})
+	</insert>
+	
+	  <!-- 글수정 페이지 보여주기 -->  
+	<select id="getView" parameterType="String" resultType="com.spring.kimkh.model.LecutreMatterInsertVO">
+	
+		select subseq,subName,subContent,subImg,saveSubImg,status,fk_userid
+		 from  
+		  (
+		      select subseq,subName,subContent,subImg,saveSubImg,status,fk_userid
+
+		      from subject_tbl
+		  ) V
+		  where V.subseq = #{subseq}
+	
+	</select>
+	
+	<!-- 글 수정 하기 end -->
+	<update id="updateBoard" parameterType="com.spring.kimkh.model.LecutreMatterInsertVO">
+		update subject_tbl set subName = #{subName}, subContent = #{subContent}, status = #{status}
+		where subseq = #{subseq}
+	</update>
+	
+	<delete id="DeleteEaxm_tbl" parameterType="String">
+		delete from exam where subseq= #{subseq}
+	</delete>
+	
+	<!-- 교과목 삭제하기 -->
+	<delete id="Deleteattand_tbl" parameterType="String">
+		delete from attand_tbl where fk_subseq = #{subseq}
+	</delete>
+	
+		<!-- 교과목 삭제하기 -->
+	<delete id="DeletemyPForS_tbl" parameterType="String">
+   	    delete from myPForS_tbl where fk_subseq = #{subseq}
+	</delete>
+	
+	<delete id="lecture_tbl" parameterType="String">
+		delete from lecture_tbl where fk_subseq = #{subseq}
+	</delete>
+	
+	<!-- 교과목 삭제하기 -->
+	<delete id="DeleteSubject" parameterType="String">
+		delete from subject_tbl where subseq = #{subseq}
+	</delete>
+	
+
+	<select id="selectLectureList" resultType="com.spring.kimej.model.LectureVO" parameterType="String">
+		select L.lecSeq,L.fk_subSeq,L.lecTitle
+		from subject_tbl S join lecture_tbl L
+		on S.subseq = L.fk_subSeq
+		where subseq = #{subseq}
+	</select>
+	
+	
+	
+	<select id="searchwWithPaging2" resultType="com.spring.kimkh.model.LecutreMatterInsertVO">
+		select subseq,subName,subContent,subImg,saveSubImg,fk_userid
+    	from subject_tbl
+	</select>
 	
 </mapper>

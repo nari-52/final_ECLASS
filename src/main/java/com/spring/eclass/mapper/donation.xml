@@ -5,102 +5,165 @@
 
 <!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="donation">
-   <!-- 
-   <select id="donationList" resultType="com.spring.kimeh.model.DonStoryVO">
-      select donseq, subject, content, listMainImg, storyImg, donCnt
+	<!-- 
+	<select id="donationList" resultType="com.spring.kimeh.model.DonStoryVO">
+		select donseq, subject, content, listMainImg, storyImg, donCnt
            , to_char(donDate,'yyyy-mm-dd hh24:mi:ss') as donDate 
            , donDueDate , donStatus , targetAmount, totalPayment,
            ceil(donDueDate - donDate) as dDay, totalSupporter
-      from donStory      
-         order by donDate desc
-   </select> -->
-   
-   <select id="donationList" parameterType="HashMap" resultType="com.spring.kimeh.model.DonStoryVO">
-      select donseq, subject, content, listMainImg, storyImg, donCnt,donDate,
-                donDueDate , donStatus , targetAmount, totalPayment, dDay, totalSupporter
-      from
-      ( 
-      select row_number() over ( order by donseq desc) as rno,
-             donseq, subject, content, listMainImg, storyImg, donCnt,
-             to_char(donDate,'yyyy-mm-dd hh24:mi:ss') as donDate, 
-             donDueDate , donStatus , targetAmount, totalPayment,
-             ceil(donDueDate - donDate) as dDay, totalSupporter
-      from donStory
-      where donStatus = 1
-      <if test='searchWord != ""'>
-                 and lower(${searchType}) like '%'|| lower(#{searchWord})||'%'
-      </if>
-      order by donseq desc
-      )V
-      where rno between #{startRno} and #{endRno}   
-   </select>
-   
-   <!-- == 후원리스트(페이징처리를 위한 전체페이지 갯수)-->
+		from donStory      
+   		order by donDate desc
+	</select> -->
+	
+	<select id="donationList" parameterType="HashMap" resultType="com.spring.kimeh.model.DonStoryVO">
+		select donseq, subject, content, listMainImg, storyImg, donCnt,donDate,
+       		   donDueDate , donStatus , targetAmount, totalPayment, dDay, totalSupporter,orgListMainImg, orgStoryImg
+		from
+		( 
+		select row_number() over ( order by donDueDate desc) as rno,
+		       donseq, subject, content, listMainImg, storyImg, donCnt,
+		       to_char(donDate,'yyyy-mm-dd hh24:mi:ss') as donDate, 
+		       donDueDate , donStatus , targetAmount, totalPayment,
+		       ceil(donDueDate - donDate) as dDay, totalSupporter
+		       ,orgListMainImg, orgStoryImg
+		from donStory
+		where donStatus = 1
+		<if test='searchWord != ""'>
+			  	   and lower(${searchType}) like '%'|| lower(#{searchWord})||'%'
+		</if>
+		)V
+		where rno between #{startRno} and #{endRno}   
+		order by dDay desc
+	</select>
+	
+	<!-- == 후원리스트(페이징처리를 위한 전체페이지 갯수)-->
     <select id="getTotalCount" parameterType="HashMap" resultType="int">
-       select count(*)
-       from donStory
-       where donStatus = 1
-       <if test='searchWord != ""'>
-           and lower(${searchType}) like '%'|| lower(#{searchWord})||'%'
-       </if>
+    	select count(*)
+    	from donStory
+    	where donStatus = 1
+    	<if test='searchWord != ""'>
+		     and lower(${searchType}) like '%'|| lower(#{searchWord})||'%'
+		 </if>
     </select>
-   
-   <!-- == 후원리스트(검색어 입력시 자동글 완성) == -->
+	
+	<!-- == 후원리스트(검색어 입력시 자동글 완성) == -->
     <select id="wordSearchShow" parameterType="HashMap" resultType="String">
-       select distinct ${searchType}
-      from donStory
-      where donStatus = 1 and lower(${searchType}) like '%'||lower(#{searchWord})||'%'   
+    	select distinct ${searchType}
+		from donStory
+		where donStatus = 1 and lower(${searchType}) like '%'||lower(#{searchWord})||'%'   
     </select>
-   
-   
-   <select id="donationStory" resultType="com.spring.kimeh.model.DonStoryVO" parameterType="String">
-      select S.donseq, S.subject, S.content, S.listMainImg, S.storyImg, S.donDate, S.donDueDate,
-             S.donStatus, S.targetAmount, 
-             (select nvl(sum(payment + point), 0) from donPayment where fk_donSeq = #{donseq}) as totalPayment, 
-             (select count(*) as totalSupporter from donPayment where fk_donSeq = #{donseq}) as totalSupporter, 
-             I.donImg, I.donImgseq,
-             ceil(donDueDate - donDate) as dDay
-      from donStory S left join donImg I
-      on S.donseq = I.fk_donSeq  
-      where S.donseq = #{donseq}
-   </select>
-   
-   <select id="donationSupporter" resultType="com.spring.kimeh.model.DonStoryVO" parameterType="String">
-      select S.donseq, S.subject, S.content, S.listMainImg, S.storyImg, S.donDate, S.donDueDate,
-             S.donStatus, S.targetAmount,
-             (select nvl(sum(payment + point), 0) from donPayment where fk_donSeq = #{donseq}) as totalPayment,
-             (select count(*) as totalSupporter from donPayment where fk_donSeq = #{donseq}) as totalSupporter,
-             ceil(S.donDueDate - S.donDate) as dDay,
-             I.payment, I.name, I.point, I.noName, I.noDonpmt,
-             (I.payment + I.point) as sumPayment,
-             to_char(I.paymentDate,'yyyy-mm-dd hh24:mi:ss') as paymentDate,
-             round(TO_NUMBER((SYSDATE - paymentDate) * (24 * 60)),0) as showDate  
-      from donStory S left join donPayment I
-      on S.donseq = I.fk_donSeq    
-      where S.donseq = #{donseq}   
-   </select>    
-       
-       
+	
+	
+	<select id="donationStory" resultType="com.spring.kimeh.model.DonStoryVO" parameterType="String">
+		select S.donseq, S.subject, S.content, S.listMainImg, S.storyImg, S.donDate, S.donDueDate,
+		       S.donStatus, S.targetAmount, 
+		       (select nvl(sum(payment + point), 0) from donPayment where fk_donSeq = #{donseq}) as totalPayment, 
+		       (select count(*) as totalSupporter from donPayment where fk_donSeq = #{donseq}) as totalSupporter, 
+		       I.donImg, I.donImgseq,
+		       ceil(donDueDate - donDate) as dDay,
+		       orgListMainImg, orgStoryImg
+		from donStory S left join donImg I
+		on S.donseq = I.fk_donSeq  
+		where S.donseq = #{donseq}
+	</select>
+	
+	<select id="donationSupporter" resultType="com.spring.kimeh.model.DonStoryVO" parameterType="String">
+		select S.donseq, S.subject, S.content, S.listMainImg, S.storyImg, S.donDate, S.donDueDate,
+		       S.donStatus, S.targetAmount,
+		       (select nvl(sum(payment + point), 0) from donPayment where fk_donSeq = #{donseq}) as totalPayment,
+		       (select count(*) as totalSupporter from donPayment where fk_donSeq = #{donseq}) as totalSupporter,
+		       ceil(S.donDueDate - S.donDate) as dDay,
+		       I.payment, I.name, I.point, I.noName, I.noDonpmt,
+		       (I.payment + I.point) as sumPayment,
+		       to_char(I.paymentDate,'yyyy-mm-dd hh24:mi:ss') as paymentDate,
+		       round(TO_NUMBER((SYSDATE - paymentDate) * (24 * 60)),0) as showDate,
+		       orgListMainImg, orgStoryImg  
+		from donStory S left join donPayment I
+		on S.donseq = I.fk_donSeq    
+		where S.donseq = #{donseq}	
+	</select>
+	
+	<!-- 더보기 페이징 처리 (후원서포터) -->
+	<select id="donationSupporterMoreJSON" resultType="com.spring.kimeh.model.DonStoryVO" parameterType="HashMap">
+		select donseq, subject, content, listMainImg, storyImg, donDate, donDueDate, donStatus, targetAmount, 
+       		   totalPayment, totalSupporter,dDay, payment, name, point, noName, noDonpmt, sumPayment, paymentDate, showDate
+		from
+		(
+			select row_number() over(order by paymentDate desc) as RNO,
+			       S.donseq, S.subject, S.content, S.listMainImg, S.storyImg, S.donDate, S.donDueDate,
+			       S.donStatus, S.targetAmount, S.totalPayment , S.totalSupporter,
+			       ceil(S.donDueDate - S.donDate) as dDay,
+			       I.payment, I.name, I.point, I.noName, I.noDonpmt,
+			       (I.payment + I.point) as sumPayment,
+			       to_char(I.paymentDate,'yyyy-mm-dd hh24:mi:ss') as paymentDate,
+			       round(TO_NUMBER((SYSDATE - paymentDate) * (24 * 60)),0) as showDate 
+			       ,orgListMainImg, orgStoryImg
+			from donStory S left join donPayment I
+			on S.donseq = I.fk_donSeq  
+			where S.donseq = #{donseq}
+		)V
+		where V.RNO between #{startRno} and #{endRno}   
+	</select>  
+	    
+	    
     <!-- 1. 결제하기  -->
     <insert id="donationPayment" parameterType="com.spring.kimeh.model.DonPaymentVO">
-       insert into donPayment(fk_donSeq, fk_userid, name, noName, noDonpmt, paymentDate, payment, point) 
-      values( #{fk_donSeq} , #{fk_userid} ,#{name}, default, default, default, #{payment}, default )
+    	insert into donPayment(fk_donSeq, fk_userid, name, noName, noDonpmt, paymentDate, payment, point) 
+		values( #{fk_donSeq} , #{fk_userid} ,#{name}, default, default, default, #{payment}, default )
     </insert>
     
     <!-- 2. 포인트 차감 -->
     <update id="updateUsePoint" parameterType="com.spring.kimeh.model.DonPaymentVO">
-       update eclass_member set point = point - to_number(#{point})
-      where userid = #{fk_userid}    
+    	update eclass_member set point = point - to_number(#{point})
+		where userid = #{fk_userid}    
     </update>
     
     <!-- 3. AOP에서 사용하는 것으로 결제한 회원에게 포인트 증가  -->
     <update id="pointPlus" parameterType="HashMap">
-       update eclass_member set point = point + to_number(#{pointPlus})
-      where userid = #{userid}
+    	update eclass_member set point = point + to_number(#{pointPlus})
+		where userid = #{userid}
     </update>
     
-    
-    
-    
+	<!-- 후원하기 글 등록 (파일첨부 없는 경우)-->
+	<insert id="donationStoryAdd" parameterType="com.spring.kimeh.model.DonStoryVO">
+		insert into donStory(donseq, subject, content, donCnt, donDate, donDueDate, donStatus, targetAmount, totalPayment, totalSupporter)
+		values(donStorySeq.nextval, #{subject} , #{content}, default, #{donDate}, #{donDueDate}, default, #{targetAmount} , default, default)
+	</insert>
+	
+	<!-- 후원하기 글 등록 (파일첨부 있는 경우)-->
+	<insert id="donationStoryAdd_withFile" parameterType="com.spring.kimeh.model.DonStoryVO">
+		insert into donStory(donseq, subject, content, listMainImg, storyImg, donCnt, donDate, donDueDate, donStatus, targetAmount, totalPayment, totalSupporter, orgListMainImg, orgStoryImg)
+		values(donStorySeq.nextval, #{subject} , #{content}, #{listMainImg}, #{storyImg}, default, #{donDate}, #{donDueDate}, default, #{targetAmount} , default, default, #{orgListMainImg}, #{orgStoryImg})
+	</insert>
+	
+	<!-- 글 수정하기 -->
+	<select id="donationStoryEdit" resultType="com.spring.kimeh.model.DonStoryVO" parameterType="String">
+		select S.donseq, S.subject, S.content, S.listMainImg, S.storyImg, S.donDate, S.donDueDate,
+		       S.donStatus, S.targetAmount, 
+		       (select nvl(sum(payment + point), 0) from donPayment where fk_donSeq = #{donseq}) as totalPayment, 
+		       (select count(*) as totalSupporter from donPayment where fk_donSeq = #{donseq}) as totalSupporter, 
+		       I.donImg, I.donImgseq,
+		       ceil(donDueDate - donDate) as dDay,
+		       orgListMainImg, orgStoryImg
+		from donStory S left join donImg I
+		on S.donseq = I.fk_donSeq  
+		where S.donseq = #{donseq}	
+	</select>
+		 	
+	<!-- 글 수정 완료하기 -->
+	<update id="donationStoryEditEnd" parameterType="com.spring.kimeh.model.DonStoryVO">
+		update donStory set subject = #{subject}, content = #{content}
+						  , listMainImg = #{listMainImg}, storyImg = #{storyImg}
+						  , donDate = #{donDate}, donDueDate = #{donDueDate}, targetAmount = #{targetAmount} 
+						  , orgListMainImg = #{orgListMainImg}, orgStoryImg = #{orgStoryImg}
+		where donseq = #{donseq}
+	</update>
+
+	<!-- 글 삭제하기  -->
+	<update id="donationStoryDel" parameterType="String">
+		update donStory set donStatus = 0
+		where donseq = #{donseq}
+	</update>
+
 
 </mapper>

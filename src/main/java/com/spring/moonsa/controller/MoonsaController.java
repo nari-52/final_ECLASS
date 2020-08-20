@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.common.MyUtil;
 import com.spring.moonsa.model.AttandVO;
 import com.spring.moonsa.service.InterMypageService;
 import com.spring.nari.model.MemberVO;
@@ -214,13 +214,17 @@ public class MoonsaController {
 		
 		int n = service.getChangeA(paraMap); // 출석 정보 수정하기(update)
 		
+		if(n == 1) {
+			service.getChangeAtotal(paraMap); // 'O'로 변경될 경우 출석점수 변경
+		}
+		
 	    JSONObject jsonObj = new JSONObject();
 	    jsonObj.put("n", n);
 	    
 		return jsonObj.toString();
 	}
 
-	// 출석수정 (교수) -- 수정버튼 누른 후 ajax
+	// 성적수정 (교수) -- 수정버튼 누른 후 ajax
 	@ResponseBody // view단이 필요 없다는것. 여긴 ajax이므로 필요없음
 	@RequestMapping(value="/changeGradeEnd.up", produces="text/plain;charset=UTF-8")
 	public String requiredLogin_changeGradeEnd(HttpServletRequest request, HttpServletResponse response) {

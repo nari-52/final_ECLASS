@@ -7,16 +7,18 @@ public class ExamVO {
 	private String userid;
 	private String examTitle;
 	private String examDate;
+	private String subName;
 	
 	public ExamVO() {}
 	
-	public ExamVO(String exam_seq, String subSeq, String userid, String examTitle, String examDate) {
+	public ExamVO(String exam_seq, String subSeq, String userid, String examTitle, String examDate, String subName) {
 		super();
 		this.exam_seq = exam_seq;
 		this.subSeq = subSeq;
 		this.userid = userid;
 		this.examTitle = examTitle;
 		this.examDate = examDate;
+		this.subName = subName;
 	}
 
 	public String getExam_seq() {
@@ -58,6 +60,15 @@ public class ExamVO {
 	public void setExamDate(String examDate) {
 		this.examDate = examDate;
 	}
+
+	public String getSubName() {
+		return subName;
+	}
+
+	public void setSubName(String subName) {
+		this.subName = subName;
+	}
+	
 	
 
 }

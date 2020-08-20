@@ -60,6 +60,39 @@
    		where userid = #{userid}
    </update>
    
+   <!-- 회원정보 수정하기 위한 정보 가져오기 -->
+   <select id="select_updateMember" parameterType="String" resultType="com.spring.nari.model.MemberVO">
+   		select userid,name,pwd,identity,university,major,student_num,email,mobile,
+	            postcode,address,detailaddress,extraaddress,point,registerday,status,
+	            last_login_date, pwd_change_date,filename,orgfilename
+	    from eclass_member
+	    where userid=#{userid}
+   </select>
+   
+   <!-- 회원정보 수정하기 -->
+   <update id="updateMember" parameterType="com.spring.nari.model.MemberVO">
+   		update eclass_member set pwd=#{pwd}, university = #{university}, major = #{major}, 
+   				student_num=#{student_num}, email = #{email}, mobile =#{mobile},
+	            postcode=#{postcode}, address=#{address}, detailaddress=#{detailaddress}, 
+	            extraaddress = #{extraaddress}, pwd_change_date=sysdate
+	    where userid = #{userid}
+   </update>
+   
+   <!-- 관리자페이지 학생관리 보여주기 -->
+   <select id="member_studentList" resultType="com.spring.nari.model.MemberVO">
+   		select userid,name,university,to_char(registerday, 'yyyy-MM-dd') AS registerday,status
+	    from eclass_member
+	    where identity = 1
+	    order by name
+   </select>
+   
+      <!-- 관리자페이지 교수관리 보여주기 -->
+   <select id="member_professorList" resultType="com.spring.nari.model.MemberVO">
+   		select userid,name,university,to_char(registerday, 'yyyy-MM-dd') AS registerday,status
+	    from eclass_member
+	    where identity = 2
+	    order by name
+   </select>
    
 </mapper>
 

@@ -21,6 +21,17 @@
 		values (SEQ_LECSEQ.nextval, #{lecNum}, #{fk_subSeq}, #{lecTitle}, #{lecLink}, #{lecStartday}, #{lecEndday})		
 	</insert>
 	
+	<!-- 강의 수정하기 -->
+	<update id="lectureEdit" parameterType="HashMap">
+		update lecture_tbl set lecNum=#{lecNum}, lecTitle=#{lecTitle}, lecLink=#{lecLink}, lecStartday=#{lecStartday}, lecEndday=#{lecEndday}
+   		where lecSeq = #{lecSeq}
+	</update>
+	
+	<!-- 강의 삭제하기 -->
+	<delete id="lectureDelete" parameterType="String">
+		delete from lecture_tbl where lecSeq = #{lecSeq}
+	</delete>
+	
 	<!-- 강의 목록 -->
 	<select id="ListSearch" resultType="com.spring.kimej.model.LectureVO">
 	    select lecSeq, lecNum, lecTitle, to_char(lecStartday, 'yyyy-mm-dd') AS lecStartday, to_char(lecEndday, 'yyyy-mm-dd') AS lecEndday, subName, fk_subSeq
@@ -35,15 +46,41 @@
 	
 	<!-- 강의 상세 페이지 -->
 	<select id="getView" parameterType="String" resultType="com.spring.kimej.model.LectureVO">
-		select lecTitle, lecLink, lecStartday, lecEndday, fk_subSeq
+		select lecTitle, lecLink, lecStartday, lecEndday, fk_subSeq, lecSeq, lecNum
 		from lecture_tbl
 		where lecSeq = #{lecSeq}
 	</select>
 	
-	<!-- 강의 댓글 -->
+	<!-- 강의 댓글 작성하기 -->
 	<insert id="addComment" parameterType="com.spring.kimej.model.LectureCommentVO">
-    	insert into lectureComment_tbl(lecComSeq, fk_lecSeq, fk_userid, comContent, writeday)
-        values(seq_lecComSeq.nextval, #{fk_lecSeq}, #{fk_userid}, #{comContent}, default)
+    	insert into lectureComment_tbl(lecComSeq, fk_lecSeq, fk_subSeq, fk_userid, comContent, writeday)
+        values(seq_lecComSeq.nextval, #{fk_lecSeq}, #{fk_subSeq}, #{fk_userid}, #{comContent}, default)
     </insert>
+    
+    <!-- 강의 댓글 삭제하기 -->
+	<delete id="lectureCommentDelete" parameterType="String">
+		delete from lectureComment_tbl where lecComSeq = #{lecComSeq}
+	</delete>
+    
+    <!-- 강의 댓글 보여주기 -->
+	<select id="getCommentListPaging" parameterType="HashMap" resultType="com.spring.kimej.model.LectureCommentVO">
+    	select fk_userid, comContent, writeday, lecComSeq
+		from 
+		(
+	  	  select row_number()over(order by lecComSeq desc) as rno,
+	             fk_userid, comContent, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') as writeday, lecComSeq
+	      from lectureComment_tbl
+	      where fk_lecSeq = #{fk_lecSeq}
+	    ) V 
+	    where rno between #{startRno} and #{endRno}
+    </select>
+     
+     <!-- 원게시물에 딸린 댓글 totalPage 알아오기(Ajax 로 처리) -->
+     <select id="getCommentTotalCount" parameterType="HashMap" resultType="int">
+         select count(*)
+         from lectureComment_tbl
+         where fk_lecSeq = #{fk_lecSeq}
+     </select>
+    
 
 </mapper>

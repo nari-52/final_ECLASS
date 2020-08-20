@@ -44,7 +44,7 @@ public class GoogleMail {
 	    	MimeMessage msg = new MimeMessage(ses);
 
 	    	// 제목 설정
-	    	String subject = "ECLASS 이메일 인증을 위한 인증코드 발송 입니다.";
+	    	String subject = "[ECLASS] 인증코드 발송 메일 입니다.";
 	    	msg.setSubject(subject);
 	    	        
 	    	// 보내는 사람의 메일주소

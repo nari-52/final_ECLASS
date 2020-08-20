@@ -1,0 +1,12 @@
+@charset "UTF-8";
+
+#contentsWrap {
+	width: 1080px;
+	margin: 0 auto;	
+}
+
+#register-title {
+	font-size: 20pt;
+	font-weight: bold;
+	margin-bottom: 80px;
+}

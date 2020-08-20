@@ -7,7 +7,7 @@
 
 <style type="text/css">
 	div#signuptitle {
-		border: solid 1px gray;
+		/* border: solid 1px gray; */
 		max-width: 1080px;
 		height: 100px;
 		margin: 0 auto;
@@ -26,9 +26,9 @@
 	/* 진행상황 시작 ------------------------------------------ */
 	
 	div#idFindcontent {
-		border: solid 1px red;
+		/* border: solid 1px red; */
 		width: 100%;
-		height: 1500px;
+		height: 700px;
 		background: #fafafa;
 		display: inline-block;
 		
@@ -39,7 +39,7 @@
 	div#idFind_content {
 		/* border: solid 1px red; */
 		width: 100%;
-		height: 800px;
+		height: 600px;
 		background: #fafafa;
 		display: inline-block;
 		margin: 0 auto;
@@ -49,7 +49,7 @@
 	div#idFind_back {
 		border: solid 1px #ddd;
 		width: 1080px;
-		height: 570px;
+		height: 470px;
 		background: white;
 		margin: 0 auto;
 		padding-top: 50px; /* form 태그 위에 padding 주기 */
@@ -69,36 +69,40 @@
 		margin-bottom: 10px;
 	}
 	
-	/* 가입하기 버튼 */
-	div#idfind {
-		border: solid 1px blue;
-		margin: 0 auto;
-		width: 620px;
-		height: 40px;
-		background-color: #00bcd4;
-		color: white;
-		font-size: 13pt;
-		font-weight: bold;
-		text-align: center;
-		padding-top: 10px;
-	}
-	
 	/* 메일 인증번호 받기 */
 	div#mailbtn {
-		border: solid 1px blue;
+		border: solid 1px #ddd;
 		margin: 0 auto;
 		width: 140px;
 		height: 100px;
 		line-height: 100px;
 		background-color: #00bcd4;
 		color: white;
-		font-size: 14pt;
+		font-size: 13pt;
 		font-weight: bold;
 		text-align: center;
 		padding-top: 10px;
 		float: right;
 		margin-top: -125px;
+		cursor: pointer;
 	}
+	
+	/* 아이디찾기 버튼 */
+	div#idfindbtn {
+		border: solid 1px #ddd;
+		margin: 0 auto;
+		width: 620px;
+		height: 30px;
+		background-color: #00bcd4;
+		color: white;
+		font-size: 12pt;
+		font-weight: bold;
+		text-align: center;
+		padding-top: 10px;
+		margin-top: 30px;
+		cursor: pointer;
+	}
+	
 	
 </style>
 
@@ -145,7 +149,7 @@
 				
 		// 아이디찾기 버튼 클릭 시 확인하기
 		$("#idfindbtn").click(function(){ 
-			/* 
+			
 			// 1. 이름과 메일주소가 공란인지 확인한다. -------------------------------------------- 
 			var nameVal = $("#name").val().trim();
 			var emailVal = $("#email").val().trim();
@@ -181,14 +185,10 @@
 				alert("메일인증 시 작성한 이메일과 일치하지 않습니다.");
 				return;
 			}
-			 */
-
-			 
+			
 			 // alert("userid : " + userid);
 			 goidFind(); // 아이디찾기
-			
-			
-			
+
 		}); // end of $("#idfindbtn").click(function() ------------
 
 
@@ -238,17 +238,17 @@
 					
 					<input type="hidden" id="namecheck" value="" />
 					<input type="hidden" id="emailcheck" value="" />
-					<input type="text" id="userid" name="userid" value="" />
+					<input type="hidden" id="userid" name="userid" value="" />
 					
 					<label style="padding: 10px 50px 0px 40px; line-height: 50px">인증번호</label><input type="text" id="mailmessageCheck" name="mailmessageCheck" required placeholder="인증번호를 입력해주세요." style="border: solid 1px #ddd; width: 450px; height: 50px; vertical-align: middle; padding-left: 10px; font-size: 11pt; margin-top: 10px;"/>
-					<input type="text" id="mailmessage" name="mailmessage" value="${mailmessage}" />
+					<input type="hidden" id="mailmessage" name="mailmessage" value="${mailmessage}" />
 					
 
 					
 					<div id="idfindbtn" >아이디찾기</div>
 				
-					<div style="color: #888; margin-top: 30px;">※ 인증메일 발송에 약간의 시간이 소요됩니다.</div>
-					<div style="color: #888;">※ 회원가입시 사용하신 메일주소를 입력해주세요.</div>
+					<div style="color: #888; margin-top: 30px;">※ 회원가입시 사용하신 이름과 메일주소를 입력해주세요.</div>
+					<div style="color: #888;">※ 인증메일 발송에 약간의 시간이 소요됩니다.</div>
 
 				</form>
 			</div>

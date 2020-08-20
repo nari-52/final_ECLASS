@@ -7,7 +7,7 @@
 
 <style type="text/css">
 	div#signuptitle {
-		border: solid 1px gray;
+		/* border: solid 1px gray; */
 		max-width: 1080px;
 		height: 100px;
 		margin: 0 auto;
@@ -26,7 +26,7 @@
 	/* 진행상황 시작 ------------------------------------------ */
 	
 	div#signupcontent {
-		border: solid 1px red;
+		/* border: solid 1px red; */
 		width: 100%;
 		height: 1200px;
 		background: #fafafa;
@@ -35,9 +35,9 @@
 	}
 	
 	div#processBar {
-		border: solid 1px yellow;
+		/* border: solid 1px yellow; */
 		display: inline-block;
-		padding: 20px 0 20px 180px;
+		padding: 40px 0 20px 180px;
 		/* overflow: hidden; *//* div 태그 상위 태그 크기에 맞추기 */
 		align-content: center; 
 	}
@@ -49,9 +49,10 @@
 	}
 	
 	li.currentProcess {
-		border: solid 1px blue;
+		border: solid 1px #ddd;
 		width: 180px;
-		background-color: yellow;
+		background-color: white;
+		padding: 5px;
 	}
 	
 	.pracessTitle {
@@ -85,18 +86,18 @@
 	
 	/* 동의/취소 버튼 --------------------------------------------  */
 	div#buttonTnC {
-		border: solid 1px blue;
+		/* border: solid 1px blue; */
 		width: 100%;
+		margin-bottom: 30px;
 	}
 	
 	.btnTnC {
-		border: solid 1px red;
+		border: solid 1px #ddd;
 		width: 150px;
 		height: 42px;
 		font-size: 14pt;
 		margin: 0 10px;
-		
-		
+		cursor: pointer;
 	}
 	
 	.agree {
@@ -110,6 +111,10 @@
 		background-color: #666;
 		color: white;
 		font-weight: bold;
+	}
+	
+	.pointer {
+		cursor: pointer;
 	}
 	
 </style>
@@ -215,24 +220,24 @@
 		</div>
 		<br/><br/><br/><br/>
 		<div id="TermsAndConditions">
-			<input type="checkbox" id="allCheck" /><label for="allCheck">모든 약관을 확인하고 모두 동의합니다.</label>
+			<input type="checkbox" id="allCheck" class="pointer"/><label for="allCheck" class="pointer">모든 약관을 확인하고 모두 동의합니다.</label>
 			<hr>
 			<br/>
 			<h3>ECLASS 웹사이트 이용약관 (필수)</h3>
 				<div id="TnC1">
 					<iframe src="<c:url value="/resources/iframeAgree/tnc1.html" />" width="100%" height="150px" style="border: solid 1px gray; margin: 20px 0px; background-color: white;"></iframe>
 				</div>
-				<input type="checkbox" name="TnC" id="TnC01" /><label for="TnC01" class="TnCcheck">ECLASS 웹사이트 이용약관에 동의합니다.</label>
+				<input type="checkbox" name="TnC" id="TnC01" class="pointer"/><label for="TnC01" class="TnCcheck pointer">ECLASS 웹사이트 이용약관에 동의합니다.</label>
 			<h3>개인정보처리방침 (필수)</h3>
 				<div id="TnC2">
 					<iframe src="<c:url value="/resources/iframeAgree/tnc2.html" />" width="100%" height="150px" style="border: solid 1px gray; margin: 20px 0px; background-color: white;"></iframe>
 				</div>
-				<input type="checkbox" name="TnC" id="TnC02" /><label for="TnC02" class="TnCcheck">개인정보처리방침에 동의합니다.</label>
+				<input type="checkbox" name="TnC" id="TnC02" class="pointer"/><label for="TnC02" class="TnCcheck pointer">개인정보처리방침에 동의합니다.</label>
 			<h3>개인정보위탁동의 (선택)</h3>
 				<div id="TnC3">
 					<iframe src="<c:url value="/resources/iframeAgree/tnc3.html" />" width="100%" height="150px" style="border: solid 1px gray; margin: 20px 0px; background-color: white;"></iframe>
 				</div>
-				<input type="checkbox" name="TnC" id="TnC03" /><label for="TnC03" class="TnCcheck">개인정보 위탁에 동의합니다.</label>
+				<input type="checkbox" name="TnC" id="TnC03" class="pointer"/><label for="TnC03" class="TnCcheck pointer">개인정보 위탁에 동의합니다.</label>
 			<input type="hidden" name="identity" id="identity" value="${identity}"/>
 			<br/><br/><br/>
 			<div id="buttonTnC">

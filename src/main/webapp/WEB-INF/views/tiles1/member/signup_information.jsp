@@ -7,7 +7,7 @@
 
 <style type="text/css">
 	div#signuptitle {
-		border: solid 1px gray;
+		/* border: solid 1px gray; */
 		max-width: 1080px;
 		height: 100px;
 		margin: 0 auto;
@@ -35,9 +35,9 @@
 	}
 	
 	div#processBar {
-		border: solid 1px yellow;
+		/* border: solid 1px yellow; */
 		display: inline-block;
-		padding: 20px 0 20px 180px;
+		padding: 40px 0 20px 180px;
 		/* overflow: hidden; *//* div 태그 상위 태그 크기에 맞추기 */
 		align-content: center; 
 	}
@@ -49,9 +49,10 @@
 	}
 	
 	li.currentProcess {
-		border: solid 1px blue;
+		border: solid 1px #ddd;
 		width: 180px;
-		background-color: yellow;
+		background-color: white;
+		padding: 5px;
 	}
 	
 	.pracessTitle {
@@ -72,7 +73,7 @@
 	}
 	
 	/* 진행상황 끝 ------------------------------------------ */
-
+	
 	/* 가입정보 입력 ------------------------------------------ */
 	div#information_content {
 		/* border: solid 1px red; */
@@ -166,12 +167,12 @@
 	
 	/* 가입/취소 버튼 --------------------------------------------  */
 	div#buttonTnC {
-		border: solid 1px blue;
+		/* border: solid 1px blue; */
 		width: 100%;
 	}
 	
 	.btnTnC {
-		border: solid 1px red;
+		border: solid 1px #ddd;
 		width: 150px;
 		height: 42px;
 		font-size: 14pt;
@@ -183,7 +184,7 @@
 		background-color: #00bcd4;
 		color: white;
 		font-weight: bold;
-		margin-left: 360px;
+		margin-left: 400px;
 	}
 	
 	.reset {
@@ -192,6 +193,11 @@
 		font-weight: bold;
 	}
 	
+	.pointer {
+		cursor: pointer;
+	}
+	
+	
 </style>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -199,6 +205,16 @@
 <script type="text/javascript">
 
 	$(document).ready(function(){ 
+		
+		// 엔터를 누를 경우 다음 input 태그로 이동하기
+		$('input').keydown(function(e) {
+			var idx = $('input').index(this); // index가 바로 eq 값을 알려주는 친구
+			if (e.keyCode === 13) {
+				event.preventDefault(); // input 태그에서 엔터 누를 시 submit 방지하기
+				$('input').eq(idx+1).focus();
+				
+			};
+		}); 
 		
 		// 아이디 중복확인 클릭 여부
 		var bIdDuplicateCheck = false; 
@@ -218,13 +234,24 @@
 		
 		// 아이디 유효성 검사 ---------------------------
 		$("#userid").blur(function(){ 
-			// 유효성 검사 해야함 (영문 + 숫자 조합 5 ~ 20)
+
 			var data = $(this).val().trim();
-			if(data == "") {
-				$(this).parent().find(".error").show();
+			
+			// 유효성 검사 해야함 (영소문자 + 숫자 조합 4 ~ 20)
+			var regExp_userid = /^(?=.*[a-z])+[a-z0-9_]{4,20}$/;
+			var bool = regExp_userid.test(data);
+			
+			if(data == "" && bool) {
+				$(this).parent().find(".iderror").show();
+				$(this).parent().find(".idregex").hide();
+			}
+			else if (!bool) {
+				$(this).parent().find(".idregex").show();
+				$(this).parent().find(".iderror").hide();
 			}
 			else {
-				$(this).parent().find(".error").hide();
+				$(this).parent().find(".iderror").hide();
+				$(this).parent().find(".idregex").hide();
 			}
 		});
 
@@ -232,6 +259,10 @@
 		$("#idcheck").click(function(){ 
 			// alert("아이디 중복검사 체크");
 			var useridVal = $("#userid").val().trim();
+			
+			$("#idcheckResult").html("");
+			var regExp_userid = /^(?=.*[a-z])+[a-z0-9_]{4,20}$/;
+			var bool = regExp_userid.test(useridVal);
 			
 			// 빈칸으로 아이디 중복검사 버튼을 누른 경우
 			if(useridVal == "") {
@@ -248,11 +279,12 @@
 					type: "POST",
 					data: {"userid":$("#userid").val()},
 					dataType: "JSON",
-					success: function(json) {
-						if(json.isUse == null && useridVal != "" ) {
+					success: function(json) {						
+						if(json.isUse == null && useridVal != "" && bool ) {
 							$("#idcheckResult").html("사용가능합니다.").css({"color":"navy", "font-size":"9pt"});
+							
 						}
-						else if (useridVal != "") {
+						else if (useridVal != "" & bool) {
 							$("#idcheckResult").html($("#userid").val()+" 은 중복된 ID라 사용 불가능합니다.").css({"color":"red", "font-size":"9pt"});
 							$("#userid").val("");
 						}
@@ -262,15 +294,86 @@
 					}
 				}); // end of ajax
 			}
+		}); // end of $("#idcheck").click(function(){ ----------------------------------------------
+		
+		// 비밀번호 유효성 검사 --------------------------------------------
+		$("#pwd").blur(function(){ 
+			
+			var data = $(this).val().trim();
+			var regExp_pwd = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);
+		
+			var bool = regExp_pwd.test(data);
+			
+			if (data != "" && !bool ) { // 암호가 정규표현식에 위배된 경우
+				$(this).parent().find(".error").show();
+			}
+			else {
+				$(this).parent().find(".error").hide();
+			}
+
+		}); // -------------------------------------------------------
+		
+		
+		// 비밀번호 일치여부 확인
+		$("#pwdcheck").blur(function(){ 
+			var pwd = $("#pwd").val();
+			var pwdcheck = $(this).val().trim();
+
+			if (pwd != pwdcheck) { // 암호가 정규표현식에 위배된 경우
+				$(this).parent().find(".error").show();
+				$("#pwdcheck").val("");
+				$("#pwdcheck").focus();
+			}
+			else {
+				$(this).parent().find(".error").hide();
+			}
+
+		}); // -------------------------------------------------------
+		
+
+		// 휴대전화 유효성 검사 ------------------------------------------
+		$("#mobile").keyup(function(){  
+			
+			var keycode = event.keyCode;
+			
+			
+			// 숫자 이외의 문자를 입력 시 에러 문구 보여준다.
+			if( !((48 <= keycode && keycode<=57) || (96<=keycode && keycode<=105))){
+				$(this).parent().find(".error").show(); 
+				$("#mobilecheckResult").val("");
+		    }
+			
+			$(this).parent().find(".error").hide();
+			var data = $(this).val().trim();
+			var regExp_mobile = /^((01[1|6|7|8|9])[1-9]+[0-9]{6,7})|(010[1-9][0-9]{7})$/;
+	
+			var bool = regExp_mobile.test(data);
+			
+			if (!bool ) { // 암호가 정규표현식에 위배된 경우
+				$(this).parent().find(".error").show();
+				$("#mobilecheckResult").val("");
+			}
+			else {
+				$(this).parent().find(".error").hide();
+			}
+		
 		});
 		
+			
 		// AJAX로 휴대전화 중복 검사 --------------------------
 		$("#mobilecheck").click(function(){ 
 			// alert("모바일 중복검사 체크");
 			var mobileVal = $("#mobile").val().trim();
+			var keycode = event.keyCode;
+			
+			// 숫자 이외의 문자를 입력 시 에러 문구 보여준다.
+			if( !((48 <= keycode && keycode<=57) || (96<=keycode && keycode<=105))){
+				$(".mberror").show();
+				$("#mobilecheckResult").val("");
+		    }
 			
 			// 빈칸으로 모바일 중복검사 버튼을 누른 경우
-			if(mobileVal == "") {
+			if(mobileVal == "" || ((48 <= keycode && keycode<=57) || (96<=keycode && keycode<=105))) {
 				$(".mberror").show();
 			}
 			// 모바일 중복검사 버튼을 잘 누른 경우
@@ -298,16 +401,7 @@
 					}
 				}); // end of ajax
 			}
-		});
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		}); 
 		
 		
 		// 이메일 수정 불가 -------------------------------
@@ -319,9 +413,7 @@
 			$(this).parent().find(".error").hide();
 		});
 		
-		
-		
-		// 주소 api
+		// 주소 api ----------------------------------------
 		$("#zipcodeSearch").click(function(){
 			// alert("주소 api");
 			new daum.Postcode({
@@ -370,18 +462,30 @@
 	            }
 	        }).open();	
 		});
+
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		// 가입 버튼을 눌렀을 경우 ------------------------------------
 		$("#goRegister").click(function(){ 
+			
+			// 아이디 공백 여부 --------------------------------
+			var useridVal = $("#userid").val().trim();
+			
+			if (useridVal == "") {
+				alert("아이디를 입력해주세요!");
+				return;
+			}
+			
+			// 아이디 중복확인 클릭 여부 --------------------------------
+			if (bIdDuplicateCheck == false) {
+				alert("아이디 중복확인은 필수입니다!");
+				return;
+			}
+			
+			// 휴대전화 중복확인 클릭 여부 --------------------------------
+			if (bMobileDuplicateCheck == false) {
+				alert("휴대전화 중복확인은 필수입니다!");
+				return;
+			}
 			
 			func_goRegister();
 			
@@ -447,7 +551,7 @@
 			<div id="information_back">
 				<span style="font-size: 16pt; ">가입정보를 입력해 주세요.</span><span class="required_red" style="margin-left: 630px;">*</span>
 				<span style="font-size: 10pt;">표시는 필수 입력 항목입니다.</span>
-				<form name="information_form" id="information_form">
+				<form name="information_form" id="information_form" >
 					<table>
 						<tr>
 							<th>
@@ -467,10 +571,11 @@
 							</th>
 							<td>
 								<input type="text" name="userid" id="userid" class="requiredInfo inputbox_short" /> 
-								<span id="idcheck" style="display: inline-block; border: solid 1px #464646; width: 100px; line-height: 30pt; text-align: center; margin-left: 15px;">중복확인</span>
+								<span id="idcheck" class="pointer" style="display: inline-block; border: solid 1px #464646; width: 100px; line-height: 30pt; text-align: center; margin-left: 15px;">중복확인</span>
 								<span id="idcheckResult"></span>
 								<span class="error iderror">아이디는 필수입력 사항입니다.</span>
-								<div class="sub_text">중복확인을 눌러주세요. 가입 후 아이디 변경은 불가합니다.</div>
+								<span class="error idregex">아이디는 영소문자, 숫자를 포함하여 4~20글자로 입력해주세요.</span>
+								<div class="sub_text">아이디는 영소문자, 숫자를 포함하여 4~20글자로 입력해주세요. 중복확인을 눌러주세요. </div>
 							</td>
 						</tr>
 						
@@ -503,10 +608,10 @@
 								대학명
 							</th>
 							<td>
-								<input type="text" name="university" id="university" class="requiredInfo inputbox_short" /> 
-								<span id="universitycheck" style="display: inline-block; border: solid 1px #464646; width: 100px; line-height: 30pt; text-align: center; margin-left: 15px;">대학검색</span>
+								<input type="text" name="university" id="university" placeholder="OO대학교" class="requiredInfo inputbox_short" /> 
+								<!-- <span id="universitycheck" style="display: inline-block; border: solid 1px #464646; width: 100px; line-height: 30pt; text-align: center; margin-left: 15px;">대학검색</span> -->
 								<span class="error"></span>
-								<div class="sub_text">대학검색을 눌러 학교명을 입력해주세요.</div>
+								<div class="sub_text">예: 한국대학교</div>
 							</td>
 						</tr>
 						
@@ -518,20 +623,35 @@
 							<td>
 								<input type="text" name="major" id="major" class="requiredInfo inputbox_short" /> 
 								<span class="error"></span>
+								<div class="sub_text">학과명을 입력해주세요.</div>
 							</td>
 						</tr>
 						
-						<tr>
-							<th>
-								<span class="required_red">*</span>
-								학번
-							</th>
-							<td>
-								<input type="text" name="student_num" id="student_num" class="requiredInfo inputbox_short" /> 
-								<span class="error"></span>
-							</td>
-						</tr>
-						
+						<c:if test="${identity eq '1'}">
+							<tr>
+								<th>
+									<span class="required_red">*</span>
+									학번
+								</th>
+								<td>
+									<input type="text" name="student_num" id="student_num" class="requiredInfo inputbox_short" /> 
+									<span class="error"></span>
+									<div class="sub_text">학번을 입력해주세요.</div>
+								</td>
+							</tr>
+						</c:if>
+						<c:if test="${identity eq '2'}">
+							<tr>
+								<th>
+									학번
+								</th>
+								<td>
+									<input type="text" name="student_num" id="student_num" class="requiredInfo inputbox_short" /> 
+									<span class="error"></span>
+									<div class="sub_text">교수로 회원가입 시 입력하지 않으셔도 됩니다.</div>
+								</td>
+							</tr>
+						</c:if>
 						<tr>
 							<th>
 								<span class="required_red">*</span>
@@ -539,9 +659,9 @@
 							</th>
 							<td>
 								<input type="text" name="mobile" id="mobile" class="requiredInfo inputbox_short" placeholder="숫자만 입력해 주세요." /> 
-								<span id="mobilecheck" style="display: inline-block; border: solid 1px #464646; width: 100px; line-height: 30pt; text-align: center; margin-left: 15px;">중복확인</span>
+								<span id="mobilecheck" class="pointer" style="display: inline-block; border: solid 1px #464646; width: 100px; line-height: 30pt; text-align: center; margin-left: 15px;">중복확인</span>
 								<span id="mobilecheckResult"></span>
-								<span class="error mberror">숫자만 입력해 주세요.</span>
+								<span class="error mberror">휴대전화 형식이 아닙니다.</span>
 								<div class="sub_text">중복확인을 눌러주세요.</div>
 							</td>
 						</tr>
@@ -564,7 +684,7 @@
 							</th>
 							<td style="padding: 5px 0px 5px 10px; ">
 								<input type="text" id="postcode" name="postcode" size="6" maxlength="5" class="inputbox_short" />
-								<span id="zipcodeSearch" style="display: inline-block; border: solid 1px #464646; width: 130px; line-height: 30pt; text-align: center; margin-left: 15px;">우편번호 검색</span>
+								<span id="zipcodeSearch" class="pointer" style="display: inline-block; border: solid 1px #464646; width: 130px; line-height: 30pt; text-align: center; margin-left: 15px;">우편번호 검색</span>
 								<input type="text" id="address" name="address" size="40" placeholder="주소" class="inputbox_long"/><br/>
 								<input type="text" id=detailaddress name="detailaddress" size="40" placeholder="상세주소" class="inputbox_long"/>
 								<input type="text" id="extraaddress" name="extraaddress" size="40" placeholder="참고항목" class="inputbox_long"/> 
@@ -580,8 +700,8 @@
 					
 					<br/><br/><br/>
 					<div id="buttonTnC">
-						<button class="btnTnC agree" id="goRegister">가입</button>
-						<button class="btnTnC reset" onclick="alert('취소 (메인페이지로)')">취소</button>
+						<button class="btnTnC agree pointer" id="goRegister">가입</button>
+						<button class="btnTnC reset pointer" onclick="alert('취소 (메인페이지로)')">취소</button>
 					</div>	
 						
 				

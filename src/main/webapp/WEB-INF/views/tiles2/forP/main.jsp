@@ -12,35 +12,50 @@
 #test{
 	display: inline-block;
 	border: solid 0px red;
-	margin: 0 20px;
+	margin: 0 0 0 20px;
 	color: gray;
 }
 .sidecss {
 	border: solid 1px #00BCD4;
 	background-color: #FAFAFA;
 	color: #00BCD4;
+	text-align: center;
 }
 #namecss{
 	color: #00BCD4;
 	font-weight: bold;
 }
 #tableCss{
-	text-align: center;
 	font-size: 13pt;
+	width: 850px;
 }
 #mainCss{
 	font-size: 15pt;
 	background-color: #FAFAFA;
 	border: solid 1px #00BCD4;
 	padding: 10px;
-	width: 600px;
+	width: 850px;
 	margin-bottom: 10px;
 	border-radius: 10px;
 }
 td {
 	padding: 10px;
 }
+#mym {
+	color: white;
+	background-color: #00BCD4;
+}
 </style>
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+	}); // end of $(document).ready(function()--------------
+	
+	function go_subject(fk_subSeq){
+		
+		location.href="lecture/lectureList.up?fk_subSeq="+fk_subSeq;
+	}
+</script>
 </head>
 <body>
 	<div id="test">
@@ -62,12 +77,17 @@ td {
 				<td class="sidecss2">${membervo.point}</td>
 			</tr>
 			<tr>
-				<td class="sidecss">교과목 목록</td>
+				<td class="sidecss">수강중인 교과목</td>
 				<td class="sidecss2">
-					<c:if test="${not empty subjectListforP}">
+					<c:if test="${not empty subjectListforP}">	
+						<ul style="margin-left: -20px;">	
 						<c:forEach var="sublist" items="${subjectListforP}">
-							${sublist.subName}<br/>
-						</c:forEach>
+							 <li>
+								${sublist.subName}
+								<button type="button" onclick="go_subject('${sublist.subseq}');">강의 보기!</button>
+							</li>
+						</c:forEach>	
+						</ul>
 					</c:if>
 					<c:if test="${empty subjectListforP}">
 						교과목 없음

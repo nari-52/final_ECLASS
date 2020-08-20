@@ -80,6 +80,41 @@ public class DonationDAO implements InterDonationDAO{
 		return donstoryPage;
 	}
 
+	//후원하기 글 등록 
+	@Override
+	public int donationStoryAdd(DonStoryVO donstoryvo) {
+		int n = sqlsession.insert("donation.donationStoryAdd", donstoryvo);
+		return n;
+	}
+	
+	//후원하기 글쓰기 등록(파일첨부 O)
+	@Override
+	public int donationStoryAdd_withFile(DonStoryVO donstoryvo) {
+		int n = sqlsession.insert("donation.donationStoryAdd_withFile", donstoryvo);
+		return n;
+	}
+
+	//글 수정하기 
+	@Override
+	public DonStoryVO donationStoryEdit(String donseq) {
+		DonStoryVO donstoryvo = sqlsession.selectOne("donation.donationStoryEdit",donseq);
+		return donstoryvo;
+	}
+
+	//글 수정완료하기 
+	@Override
+	public int donationStoryEditEnd(DonStoryVO donstoryvo) {
+		int n = sqlsession.update("donation.donationStoryEditEnd",donstoryvo);
+		return n;
+	}
+
+	//글 삭제하기 
+	@Override
+	public int donationStoryDel(String donseq) {
+		int n = sqlsession.update("donation.donationStoryDel",donseq);
+		return n;
+	}
+
 	
 
 	

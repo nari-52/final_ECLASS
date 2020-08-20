@@ -22,16 +22,28 @@
 
 #btnCommentOK {
 	float: right;
-	margin-top: 20px;
+	margin-top: 25px;
 }
 
 #goList {
-	display: flex;
-	margin: 0 auto;
 	padding: 5px;
+	margin-right: 20px;
 }
 
 .lecture-comment {
 	margin: 20px 0;
 }
 
+#commentDisplay {
+	margin: 100px 0;
+}
+
+#buttons {
+    display: flex;
+    justify-content: center; /*가로에서 가운데에 요소(자식요소)를 배치하겠다*/
+	margin: 50px 0 100px 0;
+}
+
+a:link { color: gray; text-decoration: none; }
+a:active { color: gray; text-decoration: none; }
+a:visited { color: gray; text-decoration: none; }

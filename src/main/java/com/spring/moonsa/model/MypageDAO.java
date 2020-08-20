@@ -80,6 +80,12 @@ public class MypageDAO implements InterMypageDAO {
 		return n;
 	}
 
+	// 'O'로 변경될 경우 출석점수 변경
+	@Override
+	public void getChangeAtotal(HashMap<String, String> paraMap) {
+		sqlsession.update("mypage.getChangeAtotal", paraMap);
+	}
+
 
 	
 	

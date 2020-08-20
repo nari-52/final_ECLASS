@@ -12,7 +12,7 @@
 #test{
 	display: inline-block;
 	border: solid 0px red;
-	margin: 0 20px;
+	margin: 0 0 0 20px;
 	color: gray;
 }
 #namecss{
@@ -24,20 +24,27 @@
 	background-color: #FAFAFA;
 	border: solid 1px #00BCD4;
 	padding: 10px;
-	margin-bottom: 10px;
-	width: 600px;
+	margin-bottom: 20px;
+	width: 850px;
 	text-align: center;
 	border-radius: 10px;
 }
 #tableCss{
 	text-align: center;
-	font-size: 15pt;
+	font-size: 12pt;
+	width: 500px;
 }
 .sidecss {
 	padding: 0 20px;
+	text-align: center;
 }
 .sidecss2 {
 	padding: 0 10px;
+	text-align: center;
+}
+#myG {
+	color: white;
+	background-color: #00BCD4;
 }
 </style>
 <script type="text/javascript">

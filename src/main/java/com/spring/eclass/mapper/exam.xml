@@ -6,27 +6,115 @@
 <!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="exam">
 
+	<!-- 시험 등록하기 -->
 	<insert id="exam_insert" parameterType="HashMap">
 		insert into exam(exam_seq, subSeq, userid, examTitle, examDate)
 		values(seq_exam_seq.nextval, #{subSeq}, #{userid}, #{examTitle}, #{examDate})
 	</insert>
 	
+	<!-- 시험 제목으로 시험번호 알아오기 -->
 	<select id="exam_select" parameterType="String" resultType="com.spring.kimej.model.ExamVO">
 		select exam_seq
 		from exam
 		where examTitle = #{examTitle}
 	</select>
 	
+	<!-- 시험문제들 등록하기 -->
 	<insert id="question_insert" parameterType="HashMap">
 		insert into examQuestion(question_seq, exam_seq, question, answer)
 		values(seq_question_seq.nextval, #{exam_seq}, #{question}, #{answer})
 	</insert>
 	
+	<!-- 교과목 시퀀스로 시험문제와 정답들 알아오기 -->
 	<select id="questionList" parameterType="String" resultType="com.spring.kimej.model.ExamQuestionVO">
 		select question_seq, question, answer
+		from exam E join examQuestion Q
+		on E.exam_seq = Q.exam_seq
+		where subSeq = #{subSeq}
+		order by question_seq
+	</select>
+   
+	<!-- 교과목 시퀀스로 시험정보 알아오기 -->
+	<select id="examList" parameterType="String" resultType="com.spring.kimej.model.ExamVO">
+		select exam_seq, examTitle, examDate, userid, subSeq
+		from exam
+		where subSeq = #{fk_subSeq}
+	</select>
+	
+	<!-- 시험 시퀀스로 문제들 알아오기 -->
+	<select id="questions" parameterType="String" resultType="String">
+		select question
 		from examQuestion
 		where exam_seq = #{exam_seq}
-		order by question_seq desc
 	</select>
-
+	
+	<!-- 시험 시퀀스로 정답들 알아오기 -->
+	<select id="answers" parameterType="String" resultType="String">
+		select answer
+		from examQuestion
+		where exam_seq = #{exam_seq}
+	</select>
+	
+	<!-- 시험 시퀀스로 시험문제 시퀀스들 알아오기 -->
+	<select id="question_seqs" parameterType="String" resultType="String">
+		select question_seq
+		from examQuestion
+		where exam_seq = #{exam_seq}
+	</select>
+	
+	<!-- 시험 시퀀스로 시험 정보 알아오기 -->
+	<select id="examDetail" parameterType="String" resultType="com.spring.kimej.model.ExamVO">
+		select exam_seq, subSeq, userid, examTitle, examDate
+		from exam
+		where exam_seq = #{exam_seq}
+	</select>
+	
+	<!-- 시험 시퀀스로 시험제목이랑 날짜 수정하기 -->
+	<update id="examEdit" parameterType="HashMap">
+		update exam set examTitle=#{examTitle}, examDate=#{examDate}
+   		where exam_seq = #{exam_seq}
+	</update>
+	
+	<!-- 강의 삭제하기 -->
+	<delete id="examDelete" parameterType="String">
+		delete from exam where exam_seq = #{exam_seq}
+	</delete>
+	
+	<!-- 시험 제출하면 시험점수 입력하기 -->
+	<update id="examG_insert" parameterType="HashMap">
+		update myPForS_tbl set examG=#{examG}
+		where fk_userid = #{userid} and fk_subSeq=#{subSeq}
+	</update>
+	
+	<!-- 시험 점수 알아오기 -->
+	<select id="examG_select" parameterType="HashMap" resultType="String">
+		select examG
+		from myPForS_tbl
+		where fk_userid = #{userid} and fk_subSeq=#{fk_subSeq}
+	</select>
+	
+	<!-- 시험문제 수정하기 -->
+	<update id="question_update" parameterType="HashMap">
+		update examQuestion set question=#{question}, answer=#{answer}
+   		where exam_seq = #{exam_seq} and question_seq=#{question_seq}
+	</update>
+	
+	<!-- 출적 점수 알아오기 -->
+	<select id="getAttandG" parameterType="String" resultType="String">
+		select attandG
+		from myPForS_tbl
+		where fk_userid = #{userid}
+	</select>
+	
+	<!-- 최종 성적 입력하기 -->
+	<update id="finalG_insert" parameterType="HashMap">
+		update myPForS_tbl set finalG = case when (examG+attandG) >= 90 then 'A'
+	    when (examG+attandG) >= 80 then 'B'
+	    when (examG+attandG) >= 70 then 'C'
+	    when (examG+attandG) >= 60 then 'D'
+	    else 'F' end
+	    where fk_userid = #{userid}
+	    and fk_subSeq = #{subSeq}
+	</update>
+   
 </mapper>

@@ -90,5 +90,40 @@ public class DonationService implements InterDonationService {
 		return donstoryPage;
 	}
 
+	//후원하기 글쓰기 등록 
+	@Override
+	public int donationStoryAdd(DonStoryVO donstoryvo) {
+		int n = dao.donationStoryAdd(donstoryvo);
+		return n;
+	}
+
+	//후원하기 글쓰기 등록(파일첨부 O)
+	@Override
+	public int donationStoryAdd_withFile(DonStoryVO donstoryvo) {
+		int n = dao.donationStoryAdd_withFile(donstoryvo);
+		return n;
+	}
+
+	//글 수정하기
+	@Override
+	public DonStoryVO donationStoryEdit(String donseq) {
+		DonStoryVO donstoryvo = dao.donationStoryEdit(donseq);
+		return donstoryvo;
+	}
+
+	//글 수정 완료하기 
+	@Override
+	public int donationStoryEditEnd(DonStoryVO donstoryvo) {
+		int n = dao.donationStoryEditEnd(donstoryvo);
+		return n;
+	}
+
+	//글 삭제하기 
+	@Override
+	public int donationStoryDel(String donseq) {
+		int n = dao.donationStoryDel(donseq);
+		return n;
+	}
+
 	
 }

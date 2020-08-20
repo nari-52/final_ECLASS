@@ -31,10 +31,12 @@
 }
 #tableCss{
 	text-align: center;
-	font-size: 15pt;
+	font-size: 12pt;
+	width: 300px;
 }
 .sidecss{
 	color: white;
+	text-align: center;
 }
 #selectCSS {
 	margin-top: 20px; 
@@ -48,6 +50,9 @@
 	width: 100px;
 	margin-right: 13px;
 	height: 25px;
+}
+td {
+	padding: 5px;
 }
 </style>
 <script type="text/javascript">

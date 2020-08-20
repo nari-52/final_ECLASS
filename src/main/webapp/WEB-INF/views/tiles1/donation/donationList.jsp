@@ -196,7 +196,7 @@
     	  goSearch();
       });         		
    	  
-	});	 // end of $(document).ready(function(){})----- 
+    });	 // end of $(document).ready(function(){})----- 
 	
 	//검색하기 
     function goSearch(){
@@ -214,17 +214,22 @@
         <div class="contentLine" align="center"></div>
 		<div class="section" align="center">			
 		<div class="productList" align="center">		
+			
 			<%-- === 글검색 폼 추가하기 : 글제목, 글내용으로 검색 --%> 
-			<div style="height:50px;">
+			<div style="height:50px; width:1000px; ">
 			<form name="searchFrm" align="right" style="margin-bottom:50px;">
-				<select name="searchType" id="searchType" style="height: 25px; border:solid 1px #ccc; border-radius: 2px; color:#bbb">
+				<select name="searchType" id="searchType" style="height: 27px; border:solid 1px #ccc; border-radius: 2px; color:#bbb">
 					<option value="subject">글제목</option>
 					<option value="content">글내용</option>
 				</select>
 				<input type="text" name="searchWord" id="searchWord" size="30" style="height: 25px; border-radius: 2px; border:solid 1px #ccc"autocomplete="off" /> 
 				<button type="button" style="height: 25px; border:solid 1px #ccc; color:gray; border-radius: 2px" onclick="goSearch()">검색</button>
-				<div id="displayList" style="position: relative; z-index:1; background-color:#fff; border:solid 1px #ccc; font-size:10pt; text-align: left; border-top:0px; width:245px; height:100%; margin-left:728px; overflow:auto;">
-				</div>
+				
+				 <div id="displayList" style="position: relative; z-index:1; background-color:#fff; border:solid 1px #ccc; font-size:10pt; text-align: left; border-top:0px; width:242px; height:100%; margin-left:710px; overflow:auto;">
+            	 </div>
+				<%-- 노트북용 자동완성 맞는 길이 
+				<div id="displayList" style="position: relative; z-index:1; background-color:#fff; border:solid 1px #ccc; font-size:10pt; text-align: left; border-top:0px; width:230px; height:100%; margin-left:727px; overflow:auto;">
+				</div>--%> 
 			</form>
 			</div>
 				
@@ -242,27 +247,37 @@
 						</c:if>
 						<c:if test="${not empty donstoryList}">
                         	<tr>    
-                        	<c:forEach var="don" items="${donstoryList}" varStatus="status">                       
+                        	<c:forEach var="don" items="${donstoryList}" varStatus="status">                  
                                 <td class="pricecolor">
-                                    <a href='<%= ctxPath%>/donation/donationStory.up?donseq=${don.donseq}'>
-                                        <div style="width:250px; height:350px;" class="sample_image">
-                                        <img style="width:100%; height:100%;" src="<%= ctxPath%>/resources/images/${don.listMainImg}" /></div>
-
+                                    <a href='<%= ctxPath%>/donation/donationStory.up?donseq=${don.donseq}'>     
+                                                                       
+                                        <c:if test="${empty don.listMainImg}">  
+                                        <div style="width:250px; height:350px;" class="sample_image">                                    
+                                        	<img style="width:100%; height:100%;" src="<%= ctxPath%>/resources/images/donation/${don.orgListMainImg}" />
+										</div>
+										</c:if>  
+										
+										<c:if test="${not empty don.listMainImg}">   
+										<div style="width:250px; height:350px;" class="sample_image">                                   
+                                        	<img style="width:100%; height:100%;" src="<%= ctxPath%>/resources/files/${don.listMainImg}" />
+										</div>
+										</c:if> 
+										
                                         <br/><span style="font-size:12.5pt; letter-spacing: 0.4px; color:#333;">
                                         	${don.subject}</span>
                                         
                                         <div style="border-bottom: solid 2px #00BCD4; width: 248px; padding: 3px 0 0 0"></div>
                                             
-                                        <c:if test="${don.totalPayment != 0}">
-                                        	<c:if test="${don.dDay<=0}">
-                                        	<span style="color: #00BCD4; font-weight: bold; font-size: 18px;">후원종료</span>
-                                        	</c:if>
-                                        	<c:if test="${don.dDay>0}">
-                                        	<span style="color: #00BCD4; font-weight: bold; font-size: 18px;">D-${don.dDay}</span>
-                                        	</c:if>                                            
-											<%-- <fmt:formatNumber value="${(don.totalPayment)/don.targetAmount}" pattern="0.0%"/>  --%>  
-                                            <span style="float:right; padding-top:3px; padding-right:25px; color: #bbb; font-weight: bold; font-size: 16px;">목표금액 <fmt:formatNumber value="${don.targetAmount}" pattern="###,###"/>원 </span>                                                                                        
-                                        </c:if>
+                                        
+                                       	<c:if test="${don.dDay<=0}">
+                                       	<span style="color: #00BCD4; font-weight: bold; font-size: 18px;">후원종료</span>
+                                       	</c:if>
+                                       	<c:if test="${don.dDay>0}">
+                                       	<span style="color: #00BCD4; font-weight: bold; font-size: 18px;">D-${don.dDay}</span>
+                                       	</c:if>                                            
+										<%-- <fmt:formatNumber value="${(don.totalPayment)/don.targetAmount}" pattern="0.0%"/>  --%>  
+                                        <span style="float:right; padding-top:3px; padding-right:25px; color: #bbb; font-weight: bold; font-size: 16px;">목표금액 <fmt:formatNumber value="${don.targetAmount}" pattern="###,###"/>원 </span>                                                                                        
+                                        
                                     </a>
                                 </td> 
                                 
@@ -278,12 +293,14 @@
 			
 			<%-- === 페이지바 === --%>
 			<div align="center" style="width:70%; border:solid 0px gray; margin:13px auto;">${pageBar}</div>
+			<%-- === 글쓰기 === --%>
+			<c:if test="${sessionScope.loginuser.identity==3}">
 			<div>
 				<button type="button" style="margin-left: 700px; width: 100px; border:solid 1px #ddd; background-color:#fafafa; color:gray; border-radius:3px">
-					<a href="<%=ctxPath%>/donation/donationStoryAdd.up">글쓰기</a>
+					<a href="<%=ctxPath%>/donation/donationStoryAdd.up" style="color:gray; text-decoration: none;">글쓰기</a>
 				</button>
 			</div>	
-		
+			</c:if>
 			
 				</div>
 			</div>		

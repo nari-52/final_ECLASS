@@ -3,6 +3,7 @@ package com.spring.kanghm.model;
 import java.util.HashMap;
 import java.util.List;
 
+import com.spring.kimeh.model.DonPaymentVO;
 import com.spring.kimeh.model.DonStoryVO;
 
 public interface InterEclassDAO {
@@ -87,6 +88,30 @@ public interface InterEclassDAO {
 
 	// 첨부파일이 존재하는 Q&A 글쓰기
 	int addquestion_withFile(QuestionVO questionvo);
+
+	// groupno 컬럼의 최대값 구하기
+	int getGroupnoMax(); 
+
+	// Q&A 조회수 증가하며 글 조회하기
+	QuestionVO getQuestionView(String question_seq);
+
+	// Q&A 조회수 1증가 시키기
+	void addQuestionViewCount(String question_seq);
+
+	// Q&A 조회수 증가 없이 글 조회하기
+	QuestionVO getQuestionViewNoAdd(String question_seq);
+
+	// Q&A 게시판 글 수정하기 완료하기
+	int editquestionboardEnd(QuestionVO questionvo);
+
+	// Q&A 게시판 글 삭제 완료하기
+	int delquestion(HashMap<String, String> paraMap);
+
+	// 메인페이지에서 공지사항 띄워주기
+	List<NoticeboardVO> getindexnotice();
+
+	// 메인페이지에서 후원순위 보여주기	
+	List<DonStoryVO> getindexdon();
 
 
 }

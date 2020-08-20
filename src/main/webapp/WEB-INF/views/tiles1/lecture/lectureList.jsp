@@ -1,8 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-    
 <%	String ctxPath = request.getContextPath(); %>
 
 <link rel="stylesheet" type="text/css" href="<%=ctxPath%>/resources/css/reset.css" />
@@ -42,7 +40,7 @@
 <div id="contentsWrap">
 
 	<div id="leture-title">
-		<%-- ${lecturevoList.subName} --%> 강의 목록
+		강의 목록
 	</div>
 	
 	<form name="searchFrm">
@@ -51,11 +49,9 @@
 			<button type="button" onclick="goSearch();">검색</button>
 		</div>
 	</form>
-	
-	<div class="border-line-box"></div>
 
 	<div class="tbl-wrap lecture-list">
-	
+	<div class="border-line-box"></div>
 		<table>
 			<thead>
 				<tr>

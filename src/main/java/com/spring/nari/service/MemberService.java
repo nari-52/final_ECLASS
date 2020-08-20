@@ -1,6 +1,7 @@
 package com.spring.nari.service;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,6 @@ public class MemberService implements InterMemberService {
 	public String idDuplicateCheck(String userid) {
 		
 		String isUse = dao.idDuplicateCheck(userid);
-		
 		return isUse;
 	}
 
@@ -52,7 +52,6 @@ public class MemberService implements InterMemberService {
 	@Override
 	public String mobileDuplicateCheck(String mobile) {
 		String isUseMobile = dao.mobileDuplicateCheck(mobile);
-		
 		return isUseMobile;
 	}
 
@@ -70,7 +69,6 @@ public class MemberService implements InterMemberService {
 	public int pwd_update(HashMap<String, String> paraMap) {
 		
 		int n = dao.pwd_update(paraMap);
-		
 		return n;
 	}
 
@@ -80,8 +78,40 @@ public class MemberService implements InterMemberService {
 	public int delMember(String userid) {
 		
 		int n = dao.delMember(userid);
-		
 		return n;
+	}
+
+
+	// 회원정보 수정하기 위한 정보 가져오기
+	@Override
+	public MemberVO select_updateMember(String userid) {
+		
+		MemberVO mvo = dao.select_updateMember(userid);
+		return mvo;
+	}
+
+
+	// 회원정보 수정하기
+	@Override
+	public int updateMember(MemberVO mvo) {
+		int n = dao.updateMember(mvo);
+		return n;
+	}
+
+	
+	// 관리자페이지 학생관리 보여주기
+	@Override
+	public List<MemberVO> member_studentList() {
+		List<MemberVO> memberList = dao.member_studentList();
+		return memberList;
+	}
+
+
+	// 관리자페이지 교수관리 보여주기
+	@Override
+	public List<MemberVO> member_professorList() {
+		List<MemberVO> memberList = dao.member_professorList();
+		return memberList;
 	}
 
 }

@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,8 +24,13 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.common.Sha256;
+import com.spring.kanghm.model.NoticeboardVO;
+import com.spring.kanghm.service.InterEclassService;
+import com.spring.kimeh.model.DonStoryVO;
 import com.spring.nari.model.MemberVO;
 import com.spring.nari.service.InterMemberService;
+
+import net.nurigo.java_sdk.Coolsms;
 
  
 @Component
@@ -35,12 +41,40 @@ public class MemberController {
 	@Autowired
 	private InterMemberService service; // 의존객체 service
 
+	@Autowired
+	private InterEclassService mservice;
+	
 	// 로그인 페이지 보여주기
 	@RequestMapping (value="/login/login.up")
-	public ModelAndView login(ModelAndView mav) {
+	public ModelAndView login(HttpServletRequest request, ModelAndView mav) {
 		
-		mav.setViewName("/login/login.tiles1");
+		//String userid = "";
 		
+/*		HttpSession session = request.getSession();
+		
+        MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+
+        if(loginuser.getUserid() == "") {
+        	userid = (String)loginuser.getUserid();
+        	System.out.println("~~~~~~~~~~~~~~~~~~~~~"+userid);
+        }
+        */
+        
+		
+ /*       if(userid != "") {
+        	String msg = "이미 로그인 하셨습니다.";
+			String loc = "javascript:history.back()";
+			
+			mav.addObject("msg", msg);
+			mav.addObject("loc", loc);
+			
+			mav.setViewName("msg");
+        }
+		
+        else {
+        	mav.setViewName("/login/login.tiles1");
+        }*/
+        mav.setViewName("/login/login.tiles1");
 		return mav;
 	}
 	
@@ -109,6 +143,12 @@ public class MemberController {
 						session.removeAttribute("gobackURL"); // 중요!!!! 반드시 제거해 주어야 한다.
 					}
 					
+					List<NoticeboardVO> noticevo = mservice.getindexnotice();
+					List<DonStoryVO> paymentvo = mservice.getindexdon();
+	                  
+		            mav.addObject("noticevo", noticevo);
+		            mav.addObject("paymentvo", paymentvo);
+		            
 					mav.setViewName("/main/index.tiles1");
 					
 				}
@@ -136,16 +176,6 @@ public class MemberController {
 		return mav;		
 	}
 	
-
-
-
-		
-		
-
-	
-	
-	
-
 	// 회원가입_약관동의 페이지 보여주기
 	@RequestMapping (value="/member/signup_step1.up")
 	public ModelAndView signup_step1(HttpServletRequest request, ModelAndView mav) {
@@ -362,31 +392,7 @@ public class MemberController {
 	@RequestMapping (value="/member/signup_step3_end.up", method= {RequestMethod.POST})
 	public String signup_step3_end(HttpServletRequest request, ModelAndView mav, MemberVO mvo) {
 		
-		
 		// 회원가입 값 가져오기 // VO로 가져오는 경우 name값과 colum 값이 일치하면 따로 값을 가져오지 않아도 자동 matching 된다
-		/*String userid = request.getParameter("userid");		
-		String name = request.getParameter("name");			
-		String pwd = request.getParameter("pwd");			
-		String identity = request.getParameter("identity");		
-		String university = request.getParameter("university");	
-		String major = request.getParameter("major");		
-		String student_num = request.getParameter("student_num");	
-		String email = request.getParameter("email");		
-		String mobile = request.getParameter("mobile");		
-		String postcode = request.getParameter("postcode");		
-		
-		String address = request.getParameter("address");		
-		String detailaddress = request.getParameter("detailaddress");
-		String extraaddress = request.getParameter("extraaddress");	
-		String point = request.getParameter("point");			
-		String registerday = request.getParameter("registerday");		
-		String status = request.getParameter("status");			
-		String last_login_date = request.getParameter("last_login_date");	
-		String pwd_change_date = request.getParameter("pwd_change_date");	
-		String filename = request.getParameter("filename");		
-		String orgfilename = request.getParameter("orgfilename");*/
-		
-		
 		
 		// 회원가입 하기
 		int n = service.registerMember(mvo);
@@ -397,14 +403,6 @@ public class MemberController {
 		
 		if(n==1) {
 			
-			/*mav.addObject("userid", mvo.getUserid());
-			mav.addObject("name", mvo.getName());
-			mav.addObject("university", mvo.getUniversity());
-			mav.addObject("major", mvo.getMajor());
-			mav.addObject("student_num", mvo.getStudent_num());
-			mav.addObject("email", mvo.getEmail());
-			mav.addObject("mobile", mvo.getMobile());*/
-			
 			request.setAttribute("userid", mvo.getUserid());
 			request.setAttribute("name", mvo.getName());
 			request.setAttribute("university", mvo.getUniversity());
@@ -412,15 +410,12 @@ public class MemberController {
 			request.setAttribute("student_num", mvo.getStudent_num());
 			request.setAttribute("mobile", mvo.getMobile());
 			
-/*			mav.setViewName("member/signup_end.tiles1");*/
-			return "tiles1/member/signup_end";
+			return "/member/signup_end.tiles1";
+			// 
 		}
 		else {
 			msg = "회원가입  실패";
 			loc = "javascript:history.back()";	// 자바스크립트를 이용한 이전페이지로 이동하는 것이다.
-			
-	/*		mav.addObject("msg", msg);
-			mav.addObject("loc", loc);*/
 			
 			request.setAttribute("msg", msg);
 			request.setAttribute("loc", loc);
@@ -513,7 +508,7 @@ public class MemberController {
 		jsonObj.put("name", name);
 		jsonObj.put("email", email);
 		jsonObj.put("userid", userid);
-
+		
 		return jsonObj.toString();
 	}
 	
@@ -534,12 +529,13 @@ public class MemberController {
 	// 비밀번호 찾기 화면 보여주기
 	@RequestMapping (value="/login/pwdFind.up")
 	public ModelAndView pwdFind(HttpServletRequest request, ModelAndView mav) {
-		
+	
 		mav.setViewName("/login/pwdFind.tiles1");
 		
 		return mav;
 	}
 	
+
 	// 비밀번호찾기 비밀번호 변경 화면 보여주기
 	@RequestMapping (value="/login/pwdFind_update.up")
 	public ModelAndView pwdFind_update(HttpServletRequest request, ModelAndView mav) { 
@@ -552,6 +548,8 @@ public class MemberController {
 		
 		mav.addObject("userid", userid);
 		mav.addObject("mobile", mobile);
+		mav.addObject("useridcheck", userid);
+		mav.addObject("mobilecheckVal", mobile);
 		
 		mav.setViewName("/login/pwdFind_update.tiles1");
 		
@@ -580,7 +578,7 @@ public class MemberController {
 		
 		if(n==1) {
 			
-			return "tiles1/login/pwdFind_end";
+			return "/login/pwdFind_end.tiles1";
 		}
 		else {
 			msg = "비밀번호 변경 실패";
@@ -620,22 +618,133 @@ public class MemberController {
 		String userid = request.getParameter("userid");
 		String pwd = request.getParameter("pwd");
 		
-
 		// 회원 탈퇴하기 (status = 0)
 		int n = service.delMember(userid); 
+
+		// 회원 탈퇴 시 로그아웃 처리
+		HttpSession session = request.getSession();
+		session.invalidate(); // session 전체 정보 삭제
 		
 		mav.setViewName("/member/delMember_end.tiles1");
 		
 		return mav;
 	}
+
 	
 	// 회원정보  수정하기 페이지 보여주기
 	@RequestMapping (value="/member/updateMember.up")
-	public ModelAndView updateMember(HttpServletRequest request, ModelAndView mav) {
+	public ModelAndView select_updateMember(HttpServletRequest request, ModelAndView mav) {
 		
+		HttpSession session = request.getSession();
+        MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+        
+        String userid = loginuser.getUserid();
+        
+        // System.out.println("~~~~~~~~~~~~~~userid: "+userid);
+		
+        // 회원정보 수정하기 위한 정보 가져오기
+        MemberVO mvo = service.select_updateMember(userid);
+        
+        mav.addObject("mvo",mvo);
 		mav.setViewName("/member/updateMember.tiles1");
 		
 		return mav;
+	}
+	
+	// 회원 정보 수정하기
+	@RequestMapping (value="/member/updateMember_end.up")
+	public ModelAndView updateMember_end(HttpServletRequest request, ModelAndView mav, MemberVO mvo) {
+		
+		// 회원정보 수정하기
+		int n = service.updateMember(mvo);
+
+		HttpSession session = request.getSession();
+        MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+        
+        String identity = loginuser.getIdentity();
+
+		
+		if(n==1) {
+			mav.addObject("msg","정보가 수정되었습니다");
+			mav.addObject("loc", request.getContextPath() + "/mypageMain.up");
+
+		}
+		else {			
+			mav.addObject("msg","회원 수정 실패");
+			mav.addObject("loc","javascript:history.back()");
+			
+			// return "msg"; //msg.jsp 페이지로 이동
+		}
+		
+		mav.setViewName("msg");
+		return mav;
+
+	}
+	
+	
+	// 관리자페이지 학생관리 보여주기
+	@RequestMapping (value="/admin/member_studentList.up")
+	public ModelAndView member_studentList(HttpServletRequest request, ModelAndView mav) {
+	
+		List<MemberVO> memberList = service.member_studentList();
+		
+		
+		mav.addObject("memberList",memberList);
+		mav.setViewName("/admin/member_studentList.tiles1");
+		
+		return mav;
+	}
+	
+	// 관리자페이지 학생 탈퇴 하기 AJAX
+	@ResponseBody
+	@RequestMapping (value="/admin/student_delMember.up")
+	public String student_delMember(HttpServletRequest request, ModelAndView mav) {
+	
+		
+		String userid = request.getParameter("userid");
+
+		
+		// 회원 탈퇴하기 (status = 0)
+		int n = service.delMember(userid); 
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		jsonObj.put("userid", userid);
+
+		return jsonObj.toString();
+
+	}
+	
+	// 관리자페이지 교수관리 보여주기
+	@RequestMapping (value="/admin/member_professorList.up")
+	public ModelAndView member_professorList(HttpServletRequest request, ModelAndView mav) {
+	
+		List<MemberVO> memberList = service.member_professorList();
+		
+		mav.addObject("memberList",memberList);
+		mav.setViewName("/admin/member_professorList.tiles1");
+		
+		return mav;
+	}
+	
+	// 관리자페이지 교수 탈퇴 하기 AJAX
+	@ResponseBody
+	@RequestMapping (value="/admin/professor_delMember.up")
+	public String professor_delMember(HttpServletRequest request, ModelAndView mav) {
+	
+		
+		String userid = request.getParameter("userid");
+
+		
+		// 회원 탈퇴하기 (status = 0)
+		int n = service.delMember(userid); 
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		jsonObj.put("userid", userid);
+
+		return jsonObj.toString();
+
 	}
 	
 				

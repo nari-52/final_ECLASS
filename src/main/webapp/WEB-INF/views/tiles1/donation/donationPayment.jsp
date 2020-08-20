@@ -12,7 +12,7 @@
 <title>donationPayment</title>
 <style type="text/css">
     .Mycontainer{
-        border: solid 1px #ccc;
+        border: solid 0px #ccc;
         width: 1080px;
         margin: 0 auto;
         /*background-color: #E5E5E5;*/
@@ -33,15 +33,29 @@
     /* == 결제 정보 == */
     #payment_table{
         width: 800px;
-        border: solid 1px #ccc;
+        border: solid 0px #ccc;
         margin: 0 auto;
+        padding-top:0;
+        border-radius: 2px;
     }
     #paymentTotal_table{
         width: 260px;
         text-align: center;
         border: solid 1px #ccc;
         margin: 10px 0;	
+        font-size:9pt;
     }
+    #payment_table th {
+    	padding-left : 6px;
+    	border: solid 1px #ccc;
+    }
+    
+    #payment_table td {
+    	padding-top: 5px;
+    	padding-left : 13px;
+    	border: solid 1px #ccc;
+    }
+    
     th, td{
 		height : 50px;
 		vertical-align: middle;	
@@ -228,7 +242,12 @@
     function numberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
-   
+    
+    function removeComma(str){
+    	n = parseInt(str.replace(/,/g,""));
+		return n;
+	}
+
     // 유효성 검사 
     function goCheck(){	
     	
@@ -260,11 +279,11 @@
 	};
     
     // 아임포트 API 
-	function func_pop(){
-		
-		var recieve = $("#sumprice").text();
+	function func_pop(){		
+		var recieveadd = $("#sumprice").text();
+		var recieve = removeComma(recieveadd);
 		//localStorage.setItem("recieve", $("#sumprice").text());	
-		//console.log(sessionStorage.getItem("recieve"));
+		console.log(recieve);
 		window.open("<%=ctxPath%>/donation/pay.up?recieve=" + recieve, "/donation/donationPaymentEnd", "left=350px, top=100px, width=820px, height=600px");
 		
     }
@@ -272,7 +291,7 @@
 	function goSubmit(){
 		
 		var noNameFlag = $("input:checkbox[name='noName']").is(":checked");
-		alert(noNameFlag);
+		//alert(noNameFlag);
 		if(noNameFlag){
 			$("input:checkbox[name='noName']").val("1");
 		}else{
@@ -280,14 +299,12 @@
 		}
 		
 		var noDonpmtFlag = $("input:checkbox[name='noDonpmt']").is(":checked");
-		alert(noDonpmtFlag);
+		//alert(noDonpmtFlag);
 		if(noDonpmtFlag){
 			$("input:checkbox[name='noDonpmt']").val("1");
 		}else{
 			$("input:checkbox[name='noDonpmt']").val("0");
 		}
-		
-		alert("후원해주셔서 감사합니다");
 		
 		var frm = document.paymentFrm;
 		frm.method="POST";
@@ -315,13 +332,13 @@
                     <th>포인트 금액</th>
                     <td> 
                         <div class="paymentExp">현재 포인트 보유액 <fmt:formatNumber value="${sessionScope.loginuser.point}" pattern="###,###"/>원</div>
-                        <input class="pointUseInput" type="text" id="pointUseInput" name="point" value="" required="required" maxlength="11">포인트를 사용하겠습니다
+                        <input class="pointUseInput" type="text" id="pointUseInput" name="point" value="" required="required" maxlength="11">&nbsp;포인트를 사용하겠습니다
                     </td>
                 </tr>
                 <tr>
                     <th>후원 금액</th>
                     <td> 
-                        <input type="text" id="paymentInput" name="payment" value="" required="required" maxlength="11">원을 후원하겠습니다
+                        <input type="text" id="paymentInput" name="payment" value="" required="required" maxlength="11">&nbsp;원을 후원하겠습니다
                         <span class="smalltext">(후원금액의 10%는 포인트로 적립됩니다)</span>
                     </td>
                 </tr>
@@ -356,12 +373,11 @@
                 </tr>
             </table>
 
-            <div class="payment_title" style="margin-top:40px;">동의사항</div>
-            <table id="payment_table">
-            
+            <div class="payment_title" style="margin-top:20px;">동의사항</div>
+            <table id="payment_table">            
                 <tr>
-                    <td colspan="2" style="height:25px;">
-                        <label for="agreeCheck" style="margin:0;">	
+                    <td colspan="2" style="border: solid 0px #ccc; padding-top:0; padding-left:0;">
+                        <label for="agreeCheck" style="margin:0; padding-top:2px; ">	
                         <input type="checkbox" name="agreeCheck" id="agreeCheck" style="margin:10px 1px 10px 0;"> 결제 진행 필수 동의</label>	
                         <span style="padding-left:20px;">결제대행 서비스 약관 동의<span class="agree_sub">(필수)</span></span>
                         <div style="padding-left:6px; color:dimgrey; font-weight: 500;">※ 결제하신 금액은 별도 수수료 없이 후원을 진행하는 후원자에게 100% 전달됩니다.</div>
@@ -369,9 +385,9 @@
                 </tr>
             </table>
             
-            <input type="text" name="fk_donSeq" value="${donseq}" />
-			<input type="text" name="fk_userid" value="${sessionScope.loginuser.userid}" />
-			<input type="text" name="name" value="${sessionScope.loginuser.name}" />
+            <input type="hidden" name="fk_donSeq" value="${donseq}" />
+			<input type="hidden" name="fk_userid" value="${sessionScope.loginuser.userid}" />
+			<input type="hidden" name="name" value="${sessionScope.loginuser.name}" />
 				
         <!-- 7. 전송 버튼 -->					
         <div style="padding:30px 0 14px;" align="center">

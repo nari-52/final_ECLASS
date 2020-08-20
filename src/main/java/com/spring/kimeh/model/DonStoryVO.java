@@ -1,12 +1,14 @@
 package com.spring.kimeh.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class DonStoryVO {
 	
 	private String donseq;          //글번호(시퀀스)
 	private String subject;		    //후원제목
 	private String content;		    //후원내용
-	private String listMainImg;     //리스트 메인이미지
-	private String storyImg;        //상세 메인이미지 
+	private String listMainImg;     //리스트 메인이미지 (날짜+나노초.png)
+	private String storyImg;        //상세 메인이미지  (날짜+나노초.png)
 	private String donCnt;          //글 조회수 
 	private String donDate;         //후원 등록일자
 	private String donDueDate;      //후원 종료일자 
@@ -26,16 +28,28 @@ public class DonStoryVO {
 	private String payment;
 	private String point;
 	private String noName;
-	private String noDonpmt;
+	private String noDonpmt; 
 	private String showDate; // 후원결제후 경과 시간 
 	private String sumPayment; //회원의 총후원금액(포인트+결제) 	
+	
+	private String orgListMainImg;//진짜 파일명(강아지.png) 
+	private String orgStoryImg;//진짜 파일명(강아지.png) 
+	
+//	private String fileName; //WAS(톰캣)에 저장될 파일명
+//	private String orgFilename; //진짜 파일명(강아지.png) 
+	private MultipartFile attach; //메인이미지 //form태그에 있는 type="file"인 파일을 받아서 저장되는 필드이다.
+	private MultipartFile attach2; //상세이미지 
+	// /Eclass/src/main/webapp/WEB-INF/views/tiles1/donation/donationStoryAdd.jsp 파일에서 input type="file" 인 name 의 이름(attach)과 
+	// 동일해야만 파일첨부가 가능해진다.!!!! (name과 vo에 있는 필드명은 같아야 함)
+	
 	
 	public DonStoryVO() {};
 	
 	public DonStoryVO(String donseq, String subject, String content, String listMainImg, String storyImg, String donCnt,
 			String donDate, String donDueDate, String donStatus, String targetAmount, String totalPayment,
 			String totalSupporter, String donImgseq, String fk_donSeq, String donImg, String dDay, String name,
-			String payment, String point, String noName, String noDonpmt, String showDate, String sumPayment) {
+			String payment, String point, String noName, String noDonpmt, String showDate, String sumPayment,
+			String orgListMainImg, String orgStoryImg, MultipartFile attach, MultipartFile attach2) {
 		super();
 		this.donseq = donseq;
 		this.subject = subject;
@@ -60,7 +74,14 @@ public class DonStoryVO {
 		this.noDonpmt = noDonpmt;
 		this.showDate = showDate;
 		this.sumPayment = sumPayment;
+		this.orgListMainImg = orgListMainImg;
+		this.orgStoryImg = orgStoryImg;
+		this.attach = attach;
+		this.attach2 = attach2;
 	}
+
+
+
 
 	public String getdDay() {
 		return dDay;
@@ -216,5 +237,39 @@ public class DonStoryVO {
 	public void setSumPayment(String sumPayment) {
 		this.sumPayment = sumPayment;
 	}
+
+	public MultipartFile getAttach() {
+		return attach;
+	}
+
+	public void setAttach(MultipartFile attach) {
+		this.attach = attach;
+	}
+
+	public MultipartFile getAttach2() {
+		return attach2;
+	}
+
+	public void setAttach2(MultipartFile attach2) {
+		this.attach2 = attach2;
+	}
+
+	public String getOrgListMainImg() {
+		return orgListMainImg;
+	}
+
+	public void setOrgListMainImg(String orgListMainImg) {
+		this.orgListMainImg = orgListMainImg;
+	}
+
+	public String getOrgStoryImg() {
+		return orgStoryImg;
+	}
+
+	public void setOrgStoryImg(String orgStoryImg) {
+		this.orgStoryImg = orgStoryImg;
+	}
+
+
 	
 }

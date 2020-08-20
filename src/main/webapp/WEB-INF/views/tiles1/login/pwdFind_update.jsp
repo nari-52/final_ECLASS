@@ -7,7 +7,7 @@
 
 <style type="text/css">
 	div#signuptitle {
-		border: solid 1px gray;
+		/* border: solid 1px gray; */
 		max-width: 1080px;
 		height: 100px;
 		margin: 0 auto;
@@ -25,10 +25,10 @@
 	
 	/* 진행상황 시작 ------------------------------------------ */
 	
-	div#idFindcontent {
-		border: solid 1px red;
+	div#pwdFindcontent {
+		/* border: solid 1px red; */
 		width: 100%;
-		height: 1500px;
+		height: 810px;
 		background: #fafafa;
 		display: inline-block;
 		
@@ -36,7 +36,7 @@
 	
 	/* 메일 인증 ------------------------------------------------------------------ */
 	
-	div#idFind_content {
+	div#pwdFind_content {
 		/* border: solid 1px red; */
 		width: 100%;
 		height: 800px;
@@ -44,9 +44,8 @@
 		display: inline-block;
 		margin: 0 auto;
 	}
-	
-	/* 이메일 인증 배경 만들기 */
-	div#idFind_back {
+
+	div#pwdFind_back {
 		border: solid 1px #ddd;
 		width: 1080px;
 		height: 570px;
@@ -54,7 +53,75 @@
 		margin: 0 auto;
 		padding-top: 50px; /* form 태그 위에 padding 주기 */
 	}
+	
+	/* ------------------------------------------------------------ */
+	form#information_form {
+		border-top: solid 1px black;
+		border-bottom: solid 1px black;
+		margin: 0 auto;
+		width: 1080px;
+		height: 100%;
+		background-color: white;
+		margin-top: 15px;
 		
+	}
+	
+	table {
+		border-collapse: collapse;
+	}
+	
+	th {
+		/* background-color: yellow; */
+		width: 250px;
+		text-align: left;
+		padding-left: 10px;
+		line-height: 60pt;
+		
+	}
+	
+	td {
+		width: 900px;
+		padding-left: 10px;
+		text-align: left;
+	}
+	
+	th, td {
+		border-top: solid 1px #ddd;
+		border-bottom: solid 1px #ddd;
+	}
+	
+	/* 하단문구 */
+	.sub_text {
+		font-size: 9pt;
+		padding-top: 5px;
+	}
+	
+	/* 에러문구  */
+	.error {
+		font-size: 9pt;
+		color: red;
+		padding-left: 15px;
+		
+	}
+		
+	/* inputbox_short */
+	.inputbox_short {
+		width: 250px;
+		line-height: 30pt;
+		padding-left: 5pt;
+		border: solid 1px #ddd;
+		font-size: 12pt;
+	}
+	
+	.inputbox_long {
+		width: 890px;
+		line-height: 30pt;
+		padding-left: 5pt;
+		border: solid 1px #ddd;
+		font-size: 12pt;
+		margin-top: 5px;
+	}
+	/* ------------------------------------------------------------ */	
 	form#pwdchange_form {
 		/* border: solid 1px gray; */
 		margin: 0 auto;
@@ -65,7 +132,7 @@
 
 
 	div#changebtn {
-		border: solid 1px blue;
+		border: solid 1px #ddd;
 		margin: 0 auto;
 		width: 320px;
 		height: 30px;
@@ -85,9 +152,57 @@
 
 	$(document).ready(function(){ 
 		
+		$(".error").hide();
+		
+		// 비밀번호 유효성 검사 --------------------------------------------
+		$("#pwd").blur(function(){ 
+			
+			var data = $(this).val().trim();
+			var regExp_pwd = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);
+		
+			var bool = regExp_pwd.test(data);
+			
+			if (data != "" && !bool ) { // 암호가 정규표현식에 위배된 경우
+				$(this).parent().find(".error").show();
+			}
+			else {
+				$(this).parent().find(".error").hide();
+			}
+
+		}); // -------------------------------------------------------
+		
+		
+		// 비밀번호 일치여부 확인
+		$("#pwdcheck").blur(function(){ 
+			var pwd = $("#pwd").val();
+			var pwdcheck = $(this).val().trim();
+
+			if (pwd != pwdcheck) { // 암호가 일치하지 않는 경우
+				$(this).parent().find(".error").show();
+				$("#pwdcheck").val("");
+				// $("#pwdcheck").focus();
+			}
+			else {
+				$(this).parent().find(".error").hide();
+			}
+
+		}); // -------------------------------------------------------
+		
 		// 비밀번호 변경 버튼 클릭 시 
 		$("#changebtn").click(function(){ 
-			func_pwdchange();
+			
+			var pwd = $("#pwd").val().trim();
+			var pwdcheck = $("#pwdcheck").val().trim();
+
+			if (pwd != pwdcheck) { 
+				$(this).parent().find(".error").show();
+				alert("암호를 확인해주세요");
+			}
+			else {
+				$(this).parent().find(".error").hide();
+				func_pwdchange();
+			}
+			
 		});
 		
 	}); // end of $(document).ready(function() -----------
@@ -114,23 +229,43 @@
 		</section>	
 	</div>
 	
-	<div id="idFindcontent">
+	<div id="pwdFindcontent">
 		<br/><br/><br/><br/>
-		<div id="idFind_content">
-			<div id="idFind_back">
+		<div id="pwdFind_content">
+			<div id="pwdFind_back">
 				<form name="pwdchange_form" id="pwdchange_form">
-					<h3 style="text-align: center;">비밀번호 변경하기</h3>
+					<h2 style="text-align: center;">비밀번호 변경하기</h2>
+					<div style="text-align: center; ">새로운 비밀번호를 입력해주세요</div>
+					<hr style="margin-bottom: 50px;">
 					
-					<label>아이디 </label><input type="text" id="userid" name="userid"  value="${userid}" />
-					<label>핸드폰번호 </label><input type="text" id="mobile" name="mobile" value="${mobile}" />
-					<ul class="input_text">
-						<li>
-							<label>비밀번호 </label><input type="password" id="pwd" name="pwd" />
-						</li>
-						<li>	
-							<label>비밀번호 확인 </label><input type="password" id="pwdcheck" name="pwdcheck" />
-						</li>
-					</ul>
+					<input type="hidden" id="userid" name="userid"  value="${userid}" />
+					<input type="hidden" id="mobile" name="mobile" value="${mobile}" />
+					
+					<table>
+	
+						<tr>
+							<th>
+								비밀번호
+							</th>
+							<td>
+								<input type="password" name="pwd" id="pwd" class="requiredInfo inputbox_short" /> 
+								<span class="error">비밀번호 조건에 부합하지 않습니다.</span>
+								<div class="sub_text">비밀번호는 영문자, 숫자, 특수기호를 모두 포함하여 8~16자로 입력해 주세요.</div>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								비밀번호 확인
+							</th>
+							<td>
+								<input type="password" id="pwdcheck" class="requiredInfo inputbox_short" /> 
+								<span class="error">암호가 일치하지 않습니다.</span>
+								<div class="sub_text">동일한 비밀번호를 다시 한 번 입력해주세요.</div>
+							</td>
+						</tr>
+
+					</table>
+					
 				</form>
 				
 				<div id="changebtn" >비밀번호 변경</div>

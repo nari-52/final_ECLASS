@@ -149,14 +149,12 @@
 				
 				<tr>
 					<th>작성자</th>
-					<td><input type="text" name="name" value="${sessionScope.loginuser.name}"/></td>
+					<td><input type="text" name="name" value="${sessionScope.loginuser.name}" readonly/></td>
 				</tr>
 				
-				<tr>
-					<th>유저id</th>
-					<td><input type="text" name="fk_userid" value="${sessionScope.loginuser.userid}"/></td>
-				</tr>
 				
+				<input type="hidden" name="fk_userid" value="${sessionScope.loginuser.userid}"/>
+	
 				<tr>
 					<th>첨부파일</th>
 					<td><input type="file" name="attach"/></td>
@@ -183,4 +181,6 @@
 		</div>	
 		<br>		
 	</div>
+	
+	
 </div>

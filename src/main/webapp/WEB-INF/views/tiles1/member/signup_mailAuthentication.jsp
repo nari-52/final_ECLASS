@@ -7,7 +7,7 @@
 
 <style type="text/css">
 	div#signuptitle {
-		border: solid 1px gray;
+		/* border: solid 1px gray; */
 		max-width: 1080px;
 		height: 100px;
 		margin: 0 auto;
@@ -23,21 +23,21 @@
 		padding-top: 25px;	
 	}
 	
-	/* 진행상황 시작 ------------------------------------------ */
+/* 진행상황 시작 ------------------------------------------ */
 	
 	div#signupcontent {
-		border: solid 1px red;
+		/* border: solid 1px red; */
 		width: 100%;
-		height: 1500px;
+		height: 700px;
 		background: #fafafa;
 		display: inline-block;
 		
 	}
 	
 	div#processBar {
-		border: solid 1px yellow;
+		/* border: solid 1px yellow; */
 		display: inline-block;
-		padding: 20px 0 20px 180px;
+		padding: 40px 0 20px 180px;
 		/* overflow: hidden; *//* div 태그 상위 태그 크기에 맞추기 */
 		align-content: center; 
 	}
@@ -49,9 +49,10 @@
 	}
 	
 	li.currentProcess {
-		border: solid 1px blue;
+		border: solid 1px #ddd;
 		width: 180px;
-		background-color: yellow;
+		background-color: white;
+		padding: 5px;
 	}
 	
 	.pracessTitle {
@@ -109,7 +110,7 @@
 	
 	/* 가입하기 버튼 */
 	div#authenticationbtn{
-		border: solid 1px blue;
+		/* border: solid 1px blue; */
 		margin: 0 auto;
 		width: 620px;
 		height: 40px;
@@ -123,19 +124,23 @@
 	
 	/* 메일 인증번호 받기 */
 	div#mailbtn {
-		border: solid 1px blue;
+		/* border: solid 1px blue; */
 		margin: 0 auto;
 		width: 140px;
 		height: 100px;
 		line-height: 100px;
 		background-color: #00bcd4;
 		color: white;
-		font-size: 14pt;
+		font-size: 13pt;
 		font-weight: bold;
 		text-align: center;
 		padding-top: 10px;
 		float: right;
 		margin-top: -125px;
+	}
+	
+	.pointer {
+		cursor: pointer;
 	}
 	
 </style>
@@ -182,7 +187,7 @@
 				
 		// 가입하기 버튼 클릭 시 확인하기
 		$("#authenticationbtn").click(function(){ 
-			/* 
+			
 			// 1. 이름과 메일주소가 공란인지 확인한다. -------------------------------------------- 
 			var nameVal = $("#name").val().trim();
 			var emailVal = $("#email").val().trim();
@@ -218,7 +223,7 @@
 				alert("메일인증 시 작성한 이메일과 일치하지 않습니다.");
 				return;
 			}
-			 */
+			 
 			 
 			 
 			// 4. 파일 첨부 여부 확인한다. --------------------------------------------------------
@@ -255,16 +260,8 @@
 				goJoin(); // 가입
 			} // end of else ---------
 			
-			
-			
-			
-			
 		}); // end of $("#authenticationbtn").click(function() ------------
-		
-
-		
-
-		
+	
 	}); // end of $(document).ready(function() -----------
 
 	// 가입버튼 클릭 함수		
@@ -323,7 +320,7 @@
 		<div id="mailAuthentication_content">
 			<div id="mailAuthentication_back">
 				<form name="mailAuthentication_form" id="mailAuthentication_form">
-					<h3 style="text-align: center;">메일 주소 인증하기</h3>
+					<h3 style="text-align: center;">회원 인증하기</h3>
 					<ul class="input_text">
 						<li>
 							<label for="name"></label>
@@ -335,30 +332,32 @@
 						</li>
 					</ul>
 					<input type="hidden" name="identity" id="identity" value="${identity}"/>
-					<div id="mailbtn">인증번호 받기</div>
+					<div id="mailbtn" class="pointer">인증번호 받기</div>
 					
 					<input type="hidden" id="namecheck" value="" />
 					<input type="hidden" id="emailcheck" value="" />
 					
 					<label style="padding: 10px 50px 0px 40px; line-height: 50px">인증번호</label><input type="text" id="mailmessageCheck" name="mailmessageCheck" required placeholder="인증번호를 입력해주세요." style="border: solid 1px #ddd; width: 450px; height: 50px; vertical-align: middle; padding-left: 10px; font-size: 11pt; margin-top: 10px;"/>
-					<input type="text" id="mailmessage" name="mailmessage" value="${mailmessage}" />
+					<input type="hidden" id="mailmessage" name="mailmessage" value="${mailmessage}" />
 					
+					<!-- <hr style="color: #ddd; font-weight: normal;"> -->
+
 					<ul class="file_attach">
 						<li>
 							<c:if test="${identity == 1}"> 
 						
-							<label>학생증 사진파일을 첨부해주세요.</label>
+							<label style="padding-left: 10px;">학생증 사진파일을 첨부해주세요.</label>
 							</c:if>
 							<c:if test="${identity == 2}"> 
 						
-							<label>재직증명서 사진파일을 첨부해주세요.</label>
+							<label style="padding-left: 10px;">재직증명서 사진파일을 첨부해주세요.</label>
 							</c:if>
-							<input type="file" id="attach" name="attach" style="border: solid 1px red; width: 610px; height: 50px; vertical-align: middle;" />
-							<input type="text" id="filename" value="" />
+							<input type="file" id="attach" name="attach" class="pointer" style="border: solid 1px #ddd; width: 610px; height: 30px; vertical-align: middle; padding: 10px 0 5px 10px; margin-top: 10px;" />
+							<input type="hidden" id="filename" value="" />
 						</li>
 					</ul>
 					
-					<div id="authenticationbtn" >가입하기</div>
+					<div id="authenticationbtn" style="margin-top: 30px;" class="pointer">가입하기</div>
 				
 					<div style="color: #888; margin-top: 30px;">※ 인증메일 발송에 약간의 시간이 소요됩니다.</div>
 					<div style="color: #888;">※ 유효하지 않은 파일 첨부 시 회원가입이 거절될 수 있습니다.</div>

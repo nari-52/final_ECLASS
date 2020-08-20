@@ -7,6 +7,7 @@ import com.spring.kanghm.model.FreeCommentVO;
 import com.spring.kanghm.model.FreeboardVO;
 import com.spring.kanghm.model.NoticeboardVO;
 import com.spring.kanghm.model.QuestionVO;
+import com.spring.kimeh.model.DonPaymentVO;
 import com.spring.kimeh.model.DonStoryVO;
 
 public interface InterEclassService {
@@ -82,6 +83,24 @@ public interface InterEclassService {
 
 	// 첨부파일이 존재하는 Q&A 글쓰기
 	int addquestion_withFile(QuestionVO questionvo);
+
+	// Q&A 조회수 증가하며 글 조회하기
+	QuestionVO getQuestionView(String question_seq, String userid);
+
+	// Q&A 조회수 증가 없이 글 조회하기
+	QuestionVO getQuestionViewNoAdd(String question_seq);
+
+	// Q&A 게시판 글 수정하기 완료하기
+	int editquestionboardEnd(QuestionVO questionvo);
+
+	// Q&A 게시판 글 삭제 완료하기
+	int delquestion(HashMap<String, String> paraMap);
+
+	// 메인페이지에서 공지사항 띄워주기
+	List<NoticeboardVO> getindexnotice();
+
+	// 메인페이지에서 후원순위 보여주기	
+	List<DonStoryVO> getindexdon();
 
 	
 

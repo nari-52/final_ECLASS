@@ -26,5 +26,7 @@ public interface InterMypageService {
 
 	int getChangeG(HashMap<String, String> paraMap); // 성적 정보 수정하기(update)
 
+	void getChangeAtotal(HashMap<String, String> paraMap); // 'O'로 변경될 경우 출석점수 변경
+
 
 }

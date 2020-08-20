@@ -45,6 +45,13 @@ public class LectureDAO implements InterLectureDAO {
 		int n = sqlsession.insert("lecture.addComment", commentvo);
 		return n;
 	}
+	
+	// 댓글 지우기
+	@Override
+	public int lectureCommentDelete(String lecComSeq) {
+		int n = sqlsession.delete("lecture.lectureCommentDelete", lecComSeq);
+		return n;
+	}
 
 	// 원게시물에 딸린 댓글들을 페이징처리해서 보여주기(Ajax 로 처리)
 	@Override
@@ -72,7 +79,37 @@ public class LectureDAO implements InterLectureDAO {
 		return subjectListforP;
 	}
 
+	// 강의 수정 페이지 보여주기 (유튜브영상)
+	@Override
+	public int lectureEdit(HashMap<String, String> paraMap) {
+		int n = sqlsession.update("lecture.lectureEdit", paraMap);
+		return n;
+	}
 
+	// 강의 삭제하기
+	@Override
+	public int lectureDelete(String lecSeq) {
+		int n = sqlsession.delete("lecture.lectureDelete", lecSeq);
+		return n;
+	}
+	
+	// 댓글 달리면 바로 출석 'O'로 변경하고 총 출석점수 +3점 해주기
+	@Override
+	public void getchangeAttandO(HashMap<String, String> paraMap) {
+		sqlsession.update("mypage.getchangeAttandO", paraMap);
+		
+	}
+	@Override
+	public void getchangeAttand3(HashMap<String, String> paraMap) {
+		sqlsession.update("mypage.getchangeAttand3", paraMap);
+		
+	}
 
+	// 이미 출석이 되어있는지 확인하기
+	@Override
+	public String findA(HashMap<String, String> paraMap) {
+		String findA = sqlsession.selectOne("mypage.AAA", paraMap);
+		return findA;
+	}
 
 }

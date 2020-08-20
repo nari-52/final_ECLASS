@@ -6,6 +6,36 @@
 <!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="kanghm">
 	
+	<!-- 메인페이지에서 공지사항 띄워주기 -->
+	<select id="getindexnotice" resultType="com.spring.kanghm.model.NoticeboardVO">
+		  select rno,writedate,notice_seq
+	     , case when length(title) > 16 then substr(title,1,16) || '...'else title end as title
+	    from
+	    (
+	        select rownum as rno,title,to_char(writedate,'yyyy-mm-dd') as writedate ,notice_seq
+	        from notice_board
+	        where status = 1 
+	        order by writedate desc   
+	    ) V
+	    where rno between 1 and 5		
+	</select>
+	
+	<!-- 메인페이지에서 후원순위 보여주기  -->
+	<select id="getindexdon" resultType="com.spring.kimeh.model.DonStoryVO">
+		select sumPayment, donseq, subject, name, point, noName, noDonpmt
+	    from 
+	    (
+	    select rownum as rno,
+	         S.donseq, S.subject, S.donStatus, S.targetAmount,
+	         I.payment, I.name, I.point, I.noName, I.noDonpmt,
+	         (I.payment + I.point) as sumPayment
+	    from donStory S left join donPayment I
+	    on S.donseq = I.fk_donSeq
+	    )V
+	    where rno between 1 and 5
+	    order by sumPayment desc
+	</select>
+	
 	<!-- 첨부파일이 존재하지 않는 자유게시판 글쓰기 -->
 	<insert id="addFreeboard" parameterType="com.spring.kanghm.model.FreeboardVO">
 	    insert into free_board(free_seq, fk_userid, name, title, content, password, viewcount, writedate, status)
@@ -44,7 +74,7 @@
 		    select rownum as rno,free_seq,fk_userid,name,title,viewcount,writedate,filename
 		    from
 		        (
-		        select free_seq,fk_userid,name,title,viewcount,to_char(writedate,'yyyy-mm-dd hh24:mi:ss') as writedate,filename
+		        select free_seq,fk_userid,name,title,viewcount,to_char(writedate,'yyyy-mm-dd') as writedate,filename
 		        from free_board
 		        where status = 1
 		        	<if test='searchWord != "" '>
@@ -172,7 +202,7 @@
 		    select rownum as rno,notice_seq,title,viewcount,writedate,filename
 		    from
 		        (
-		        select notice_seq,title,viewcount,to_char(writedate,'yyyy-mm-dd hh24:mi:ss') as writedate,filename
+		        select notice_seq,title,viewcount,to_char(writedate,'yyyy-mm-dd') as writedate,filename
 		        from notice_board
 		        where status = 1
 		        	<if test='searchWord != "" '>
@@ -271,17 +301,17 @@
 	<!-- Q&A 게시판 목록 가져오기 -->
 	<select id="getQuestionboardList" parameterType="HashMap" resultType="com.spring.kanghm.model.QuestionVO">
 		 select question_seq, fk_userid, name, title, viewcount, writedate
-		     , groupno, fk_seq, depthno , filename
+		     , groupno, fk_seq, depthno , filename ,secret
 			from 
 			(
 			    select rownum AS rno
 			         , question_seq, fk_userid, name, title, viewcount, writedate 
-			         , groupno, fk_seq, depthno ,filename
+			         , groupno, fk_seq, depthno ,filename ,secret
 			    from
 			    (
 			        select question_seq, fk_userid, name, title,  
-			               viewcount, to_char(writedate, 'yyyy-mm-dd hh24:mi:ss') as writedate,
-			               groupno, fk_seq, depthno, filename
+			               viewcount, to_char(writedate, 'yyyy-mm-dd') as writedate,
+			               groupno, fk_seq, depthno, filename ,secret
 			        from question_board
 			        where status = 1
 			         <if test='searchWord != ""'>
@@ -321,5 +351,72 @@
 	    	values(question_seq.nextval, #{fk_userid}, #{name}, #{title}, #{content}, #{password}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1, #{fileName}, #{orgFilename}, #{secret})
 	    </if>
 	</insert>
+	
+	<!-- groupno 컬럼의 최대값 구하기 -->
+	<select id="getGroupnoMax" resultType="int">
+		select nvl(max(groupno),0)
+		from question_board
+	</select>
+	
+	
+	<!-- Q&A 조회수 증가하며 글 조회하기 -->
+	<select id="getQuestionView" parameterType="String" resultType="com.spring.kanghm.model.QuestionVO">
+		   select previousseq, previoussubject, question_seq, title, content, viewcount, writedate
+		      ,nextseq, nextsubject, orgFilename, fileName, secret, fk_userid, groupno, depthno
+			from
+			(
+			 select lag(question_seq, 1) over(order by question_seq desc) as previousseq  
+					           , nvl(lag(title, 1) over(order by question_seq desc),'이전글이 없습니다')as previoussubject				           				           
+					           , question_seq, title, content, viewcount
+					           , to_char(writedate, 'yyyy-mm-dd hh24:mi:ss') as writedate				         
+					           , lead(question_seq, 1) over(order by question_seq desc) as nextseq
+					           , nvl(lead(title, 1) over(order by question_seq desc),'다음글이 없습니다.') as nextsubject
+			                   , orgFilename, fileName, secret,fk_userid, groupno, depthno
+					      from question_board
+					      where status = 1
+			) V
+			where question_seq = #{question_seq}
+	</select>
+	
+	<!-- Q&A 조회수 1증가 시키기 -->
+	<update id="addQuestionViewCount" parameterType="String">
+		update question_board set viewcount = viewcount + 1
+		where question_seq = #{question_seq}
+	</update>
+	
+	
+	<!-- Q&A 조회수 증가 없이 글 조회하기 -->
+	<select id="getQuestionViewNoAdd" parameterType="String" resultType="com.spring.kanghm.model.QuestionVO">
+		   select previousseq, previoussubject, question_seq, title, content, viewcount, writedate
+		      ,nextseq, nextsubject, orgFilename, fileName, secret, fk_userid, groupno, depthno
+			from
+			(
+			 select lag(question_seq, 1) over(order by question_seq desc) as previousseq  
+					           , nvl(lag(title, 1) over(order by question_seq desc),'이전글이 없습니다')as previoussubject				           				           
+					           , question_seq, title, content, viewcount
+					           , to_char(writedate, 'yyyy-mm-dd hh24:mi:ss') as writedate				         
+					           , lead(question_seq, 1) over(order by question_seq desc) as nextseq
+					           , nvl(lead(title, 1) over(order by question_seq desc),'다음글이 없습니다.') as nextsubject
+			                   , orgFilename, fileName, secret, fk_userid, groupno, depthno
+					      from question_board
+					      where status = 1
+			) V
+			where question_seq = #{question_seq}
+	</select>
+	
+	<!-- Q&A 게시판 글 수정하기 완료하기 -->
+	<update id="editquestionboardEnd" parameterType="com.spring.kanghm.model.QuestionVO">
+		update question_board set title = #{title}
+							 ,content = #{content}
+							 ,writedate = sysdate
+							 ,secret = #{secret}
+		where question_seq = #{question_seq} and password = #{password}
+	</update>
+	
+	<!-- Q&A 게시판 글 삭제 완료하기 -->
+	<update id="delquestion" parameterType="HashMap">
+		update question_board set status = 0
+		where question_seq = #{question_seq} and password= #{password}
+	</update>
 	
 </mapper>

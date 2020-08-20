@@ -10,23 +10,23 @@
 <style>
 	
 	#container{
-		background-color: #fafafa;
+		/* background-color: #fafafa; */
 	}
 	
 	#wholeNotice{
 		width: 1080px;
 		margin: 0 auto;
 		/* border: solid 1px black; */
-		background-color: #fafafa;
+		/* background-color: #fafafa; */
 	}
 	
 	#viewHead{
 		width: 1000px;
 		margin: 0 auto;
 		background-color: white;
-		padding: 20px 0 20px 40px;
-		border-bottom: solid 1px gray;
-		height: 130px;
+		padding: 20px 0 0 0;
+		border-bottom: solid 1px #ccc;
+		height: 160px;
 	}
 	
 	#viewContent{
@@ -37,57 +37,66 @@
 	}
 	
 	#addedFile{
-		width: 1040px;
+		width: 1000px;
 		margin: 0 auto;
-		background-color: #f2f2f2;		
+		background-color: white;
+		/* background-color: #f2f2f2;	 */	
 	}
 	
 	#addReply{
 		width: 1000px;
 		margin: 0 auto;
-		background-color: #f2f2f2;	
+		/* background-color: #f2f2f2;	 */
 	}
 	
 	#updownView{
-		width: 1040px;
+		width: 1000px;
 		margin: 0 auto;
 		background-color: white;
 		
 	}	
 	
 	table{
-		width: 1040px;
+		width: 1000px;
+		border-collapse: collapse;
 	}
 	
 	 tr,th,td{
 		text-align: center;
 		padding: 10px;
-		border-bottom: solid 1px #5E5E5E;
-		border-top: solid 1px #5E5E5E;
+		border-bottom: solid 1px #ccc;
+		border-top: solid 1px #ccc;
+		
 	} 
 	
 	#goReply{
 		display: inline-block;
 		border: solid 1px gray;
 		width: 100px;
-		height: 100px;
-		line-height: 100px;
-		background-color: #ccc;
+		height: 105px;
+		line-height: 105px;
+		background-color: gray;
 		color: white;
 		cursor: pointer;
 		margin-top: 25px;
+		border-radius: 10px;
+		font-weight: bold;
+		margin-bottom: 20px;
 	}
 	
 	.button{
 		display: inline-block;
 		width: 70px;
 		height: 40px;
-		background-color: #ccc;
+		background-color: gray;
 		float: right;
 		margin-left: 20px;
 		text-align: center;
 		line-height: 40px;
 		cursor: pointer;
+		border-radius: 10px;
+		color: white;
+		font-weight: bold;
 	}
 	
 </style>
@@ -112,7 +121,6 @@
 		var form_data = $("form[name=addComment]").serialize();
 		
 		var loginuser = $("#loginuser").val();
-		alert(loginuser);
 		
 		if(loginuser == ""){
 			alert("먼저 로그인하세요");
@@ -142,7 +150,7 @@
 	}// end of function goaddComment() --------------------
 	
 	// 댓글 삭제하기
-	function goDelComment(delseq){
+	function goDelComment(delseq,name,loginname){
 		/* var delseq = delseq;
 		alert(delseq);
 		 */
@@ -189,7 +197,7 @@
 					}
 					
 					$("#commentDisplay").html(html);
-				
+				 
 					makeCommentPageBar(currentShowPageNo);
 				},
 				error: function(request, status, error){
@@ -242,10 +250,10 @@
 				      while( !(loop > blockSize || pageNo > totalPage) ) {
 				         
 				         if(pageNo == currentShowPageNo) {
-				        	 pageBarHTML += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
+				        	 pageBarHTML += "<li style='display:inline-block; width:30px; font-size:12pt; font-weight: bold; color:navy; padding:2px 4px;'>"+pageNo+"</li>";
 				         }
 				         else {
-				        	 pageBarHTML += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='javascript:goViewComment(\""+pageNo+"\")'>"+pageNo+"</a></li>";
+				        	 pageBarHTML += "<li style='display:inline-block; width:30px; font-size:10pt; color:#b8b5ab;'><a href='javascript:goViewComment(\""+pageNo+"\")'>"+pageNo+"</a></li>";
 				         }
 				         
 				         loop++;
@@ -284,13 +292,12 @@
 
 <div id ="container"><br>
 <div id="wholeNotice">
-	<div style="text-align: center;">
-		<h3 style="color: #00BCD4; font-weight: bold;">자유게시판</h3>
+	<div style=" width: 100%;">
+		<h2 id="freeboardfont" style="color: black; font-weight: bold; margin-left: 40px;">자유게시판</h2><span style="float: left; margin-left: 40px; font-weight: bold; color:black; "></span>
 	</div>	
-	<br>
 	
 	<div id="viewHead">
-		<h3>${freeboardvo.title}</h3>
+		<h3 style="border-top: solid 1px #ccc; width: 100%;"><br>&nbsp;&nbsp;${freeboardvo.title}</h3>
 		<div style="float: right; margin:20px;">
 		<span style="font-weight: bold; font-size: 13pt;">작성자</span> <span>${freeboardvo.name}</span>&nbsp;
 		<span style="font-weight: bold; font-size: 13pt;">작성일</span> <span>${freeboardvo.writedate}</span>&nbsp;
@@ -299,16 +306,18 @@
 	</div>
 	
 	<div id="viewContent">
-		<div>
+		<div style="height: 50%;">
+			<br>
 			${freeboardvo.content}
+			<br><br><br>
 		</div>
 	</div>
 
 	<div id="addedFile">
 		<table>
 			<tr>
-				<th>첨부파일</th>
-				<td>
+				<th style="background-color: #e0e0e0; float: left; width: 200px;">첨부파일</th>
+				<td style="text-align: left;">
 					<c:if test="${not empty freeboardvo.orgFilename}">
 						<a href="<%=request.getContextPath()%>/download.up?free_seq=${freeboardvo.free_seq}">${freeboardvo.orgFilename}</a>
 					</c:if>
@@ -322,34 +331,23 @@
 		</table>
 	</div><br>
 	
-	<div id="updownView">
-		<table>
-		<%-- <c:if>로 윗글아랫글로 처리 --%>
-			<tr>
-				<th>이전글</th>
-				<td><span onclick="javascript:location.href='freeboardview.up?free_seq=${freeboardvo.previousseq}'">${freeboardvo.previoussubject}</span></td>
-			</tr>
-			
-			<tr>
-				<th>다음글</th>
-				<td><span onclick="javascript:location.href='freeboardview.up?free_seq=${freeboardvo.nextseq}'">${freeboardvo.nextsubject}</span></td>
-			</tr>
-		</table>
-	</div><br>
-	
-	<div id="updownView" style="height: 40px; background-color: #fafafa;">
+	<div id="updownView" style="height: 40px;">
 		<span class="button" onclick="javascript:location.href='<%=ctxPath%>/board/editfreeboard.up?free_seq=${freeboardvo.free_seq}'">글수정</span>
 		<span class="button" onclick="javascript:location.href='<%=ctxPath%>/board/delfreeboard.up?free_seq=${freeboardvo.free_seq}'">글삭제</span>
 		<span class="button" onclick="javascript:location.href='<%=ctxPath%>/${gobackURL}'">목록</span>
 	</div><br>
 	
+	
+	
+	
 	<div id="addReply">
 		<form name="addComment">
 		<table style="margin: 0 auto;">						
 			<tr>		
-				<input type="text" name="fk_userid" value="${sessionScope.loginuser.userid}" id="loginuser" />아이디
-				<input type="text" name="parentSeq" value="${freeboardvo.free_seq}" />원글번호
-				<td><div style="float: left; margin:0 0 10px 25px;"><input type="text" name="name" value = "${sessionScope.loginuser.name}"/> 작성자</div><br>
+				<input type="hidden" name="fk_userid" value="${sessionScope.loginuser.userid}" id="loginuser" />
+				<input type="hidden" name="parentSeq" value="${freeboardvo.free_seq}" />
+				<input type="hidden" name="name" value="${sessionScope.loginuser.name}" />
+				<td>
 				<textarea rows="5" cols="110" style="height: 100px;" name="content"></textarea></td>
 				<td><span id="goReply" onclick="goaddComment()">댓글달기</span></td>	
 			</tr>		
@@ -364,7 +362,7 @@
 		<tr>
 		    <th style="width: 10%; text-align: center;">번호</th>
 			<th style="width: 50%; text-align: center;">내용</th>
-			<th style="width: 10%; text-align: center;">작성자</th>
+			<th style="width: 10%; text-align: center; margin-left: 40px;">작성자</th>
 			<th style="text-align: center;">작성일자</th>
 			<th style="width: 10%; text-align: center;"></th>
 		</tr>
@@ -374,7 +372,27 @@
 	</table>
 	
 	<!-- 댓글페이지바 -->
-	<div id="pageBar" style="width:70%; margin:25px auto; padding-left:200px;"></div>
+	<div id="pageBar" style="width:800px; margin:25px auto; text-align:center;"></div>
+	
+	
+	
+	
+	<div id="updownView">
+		<table>
+		<%-- <c:if>로 윗글아랫글로 처리 --%>
+			<tr>
+				<th style="background-color: #e0e0e0; float: left; width: 200px;">이전글</th>
+				<td><span style="float: left;" onclick="javascript:location.href='freeboardview.up?free_seq=${freeboardvo.previousseq}'">${freeboardvo.previoussubject}</span></td>
+			</tr>
+			
+			<tr>
+				<th style="background-color: #e0e0e0; float: left; width: 200px;">다음글</th>
+				<td><span style="float: left;" onclick="javascript:location.href='freeboardview.up?free_seq=${freeboardvo.nextseq}'">${freeboardvo.nextsubject}</span></td>
+			</tr>
+		</table>
+	</div><br>
+	
+	
 	
 	
 </div>	

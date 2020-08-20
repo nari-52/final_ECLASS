@@ -12,7 +12,7 @@
 #test{
 	display: inline-block;
 	border: solid 0px red;
-	margin: 0 20px;
+	margin: 0 0 0 20px;
 	color: gray;
 }
 #namecss{
@@ -25,7 +25,7 @@
 	border: solid 1px #00BCD4;
 	padding: 10px;
 	margin-bottom: 10px;
-	width: 600px;
+	width: 850px;
 	text-align: center;
 	border-radius: 10px;
 }
@@ -34,10 +34,19 @@
 }
 #tableCss{
 	text-align: center;
-	font-size: 15pt;
+	font-size: 12pt;
+	width: 300px;
 }
 .sidecss{
 	color: white;
+	text-align: center;
+}
+td {
+	padding: 5px;
+}
+#myA {
+	color: white;
+	background-color: #00BCD4;
 }
 </style>
 <script type="text/javascript">
@@ -74,6 +83,7 @@
 	<div id="mainCss">
 	<span id="namecss">${sessionScope.loginuser.name}</span>님의 출석현황
 	  </div>
+	  <span>교과목 선택 :</span>
 		<select name="subjectSelect" id="subjectSelect">
 			<option value="0">교과목명</option>
 			<c:forEach var="sublist" items="${subjectList}">

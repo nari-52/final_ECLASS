@@ -9,18 +9,19 @@
 
 <style>
 	#container{
-		background-color: #fafafa;
+		/* background-color: #fafafa; */
 	}
 
 	#wholeNotice{
 		width: 1080px;
 		margin: 0 auto;
 		/* border: solid 1px black; */
-		background-color: #fafafa;
+		/* background-color: #fafafa; */
 	}
 	
 	table,tr,th,td{
-		border: solid 1px black;
+		border-top : solid 1px #ccc;
+		border-bottom : solid 1px #ccc;
 		border-collapse: collapse;
 		text-align: center;
 		padding: 20px;
@@ -80,7 +81,7 @@
 		 frm.question_seq.value = question_seq;
 		 
 			frm.method = "GET";
-			frm.action = "freeboardview.up";
+			frm.action = "<%=ctxPath%>/board/questionview.up";
 			frm.submit();
 	     
 	 }// end of goView(seq) ------------------------------------
@@ -90,7 +91,7 @@
 	function goSearch() {
 			var frm = document.searchFrm;
 			frm.method = "GET";
-			frm.action = "<%= request.getContextPath()%>/freeboard.up";
+			frm.action = "<%= request.getContextPath()%>/board/question.up";
 			frm.submit();
 	}// end of function goSearch()-------------------------
 	 
@@ -102,27 +103,39 @@
 <div id ="container"><br>
 <div id="wholeNotice">
 
-	<div style="text-align: center;">
-		<h2 style="color: #00BCD4; font-weight: bold;">Q&A</h2>
+	<div style="">
+		<h2 style="color: black; font-weight: bold; margin-left: 40px;">Q&A</h2><span style="float: left; margin-left: 40px; font-weight: bold; color:black; ">궁금하신 사항을 문의하실 수 있습니다.</span><br>
 	</div>	
 	<br>
 	
-	<span style="margin-left: 40px; color: black;">Total: ${totalCount}</span>
+	<span style="margin-left: 40px; margin-bottom:10px; color: black;">Total: ${totalCount}</span>
 	
 	<div>
 		<table style="margin: 0 auto; width: 1000px; background-color: white;">
 			<tr style="background-color: #f2f2f2">
-				<th>번호</th>
+				<th style="width: 40px;" >NO</th>
 				<th>제목</th>
-				<th>작성자</th>
-				<th>날짜</th>
-				<th>조회수</th>
+				<th style="width: 70px;">작성자</th>
+				<th style="width: 120px;">날짜</th>
+				<th style="width: 70px;">조회수</th>
 			</tr>
 			
 				<c:forEach var="boardList" items="${questionboardList}" varStatus="status">
 					<tr>
 						<td align="center">${boardList.question_seq}</td>
-						<td align="left"><span class="title" onclick="goView('${boardList.question_seq}')">${boardList.title}</span></td>
+						<td align="left" style="text-align: left;">
+						
+						<!-- 원글인 경우 -->
+						<c:if test="${boardList.depthno == 0}">						
+							<span class="title" onclick="goView('${boardList.question_seq}')">${boardList.title}<c:if test="${boardList.secret == 1}">&nbsp;<img src="<c:url value="/resources/images/index/locker.png" />"></c:if> </span>
+						</c:if>
+						
+						<!-- 답변글인 경우  -->
+						<c:if test="${boardList.depthno > 0}">						
+							<span class="title" onclick="goView('${boardList.question_seq}')"><span style="color: red; font-style: italic; padding-left: ${boardvo.depthno*20}px;">└Re&nbsp;</span>  ${boardList.title}<c:if test="${boardList.secret == 1}"><span>&nbsp;[비밀글]</span></c:if> </span>
+						</c:if>
+								
+						</td>
 						<td align="center">${boardList.name}</td>
 						<td align="center">${boardList.writedate}</td>
 						<td align="center">${boardList.viewcount}</td>
@@ -138,6 +151,15 @@
 			
 	</div>
 	
+	<div>
+	<c:if test="${not empty sessionScope.loginuser.userid}">
+		<button type="button" style="margin-left: 980px;">
+			<a href="<%=ctxPath%>/board/addQuestion.up">글쓰기</a>
+		</button>
+	</c:if>
+	</div>
+	
+		
 	<form name="searchFrm" style="margin-top: 20px; margin-left: 40px;">
 		<select name="searchType" id="searchType" style="height: 26px;">
 			<option value="title">글제목</option>
@@ -146,14 +168,7 @@
 		<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" /> 
 		<button type="button" onclick="goSearch()">검색</button>
 	</form>
-	
-	<div>
-	<c:if test="${not empty sessionScope.loginuser.userid}">
-		<button type="button" style="margin-left: 980px;">
-			<a href="<%=ctxPath%>/board/addQuestion.up">글쓰기</a>
-		</button>
-	</c:if>
-	</div>	
+		
 	<br>
 	
 	<form name="goViewFrm">

@@ -7,14 +7,14 @@
 
 <style>
 	#container{
-		background-color: #fafafa;
+		/* background-color: #fafafa; */
 	}
 
 	#wholeNotice{
 		width: 1080px;
 		margin: 0 auto;
 		/* border: solid 1px black; */
-		background-color: #fafafa;
+		
 	}
 	
 	table,tr,th,td{
@@ -143,7 +143,7 @@
 <div id ="container"><br>
 	<div id="wholeNotice">
 		<div style="text-align: center;">
-			<h3 style="color: #00BCD4; font-weight: bold;">Q&A</h3>
+			<h3 style=" font-weight: bold;">Q&A</h3>
 		</div>	
 		<br>
 			
@@ -155,7 +155,7 @@
 					<td>
 						<input type="text" size="50" id="title" name="title"/>
 						<input type="checkbox" id="secret" onclick="secretChk();"><label for="secret">비밀글</label>
-						<input type="text" class="secret" name="secret" value="0"> 
+						<input type="hidden" class="secret" name="secret" value="0"> 
 					</td>
 				</tr>
 				
@@ -164,10 +164,9 @@
 					<td><input type="text" name="name" value="${sessionScope.loginuser.name}"/></td>
 				</tr>
 				
-				<tr>
-					<th>유저id</th>
-					<td><input type="text" name="fk_userid" value="${sessionScope.loginuser.userid}"/></td>
-				</tr>
+				
+				<input type="hidden" name="fk_userid" value="${sessionScope.loginuser.userid}"/></td>
+				
 				
 				<tr>
 					<th>첨부파일</th>
@@ -182,7 +181,13 @@
 				<tr>
 					<th>암호</th>
 					<td><input type="text" id="password" name="password"/></td>
-				</tr>			
+				</tr>
+				
+				<input type="hidden" name="fk_seq" value="${fk_seq}" />
+      			<input type="hidden" name="groupno" value="${groupno}" />
+     			<input type="hidden" name="depthno" value="${depthno}" />
+				
+							
 			</table>
 		</form>
 		

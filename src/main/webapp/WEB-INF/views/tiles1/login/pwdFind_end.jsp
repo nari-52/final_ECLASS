@@ -7,7 +7,7 @@
 
 <style type="text/css">
 	div#signuptitle {
-		border: solid 1px gray;
+		/* border: solid 1px gray; */
 		max-width: 1080px;
 		height: 100px;
 		margin: 0 auto;
@@ -26,9 +26,9 @@
 	/* 진행상황 시작 ------------------------------------------ */
 	
 	div#pwdFindcontent {
-		border: solid 1px red;
+		/* border: solid 1px red; */
 		width: 100%;
-		height: 1500px;
+		height: 600px;
 		background: #fafafa;
 		display: inline-block;
 		
@@ -39,7 +39,7 @@
 	div#pwdFind_content {
 		/* border: solid 1px red; */
 		width: 100%;
-		height: 800px;
+		height: 500px;
 		background: #fafafa;
 		display: inline-block;
 		margin: 0 auto;
@@ -49,7 +49,7 @@
 	div#pwdFind_back {
 		border: solid 1px #ddd;
 		width: 1080px;
-		height: 570px;
+		height: 370px;
 		background: white;
 		margin: 0 auto;
 		padding-top: 50px; /* form 태그 위에 padding 주기 */
@@ -59,37 +59,40 @@
 		/* border: solid 1px gray; */
 		margin: 0 auto;
 		width: 620px;
-		height: 400px;
+		height: 150px;
 		background-color: white;	
 	}
 
-	div#loginbtn{
-		border: solid 1px blue;
-		margin: 0 auto;
-		width: 320px;
-		height: 30px;
-		background-color: #00bcd4;
-		color: white;
-		font-size: 12pt;
-		font-weight: bold;
-		text-align: center;
-		padding-top: 10px;
-		display: inline block;
+	div#btn_2 {
+		/* border: solid 1px blue; */
+		width: 100%;
+		margin-top: 50px;
 	}
 	
-	div#mainbtn{
-		border: solid 1px blue;
-		margin: 0 auto;
-		width: 320px;
-		height: 30px;
+ 	.btnTnC {
+		border: solid 1px #ddd;
+		width: 150px;
+		line-height: 42px;
+		margin: 0 10px;
+		float: left;
 		background-color: #00bcd4;
 		color: white;
+		font-weight: bold;
+		margin-left: 10px;
 		font-size: 12pt;
 		font-weight: bold;
 		text-align: center;
-		padding-top: 10px;
-		display: inline block;	
+		
 	}
+	
+	.btnTnC {
+		cursor: pointer;
+		
+	}
+	
+	.agree {
+		margin-left: 380px;
+	}	
 	
 </style>
 
@@ -129,16 +132,17 @@
 			<div id="pwdFind_back">
 				<form name="pwdFind_form" id="pwdFind_form">
 					<h3 style="text-align: center;">비밀번호 변경 완료</h3>
+					<hr style="margin-bottom: 30px;">
+					<div id="showinfo" style="text-align: center;">변경된 비밀번호로 로그인 해 주시기 바랍니다.</div>
+					<%-- <label>변경된 비밀번호 : </label><input type="text" id="pwd" name="pwd"  value="${pwd}" /> --%>
 					
-					<label>변경된 비밀번호 : </label><input type="text" id="pwd" name="pwd"  value="${pwd}" />
-					
-					
+						
 
 				</form>
-				
-				<div id="loginbtn" >로그인</div>
-				<div id="mainbtn" >메인으로</div>
-				
+				<div id="btn_2">
+					<div id="loginbtn" class="btnTnC agree">로그인</div>
+					<div id="mainbtn" class="btnTnC">메인으로</div>
+				</div>
 			</div>
 		
 		</div>

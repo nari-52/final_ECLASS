@@ -74,11 +74,6 @@
 		width: 380px;		
 	}
 	
-    .contentStoryImage{
-        border: solid 1px #ccc;
-        width: 1080px;
-        height: 500px;
-    }
     .contentStoryHeaderText{
     	margin-top:20px;
     	background-color: #fcfcfc;
@@ -91,7 +86,7 @@
     	line-height: 23px;
     }
 	.donInfo-div{
-		background-color: #fcfcfc;
+		/*background-color: #fcfcfc;*/
 		text-align: left;
 		line-height: 30px;
 		border-top : solid 1px #f4f4f4;
@@ -125,7 +120,7 @@
 		margin-top: 10px;
 		cursor: pointer;
 	}
-    .btn_share{
+    #copy_btn{
         display: inline-block;
 		width: 278px;
 		height: 52px;
@@ -167,7 +162,11 @@
 		text-decoration: none !important;
         color: #00BCD4;
 	}	
-    
+    .contentStoryStart img{
+		width : 1000px;
+		position: inherit; top:0; left: 0;
+		height: 100%;
+	}
 </style>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -189,19 +188,46 @@
         });
         
         //공유하기 버튼 클릭시 
-        $("#copy_btn").click(function(){
+        $("#copy_btn1").click(function(){
     		$('#copy_text_input').select(); //복사할 텍스트를 선택
     		document.execCommand("copy"); //클립보드 복사 실행
     		alert('URL이 복사되었습니다');
     	})
+    	
+    	
+    	$("#del").click(function(){
+			if(confirm("정말 삭제하시겠습니까?")){
+				goDel();
+			}
+			else{
+				alert("삭제가 취소되었습니다.");
+				return;
+			}			
+		});
         
 	});//end of  $(document).ready(function(){}) ---------
 	
 	function goPayment(donseq){
-	    location.href = "<%= ctxPath%>/donation/donationPayment.up?donseq="+donseq;
+		var strdDay = ${donstoryPage[0].dDay};
+		console.log("strdDay"+strdDay);
+		if(strdDay <= 0){
+			alert("후원 모집기간이 끝났습니다. 감사합니다");
+			return;
+		}
+		location.href = "<%= ctxPath%>/donation/donationPayment.up?donseq="+donseq;
 	}
 	
-
+	//글 삭제하기 
+	function goDel(){	
+		
+		
+		// 폼(form) 을 전송(submit)
+		var frm = document.delFrm;
+		frm.method = "POST";
+		frm.action = "<%= ctxPath%>/donation/donationStoryDel.up";
+		frm.submit();
+		
+	}
 	
 </script>
 </head>
@@ -224,46 +250,80 @@
 							<td colspan = "3" style="color:gray; font-size: 16px;">후원 스토리 준비중입니다...<br/>조금만 기다려주세요 :)</td>
 						</tr>
 					</c:if>
-					<c:if test="${not empty donstoryPage}">
+					<c:if test="${not empty donstoryPage}">							
+						<c:if test="${empty donstoryPage[0].storyImg}">
 						<div class="donImg">
-							<img src="<%= ctxPath%>/resources/images/${donstoryPage[0].storyImg}" />
+							<img src="<%= ctxPath%>/resources/images/donation/${donstoryPage[0].orgStoryImg}" />
 						</div>
-						<div class="donInfo-table">
-	                        <dl style="margin: 20px 0;">
-	                        <c:if test="${(donstoryPage[0].dDay-1)<0 && (donstoryPage[0].totalPayment)>=(donstoryPage[0].targetAmount)}">
-	                        	<dt style="color:#00BCD4">후원 성공</dt>
-	                        </c:if>
-	                        <c:if test="${(donstoryPage[0].dDay-1)<0 && (donstoryPage[0].totalPayment)<(donstoryPage[0].targetAmount)}">
-	                        	<dt style="color:#00BCD4">후원 종료</dt>
-	                        </c:if>
-	                        <c:if test="${(donstoryPage[0].dDay-1)==0}">
-	                        	<dt style="color:#00BCD4">오늘 종료</dt>
-	                        </c:if>
-	                         <c:if test="${(donstoryPage[0].dDay-1)> 0}">
-								<dt style="color:#00BCD4">${donstoryPage[0].dDay}일 남음</dt>
-							</c:if>															
-								<div style="border-bottom: solid 4px #00BCD4; width: 120px; padding-bottom: 3px" align="center"></div>
-	                        </dl>
-	                                               
-							<dl class="underLine">
-								<dt><fmt:formatNumber value="${(donstoryPage[0].totalPayment)/donstoryPage[0].targetAmount}" pattern="0.0%"/>달성</dt>
-							</dl>
-							<dl class="underLine">							
-								<dt><fmt:formatNumber value="${donstoryPage[0].totalPayment}" pattern="###,###"/>원 펀딩</dt>
-							</dl>                         
-							<dl>
-								<dt>${donstoryPage[0].totalSupporter}명의 후원자</dt>
-							</dl>
-	                        <span class="btn_donation" onclick="goPayment('${donstoryPage[0].donseq}')">후원하기</span>
-	                        <span class="btn_share" id="copy_btn">공유하기</span>
-	                        <input type="hidden" id="copy_text_input" value="http://localhost:9090<%= ctxPath%>/donation/donationStory.up?donseq=${donstoryPage[0].donseq}" class="form-control">
-	                        
+						</c:if> 
+						
+						<c:if test="${not empty donstoryPage[0].storyImg}">
+						<div class="donImg">
+							<img src="<%= ctxPath%>/resources/files/${donstoryPage[0].storyImg}" />
+						</div>
+						</c:if> 
+						
+						<div class="donInfo-table">						
+						<dl style="margin: 20px 0;">
+	                    <c:choose>
+	                       <c:when test="${(donstoryPage[0].dDay-1)> 0}">
+							<dt style="color:#00BCD4">${donstoryPage[0].dDay}일 남음 </dt>
+						   </c:when>
+						   <c:when test="${(donstoryPage[0].dDay-1)==0}">
+	                       	<dt style="color:#00BCD4">오늘 종료</dt>
+	                       </c:when>  
+	                      <%--  <c:when test="${(donstoryPage[0].dDay-1)<0 && (donstoryPage[0].totalPayment >= donstoryPage[0].targetAmount) }">
+	                       	<dt style="color:#00BCD4">후원 성공</dt>
+	                       </c:when>  --%> 
+						   <c:when test="${(donstoryPage[0].dDay-1)<0 && (donstoryPage[0].dDay-1)!=0}">
+	                       	<dt style="color:#00BCD4">후원 종료</dt>
+	                       </c:when>            
+	                      </c:choose>
+	                      <div style="border-bottom: solid 4px #00BCD4; width: 120px; padding-bottom: 3px;"></div>
+	                    </dl>
+	                    	                                               
+						<dl class="underLine">
+							<dt><fmt:formatNumber value="${(donstoryPage[0].totalPayment)/donstoryPage[0].targetAmount}" pattern="0.0%"/>달성</dt>
+						</dl>
+						<dl class="underLine">							
+							<dt><fmt:formatNumber value="${donstoryPage[0].totalPayment}" pattern="###,###"/>원 후원</dt>
+						</dl>                         
+						<dl>
+							<dt>${donstoryPage[0].totalSupporter}명의 후원자</dt>
+						</dl>
+                        <span class="btn_donation" onclick="goPayment('${donstoryPage[0].donseq}')">후원하기</span>
+                        
+                        <!-- modal 구동 버튼 (trigger) -->
+						<button type="button" id="copy_btn" class="btn btn-primary btn_share" data-toggle="modal" data-target="#myModal">
+						  공유하기
+						</button>
+						
+						<!-- Modal -->
+						<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+						  <div class="modal-dialog" role="document">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						        <h4 class="modal-title" id="myModalLabel">공유하기 URL</h4>
+						      </div>
+						      <div class="modal-body">
+       		                  <input type="text" id="copy_text_input" value="localhost:9090/eclass/donation/donationStory.up?donseq=${donstoryPage[0].donseq}" class="form-control" />
+                       		  </div>
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-default" data-dismiss="modal" id="copy_btn1">복사하기</button>
+						      </div>
+						    </div>
+						  </div>
+						 </div>
+                        
+                        
+                        
 						</div> 
 					</c:if> 
                 </div>
                 
 				</div>
-                <!--<div class="contentLine" align="center"></div> -->
+                <div class="contentStoryStart">
                 <div class="contentStoryHeaderText">
                 	<span style="font-weight:bold; color:#00BCD4; font-size:12pt">
                 	목표금액 : <fmt:formatNumber value="${donstoryPage[0].targetAmount}" pattern="###,###"/>원  <br/>                  
@@ -278,27 +338,62 @@
 					이 프로젝트는 펀딩 마감일까지 목표 금액이 100% 모이지 않으면 결제가 진행되지 않습니다.<br/>
                 </div>
                 
-                <div class="contentStoryImage" style="border: solid 1px orange; margin-top:20px;">
-						<c:if test="${empty donstoryPage}">
+                <div class="donInfo-div" style="border: solid 0px red; padding: 30px; color:gray" >
+                <div class="contentStoryImage" style="display: inline-block; border: solid 0px orange; margin-top:20px; width:1000px;">
+					<c:if test="${empty donstoryPage}">
 						<tr> 
 							<td colspan = "3" style="color:gray; font-size: 16px;">후원 스토리 준비중입니다...조금만 기다려주세요 :)</td>
 						</tr>
 					</c:if>     
 					<c:if test="${not empty donstoryPage}">   
-						<c:forEach var="don" items="${donstoryPage}">												
-						 		<dt><img style="width:100%; height:100%; overflow:auto" src="<%= ctxPath%>/resources/images/${don.donImg}" /><br/></dt>
+						<c:forEach var="don" items="${donstoryPage}">		
+						
+							<c:if test="${empty don.donImg}">								
+						 		<dt></dt>
+							</c:if>	
+							<c:if test="${not empty don.donImg}">	
+														
+						 		<dt><img style="display:block; width:1000px; height:100%; position: inherit; top:0; left: 0; overflow:auto" src="<%= ctxPath%>/resources/images/donation/${don.donImg}" /></dt>
+							</c:if>	
 						</c:forEach>
 					</c:if>
 				</div>
+				
 				<c:if test="${not empty donstoryPage}">
-                <div class="donInfo-div" style="border: solid 0px red; padding: 45px; color:gray" > 
-                	${donstoryPage[0].content} <br/>
-				        서포터분들과 봉사자들의 따뜻한 마음 덕분에 경남 산청 참포도아동센터에서의 벽화활동을 무사히 마칠 수 있었습니다. <br/><br/>
-				        서포터분들의 후원금은 2박 3일간 진행된 벽화봉사에 필요했던 벽화물품을 구입하고, 봉사자분들의 식비에 일부 지원이 되었습니다. <br/>
-				        남은 후원금은 다음 여름활동에서 더욱 의미있게 사용하도록 하겠습니다. <br/>
-				        아이들을 위한 벽화모임 Love On the Wall, 앞으로도 관심있게 지켜봐주세요:) <br/>
-				</div> 
-				</c:if>	              
+					<h3>${donstoryPage[0].content}</h3>
+					<!--
+					후원은 교육을 이어나갈수 있는 동기가 되기도 합니다.
+					후원은 희망교실 아이들에게 소중한 한 끼입니다.<br />3살이 채 안된 아이가 급식을 먹기 위해 
+					언니의 손을 잡고 학교에 오기도 합니다. 먼 거리를 걸어 희망교실에 오는 아이들은 <br />
+					친구들과 즐거운 시간을 보내기도 하고, 두 눈을 반짝이며 수업을 듣기도 하지만 제일 기다리는 것은 바로 학교 점심 시간입니다.<br />
+					희망교실에 다니는 아이들은 대부분 넉넉하지 않은 형편 때문에 집에서 제대로 된 식사가 어려워 희망교실에서 주는 급식으로 한 끼를
+					해결하곤 합니다. <br/> 학교 급식은 아이들의 성장 뿐 아니라 학교에 와야하는 이유가 되어 출석률을 높이고 학습 능력을 향상
+					시키는데 중요한 역할을 합니다.
+					<br /> 아이들을 위한 남은 후원금은 다음 활동에 더욱 의미있게 사용하도록 하겠습니다.
+
+					<h3>코로나19 아이들의 든든한 하루를 응원해주세요</h3>
+					아프리카아시아난민교육후원회는 희망교실 아이들이 균형잡힌 식단으로 건강하게 성장할 수 있도록 14개국 희망교실 아이들의
+					급식을 지원하고 있지만 <br/>그 많은 아이들에게 충분한 급식을 제공하기엔 여전히 어려운 상황입니다. 자라나는 아이들에게 균형
+					잡힌 따뜻한 한 끼를 선물해 끼니 걱정 없이 <br />건강하게 공부할 수 있도록 아이들의 든든한 하루를 함께 응원해주세요.
+					다른 지원을 통해 더 큰 피해를 막고, 피해 지역 아동과 가정이 재난상황을  <br /> 하루빨리 극복할 수 있도록 많은 관심과 후원
+					부탁드립니다. 자라나는 아이들에게 균형 잡힌 따뜻한 한 끼를 선물해 끼니 걱정 없이 건강하게 공부할 수 있도록 <br />아이들의 든든한 하루를 함께 응원해주세요.<br /> <br /> 
+					 -->
+				</div>
+				</c:if>	  
+				</div>
+				<c:if test="${sessionScope.loginuser.identity==3}">
+				<div style="margin: 0 auto;">
+				<button type="button" style="margin:20px 5px; width: 100px; border:solid 1px #ddd; background-color:#fafafa; color:gray; border-radius:3px">
+					<a href="<%=ctxPath%>/donation/donationStoryEdit.up?donseq=${donstoryPage[0].donseq}" style="color:gray; text-decoration: none;">글수정</a>
+				</button>
+				<button id="del" type="button" style="margin:20px 5px; width: 100px; border:solid 1px #ddd; background-color:#fafafa; color:gray; border-radius:3px">
+					글삭제
+				</button>
+				<form name="delFrm">
+					<input type="hidden" name="donseq" value="${donstoryPage[0].donseq}"/>
+				</form>
+				</div>	
+			    </c:if>       
 		</div>
 	</div>
 </body>

@@ -1,5 +1,8 @@
 package com.spring.kimeh.controller;
 
+import java.io.File;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,12 +18,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.kimeh.model.DonPaymentVO;
 import com.spring.kimeh.model.DonStoryVO;
 import com.spring.kimeh.service.InterDonationService;
 import com.spring.nari.model.MemberVO;
+import com.spring.common.FileManager;
+import com.spring.kanghm.model.FreeboardVO;
 
 //=== 컨트롤러 선언 === 
 @Component
@@ -35,6 +42,9 @@ public class DonationController {
 	// === 의존객체 주입하기(DI: Dependency Injection) ===
 		@Autowired
 		private InterDonationService service;
+		
+		@Autowired // Type에 따라 알아서 Bean을 주입해준다.
+		private FileManager fileManager; 
 				
 		// 후원하기 리스트 페이지 
 		@RequestMapping(value="/donation/donationList.up")
@@ -191,6 +201,7 @@ public class DonationController {
 				}
 			}
 			
+			
 			return mav;
 		}
 		
@@ -341,19 +352,180 @@ public class DonationController {
 			
 		}
 		
-		// == 후원하기 등록(관리자)
+		// == 후원하기 등록(관리자 GET) == --> 로그인 처리 requiredLogin_ 추가하기!  
 		@RequestMapping(value="/donation/donationStoryAdd.up")
-		public ModelAndView donationStoryAdd(ModelAndView mav, HttpServletRequest request) {
+		public ModelAndView donationStoryAdd(HttpServletRequest request,HttpServletResponse response, ModelAndView mav) {
 			
 			HttpSession session = request.getSession();
 			MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 			request.setAttribute("loginuser", loginuser);
-						
-			mav.setViewName("donation/donationStoryAdd.tiles1");
-			return mav;
 			
+			mav.setViewName("donation/donationStoryAdd.tiles1");			
+			return mav;
 		}
 		
+		// == 후원하기 등록(관리자 POST) == --> 로그인 처리 requiredLogin_ 추가하기!  
+		@RequestMapping(value="/donation/donationStoryAddEnd.up", method= {RequestMethod.POST})
+		public String donationStoryAdd(HttpServletRequest request, DonStoryVO donstoryvo, MultipartHttpServletRequest mrequest) {
+							
+				
+			MultipartFile attach = donstoryvo.getAttach();
+			MultipartFile attach2 = donstoryvo.getAttach2();
+				
+		    if( !attach.isEmpty() ) { 				
+	    		HttpSession session = mrequest.getSession();
+	    		String root = session.getServletContext().getRealPath("/");
+	    		String path = root + "resources" + File.separator +"files";	
+	    		System.out.println("확인용 path=>" + path);
+			
+	    		String newFilename = ""; //WAS톰캣의 디스크에 저장될 파일명(20200727120920486361952359300.jpg)	
+	    		String newFilename2 = "";
+	    		byte[] bytes = null; // 첨부파일을 WAS(톰캣)의 디스크에 저장할 때 사용되는 용도	    		
+	    		//long fileSize = 0;// 파일 크기를 읽어오기 위한 용도.    		
+		    
+	    		try {
+	    			bytes = attach.getBytes(); 
+	    			
+	    			// fileManager.업로드할수있는메소드(바이트, 첨부되어진 파일네임.getOriginalFilename(), 경로)
+	    			 newFilename = fileManager.doFileUpload(bytes, attach.getOriginalFilename(), path);
+	    			 newFilename2 = fileManager.doFileUpload(bytes, attach2.getOriginalFilename(), path);
+			        //newFilename는 파일올리기를 해주는 것이다.
+	    			//attach.getOriginalFilename()은 첨부된 파일의 파일명(강아지.png)이다. 
+	    			System.out.println(">>> 확인용 newFilename =>"+ newFilename);
+	    			//>>> 확인용 newFilename =>20200727120920486361952359300.jpg
+	    			
+				} catch (Exception e) { //출력도중에 에러가 날 수 있으니 익셉션 처리! 				
+					e.printStackTrace();
+				}
+		    
+	    		/* 3. Boardvo boardvo에  fileName값과 orgFileName값과 fileSize값을 넣어줘야한다.  
+		   		 	파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기   */
+	    		donstoryvo.setListMainImg(newFilename); 
+	    		donstoryvo.setStoryImg(newFilename2); 
+	    		//WAS톰캣의 디스크에 저장될 파일명(20200727120920486361952359300.jpg)
+	    		
+	    		donstoryvo.setOrgListMainImg(attach.getOriginalFilename());	    		
+	    		donstoryvo.setOrgStoryImg(attach2.getOriginalFilename());
+	    		//게시판 페이지에서 첨부된 파일명(강아지.png)을 보여주기 및 사용자가 파일 다운시 사용되어지는 파일명
+	    			    	
+		    }
+			
+		    //== !! 첨부파일이 있는지, 없는지 알아오기 !! 끝 ==
+	    	int n = 0;
+	    	
+	    	if(attach.isEmpty() && attach2.isEmpty()) {
+	    		//첨부파일이 없는 경우라면 
+	        	n = service.donationStoryAdd(donstoryvo);   
+	    	}
+	    	else {
+	    		n = service.donationStoryAdd_withFile(donstoryvo);
+	    	}
+
+	    	if(n==1) { 	    	
+	    		return "redirect:/donation/donationList.up";
+				//		/donation/donationList.up페이지로 redirect(페이지이동)해라.     		
+	    	}
+	    	else { 	    		
+	    		return "redirect:/donation/donationStoryAdd.up";
+	    	}    			    
+		}
+		
+		// == 후원하기 글수정(관리자 GET) == 
+		@RequestMapping(value="/donation/donationStoryEdit.up")
+		public ModelAndView editfreeboard(HttpServletRequest request, HttpServletResponse response,ModelAndView mav) {
+			
+			// 글 수정해야할 글번호 가져오기 
+			String donseq = request.getParameter("donseq");
+			
+			DonStoryVO donstoryvo = service.donationStoryEdit(donseq);
+			
+			//HttpSession session = request.getSession();
+			//MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+			
+			//관리자만 보이게 하기!
+			mav.addObject("donstoryvo", donstoryvo);
+			mav.setViewName("donation/donationStoryEdit.tiles1");				
+			
+								
+			return mav;
+		}
+		
+		// == 후원하기 글수정 완료(관리자 POST) == 
+		@RequestMapping(value="donation/donationStoryEditEnd.up", method= {RequestMethod.POST})
+		public ModelAndView editfreeboardEnd(HttpServletRequest request, DonStoryVO donstoryvo, ModelAndView mav,MultipartHttpServletRequest mrequest) {
+			
+			MultipartFile attach = donstoryvo.getAttach();
+			MultipartFile attach2 = donstoryvo.getAttach2();
+				
+		    if( !attach.isEmpty() ) { 				
+	    		HttpSession session = mrequest.getSession();
+	    		String root = session.getServletContext().getRealPath("/");
+	    		String path = root + "resources" + File.separator +"files";	
+	    		System.out.println("확인용 path=>" + path);
+			
+	    		String newFilename = ""; //WAS톰캣의 디스크에 저장될 파일명(20200727120920486361952359300.jpg)	
+	    		String newFilename2 = "";
+	    		byte[] bytes = null; // 첨부파일을 WAS(톰캣)의 디스크에 저장할 때 사용되는 용도	    	
+		    
+	    		try {
+	    			bytes = attach.getBytes(); 
+	    			
+	    			 newFilename = fileManager.doFileUpload(bytes, attach.getOriginalFilename(), path);
+	    			 newFilename2 = fileManager.doFileUpload(bytes, attach2.getOriginalFilename(), path);
+	    			System.out.println(">>> 확인용 newFilename =>"+ newFilename);
+	    			
+				} catch (Exception e) { //출력도중에 에러가 날 수 있으니 익셉션 처리! 				
+					e.printStackTrace();
+				}		    
+	    		donstoryvo.setListMainImg(newFilename); 
+	    		donstoryvo.setStoryImg(newFilename2); 
+	    		
+	    		donstoryvo.setOrgListMainImg(attach.getOriginalFilename());	    		
+	    		donstoryvo.setOrgStoryImg(attach2.getOriginalFilename());   			    	
+		    }
+			
+		    //String donseq = request.getParameter("donseq");
+		    //donstoryvo.setDonseq(donseq);
+		    
+			int n = service.donationStoryEditEnd(donstoryvo);
+			
+			if(n == 1) {
+				mav.addObject("msg", "글수정이 성공하였습니다");
+			}
+			else {
+				mav.addObject("msg", "글수정이 실패하였습니다");
+			}
+			
+			mav.addObject("loc", request.getContextPath()+"/donation/donationList.up?donseq="+donstoryvo.getDonseq());
+			mav.setViewName("msg");
+			
+			return mav;
+		}
+
+		
+		// 후원스토리 댓글 삭제하기
+		@ResponseBody
+		@RequestMapping(value="/donation/donationStoryDel.up", method= {RequestMethod.POST})
+	    public ModelAndView donationStoryDel(HttpServletRequest request,HttpServletResponse response, ModelAndView mav, DonStoryVO donstoryvo) throws Throwable { 
+	    	
+	    	String donseq = request.getParameter("donseq"); //글 삭제해야할 글번호 가져오기 
+	    	
+    		int n = service.donationStoryDel(donseq);
+        	
+        	if(n==1) {
+        		mav.addObject("msg","삭제가 완료되었습니다");
+        		mav.addObject("loc", request.getContextPath()+"/donation/donationList.up");
+        		mav.setViewName("msg");
+        	}
+        	else {
+        		mav.addObject("msg","삭제가 실패되었습니다");
+        		mav.addObject("loc", request.getContextPath()+"/donation/donationList.up?donseq="+donstoryvo.getDonseq());
+        		mav.setViewName("msg");
+        	}        	
+	    	  	
+	    	return mav;
+	    }    
+	    
 		
 		
 		

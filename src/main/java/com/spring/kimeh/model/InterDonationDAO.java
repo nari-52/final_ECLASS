@@ -25,5 +25,15 @@ public interface InterDonationDAO {
 
 	List<DonStoryVO> donationSupporterMoreJSON(HashMap<String, String> paraMap); //더보기 페이징처리 
 
+	int donationStoryAdd(DonStoryVO donstoryvo); //후원하기 글 등록 
+
+	int donationStoryAdd_withFile(DonStoryVO donstoryvo); //후원하기 글쓰기 등록(파일첨부 O)
+
+	DonStoryVO donationStoryEdit(String donseq); // 글 수정하기 
+
+	int donationStoryEditEnd(DonStoryVO donstoryvo); //글수정 완료하기 
+
+	int donationStoryDel(String donseq); //글 삭제하기 
+
 	
 }

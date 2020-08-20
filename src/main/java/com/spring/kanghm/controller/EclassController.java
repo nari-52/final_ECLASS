@@ -31,6 +31,8 @@ import com.spring.kanghm.model.FreeboardVO;
 import com.spring.kanghm.model.NoticeboardVO;
 import com.spring.kanghm.model.QuestionVO;
 import com.spring.kanghm.service.InterEclassService;
+import com.spring.kimeh.model.DonPaymentVO;
+import com.spring.kimeh.model.DonStoryVO;
 import com.spring.nari.model.MemberVO;
 
 //=== #30. 컨트롤러 선언 === 
@@ -54,6 +56,18 @@ public class EclassController {
 		// 메인페이지 요청
 		@RequestMapping(value="/index.up")
 		public ModelAndView index(ModelAndView mav) {
+			
+			// 메인페이지에서 공지사항 보여주기
+			List<NoticeboardVO> noticevo = service.getindexnotice();
+			
+			mav.addObject("noticevo", noticevo);
+			
+			
+			// 메인페이지에서 후원순위 보여주기		
+			List<DonStoryVO> paymentvo = service.getindexdon();
+			
+			mav.addObject("paymentvo", paymentvo);
+				
 			mav.setViewName("main/index.tiles1");
 			
 			return mav;
@@ -150,7 +164,7 @@ public class EclassController {
 	      	while( !(loop > blockSize || pageNo > totalPage) ) {
 	         
 	         if(pageNo == currentShowPageNo) {
-	            pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
+	        	 pageBar += "<li style='display:inline-block; width:30px; font-size:10pt; font-weight: bold;  color:navy; padding:2px 4px;'>"+pageNo+"</li>";
 	         }
 	         else {
 	            pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
@@ -524,10 +538,10 @@ public class EclassController {
 	      	while( !(loop > blockSize || pageNo > totalPage) ) {
 	         
 	         if(pageNo == currentShowPageNo) {
-	            pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
+	            pageBar += "<li style='display:inline-block; width:30px; font-size:10pt; font-weight: bold;  color:navy; padding:2px 4px;'>"+pageNo+"</li>";
 	         }
 	         else {
-	            pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
+	            pageBar += "<li style='display:inline-block; width:30px; font-size:10pt; color:#b8b5ab;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
 	         }
 	         
 	         loop++;
@@ -914,7 +928,7 @@ public class EclassController {
 			  // 총페이지수(totalPage) 구하기
 			  int totalPage = (int) Math.ceil ( (double)totalCount/Integer.parseInt(sizePerPage));
 			  // ex) (double)23/5 ==> 4.6 ==> Math.ceil(4.6) ==> (int)4.0 ==> 4
-			    
+			     
 			  JSONObject jsonObj = new JSONObject();
 			  jsonObj.put("totalPage", totalPage);
 			   
@@ -1023,10 +1037,10 @@ public class EclassController {
 	      	while( !(loop > blockSize || pageNo > totalPage) ) {
 	         
 	         if(pageNo == currentShowPageNo) {
-	            pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
+	        	 pageBar += "<li style='display:inline-block; width:30px; font-size:10pt; font-weight: bold;  color:navy; padding:2px 4px;'>"+pageNo+"</li>";
 	         }
 	         else {
-	            pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
+	            pageBar += "<li style='display:inline-block; width:30px; font-size:10pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
 	         }
 	         
 	         loop++;
@@ -1078,22 +1092,11 @@ public class EclassController {
 			return mav;
 		}
 		
-		/*
+		
 		// Q&A 게시판 글쓰기 요청
 		@RequestMapping(value="/board/addquestionboardEnd", method= {RequestMethod.POST})
 		public String addquestionboardEnd(HashMap<String, String> paraMap,QuestionVO questionvo, MultipartHttpServletRequest mrequest) {
-			
-			
-			System.out.println(questionvo.getFk_userid());
-			System.out.println(questionvo.getName());
-			System.out.println(questionvo.getTitle());
-			System.out.println(questionvo.getPassword());
-			System.out.println(questionvo.getFk_userid());
-			System.out.println(questionvo.getFk_userid());
-			System.out.println(questionvo.getFk_userid());
-			
-			
-			
+					
 			// 첨부파일 여부 확인
 			MultipartFile attach = questionvo.getAttach();			
 			
@@ -1168,17 +1171,161 @@ public class EclassController {
 			
 
 		}
-		*/
+		
 				
 		// Q&A게시판 글 상세보기
-		@RequestMapping(value="/questionview.up")
-		public ModelAndView questionview(ModelAndView mav) {
+		@RequestMapping(value="/board/questionview.up")
+		public ModelAndView questionview(HttpServletRequest request,ModelAndView mav) {
 			
-			mav.setViewName("board/questionview.tiles1");
+			String question_seq = request.getParameter("question_seq");
+
+			String gobackURL = request.getParameter("gobackURL");
+			mav.addObject("gobackURL",gobackURL);
+			
+			HttpSession session = request.getSession();
+			MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+			
+			String userid = "";
+			
+			if(loginuser != null) {
+				userid = loginuser.getUserid();
+				// userid 는 로그인 되어진 사용자의 userid 이다.
+			}
+			
+			QuestionVO questionvo = null;
+			
+			if("yes".equals(session.getAttribute("readCountPermission"))) {
+				
+				// 조회수 증가와 함께 글 조회
+				questionvo = service.getQuestionView(question_seq,userid);
+				
+				session.removeAttribute("readCountPermission");
+			}
+			else {
+				questionvo = service.getQuestionViewNoAdd(question_seq);
+			}
+			
+			if("admin".equals(userid)) {
+				mav.addObject("questionvo",questionvo);
+				mav.setViewName("board/questionview.tiles1");
+			}
+			else if(!questionvo.getFk_userid().equals(userid) && "1".equals(questionvo.getSecret())) {				
+				String msg = "비밀글처리 된 글입니다.";
+				String loc = "javascript:history.back()";
+				
+				mav.addObject("msg", msg);
+				mav.addObject("loc", loc);
+				mav.setViewName("msg");	
+			}		
+			else{
+				mav.addObject("questionvo",questionvo);
+				mav.setViewName("board/questionview.tiles1");
+			}
 			
 			return mav;
 		}
 				
+		// Q&A 게시판 글 수정하기		
+		@RequestMapping(value="/board/editQuestion.up")
+		public ModelAndView editQuestion(HttpServletRequest request, HttpServletResponse response,ModelAndView mav) {
+			
+			// 글 수정해야할 글번호 가져오기 
+			String question_seq = request.getParameter("question_seq");
+			
+			QuestionVO questionvo = service.getQuestionViewNoAdd(question_seq);
+			
+			HttpSession session = request.getSession();
+			MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+			
+			if( !loginuser.getUserid().equals(questionvo.getFk_userid()) ) {
+				String msg = "다른 사용자의 글은 수정이 불가합니다.";
+				String loc = "javascript:history.back()";
+				
+				mav.addObject("msg", msg);
+				mav.addObject("loc", loc);
+				mav.setViewName("msg");			
+			}
+			else {
+				mav.addObject("questionvo", questionvo);
+				mav.setViewName("board/editquestion.tiles1");				
+			}
+								
+			return mav;
+		}
+		
+		// Q&A 게시판 글 수정하기 완료하기
+		@RequestMapping(value="/board/editquestionboardEnd", method= {RequestMethod.POST})
+		public ModelAndView editquestionboardEnd(HttpServletRequest request, QuestionVO questionvo, ModelAndView mav) {
+			
+			int n = service.editquestionboardEnd(questionvo);
+			
+			if(n == 0) {
+				mav.addObject("msg", "암호가 일치하지 않아 글 수정이 불가합니다.");
+			}
+			else {
+				mav.addObject("msg", "글수정 성공!!");
+			}
+			
+			mav.addObject("loc", request.getContextPath()+"/board/questionview.up?question_seq="+questionvo.getQuestion_seq());
+			mav.setViewName("msg");
+			
+			return mav;
+		}
+		
+		// Q&A 게시판 글 삭제하기		
+		@RequestMapping(value="/board/delQuestion.up")
+		public ModelAndView delQuestion(HttpServletRequest request,HttpServletResponse response, ModelAndView mav) {
+			
+			// 삭제해야할 글번호를 받아온다.
+			String question_seq = request.getParameter("question_seq");
+			
+			QuestionVO questionvo = service.getQuestionViewNoAdd(question_seq);
+			
+			HttpSession session = request.getSession();
+			MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+			
+			if( !loginuser.getUserid().equals(questionvo.getFk_userid()) ) {
+				String msg = "다른 사용자의 글은 삭제가 불가합니다.";
+				String loc = "javascript:history.back()";
+				
+				mav.addObject("msg", msg);
+				mav.addObject("loc", loc);
+				mav.setViewName("msg");			
+			}
+			else {
+				mav.addObject("question_seq", question_seq);
+				mav.setViewName("board/delquestion.tiles1");				
+			}
+			
+			return mav;
+		}
+					
+		// Q&A 게시판 글 삭제 완료하기
+		@RequestMapping(value="/board/delQuestionEnd.up", method= {RequestMethod.POST})
+		public ModelAndView delQuestionEnd(HttpServletRequest request, ModelAndView mav) throws Throwable{
+			
+			String question_seq = request.getParameter("question_seq");
+			String password = request.getParameter("password");
+			
+			HashMap<String, String> paraMap = new HashMap<>();
+			paraMap.put("question_seq", question_seq);
+			paraMap.put("password", password);
+			
+			int n = service.delquestion(paraMap);
+			
+			if(n == 0) {
+				mav.addObject("msg", "암호가 일치하지 않아 글 삭제가 불가합니다.");
+				mav.addObject("loc", request.getContextPath()+"/board/questionview.up?question_seq="+question_seq);
+			}
+			else {
+				mav.addObject("msg", "글삭제 성공!!");
+				mav.addObject("loc", request.getContextPath()+"/board/question.up"); 
+			}
+			
+			mav.setViewName("msg");
+			
+			return mav;
+		}
 		
 		// 스마트에디터 드래그앤드롭을 사용한 다중사진 파일업로드
 		@RequestMapping(value="/image/multiplePhotoUpload.up", method= {RequestMethod.POST}) 
@@ -1256,6 +1403,9 @@ public class EclassController {
 		 	}
 		     
 		}// end of multiplePhotoUpload() -----------------------------------------------------------------
+		
+		
+		
 		
 		
 }

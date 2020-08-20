@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.spring.kimeh.model.DonPaymentVO;
 import com.spring.kimeh.model.DonStoryVO;
 
 //=== #32. DAO 선언 ===
@@ -250,6 +251,78 @@ public class EclassDAO implements InterEclassDAO{
 		int n = sqlsession.insert("kanghm.addquestion_withFile", questionvo);
 		
 		return n;
+	}
+
+	// groupno 컬럼의 최대값 구하기
+	@Override
+	public int getGroupnoMax() {
+		
+		int max = sqlsession.selectOne("kanghm.getGroupnoMax");
+		
+		return max;
+	}
+
+	// Q&A 조회수 증가하며 글 조회하기
+	@Override
+	public QuestionVO getQuestionView(String question_seq) {
+		
+		QuestionVO questionvo = sqlsession.selectOne("kanghm.getQuestionView",question_seq);
+		
+		return questionvo;
+		
+	}
+
+	// Q&A 조회수 1증가 시키기
+	@Override
+	public void addQuestionViewCount(String question_seq) {
+		
+		sqlsession.update("kanghm.addQuestionViewCount",question_seq);
+		
+	}
+
+	// Q&A 조회수 증가 없이 글 조회하기
+	@Override
+	public QuestionVO getQuestionViewNoAdd(String question_seq) {
+		
+		QuestionVO questionvo = sqlsession.selectOne("kanghm.getQuestionViewNoAdd",question_seq);
+		
+		return questionvo;
+	}
+
+	// Q&A 게시판 글 수정하기 완료하기
+	@Override
+	public int editquestionboardEnd(QuestionVO questionvo) {
+		
+		int n = sqlsession.update("kanghm.editquestionboardEnd",questionvo);
+		
+		return n;
+	}
+
+	// Q&A 게시판 글 삭제 완료하기
+	@Override
+	public int delquestion(HashMap<String, String> paraMap) {
+		
+		int n = sqlsession.update("kanghm.delquestion",paraMap);
+		
+		return n;
+	}
+
+	// 메인페이지에서 공지사항 띄워주기
+	@Override
+	public List<NoticeboardVO> getindexnotice() {
+
+		List<NoticeboardVO> noticevo = sqlsession.selectList("kanghm.getindexnotice");
+		
+		return noticevo;
+	}
+
+	// 메인페이지에서 후원순위 보여주기	
+	@Override
+	public List<DonStoryVO> getindexdon() {
+		
+		List<DonStoryVO> paymentvo = sqlsession.selectList("kanghm.getindexdon");
+		
+		return paymentvo;
 	}
 	
 }

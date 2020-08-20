@@ -1,9 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-    
 <%	String ctxPath = request.getContextPath(); %>
 
 <link rel="stylesheet" type="text/css" href="<%=ctxPath%>/resources/css/reset.css" />
@@ -76,7 +73,11 @@
         frm.action = "<%=ctxPath%>/exam/examRegisterEnd.up";
         frm.submit(); 
 	}
-
+	
+	function goBack() {
+		location.href = "<%=ctxPath%>/lecture/myLecture.up";
+	}
+	
 </script>
 
 
@@ -85,17 +86,16 @@
 	<div id="register-title">시험등록</div>
 	
 	<form id="registerFrm" name="registerFrm">
-		<span id="inputTitle" style="margin-right: 10px;">시험 제목</span><input type="text" name="examTitle" style="height: 40px; width: 1000px;" />
+		<span id="inputTitle" style="margin-right: 10px;">시험 제목</span><input type="text" id="examTitle" name="examTitle" />
 		<br><br>
 		<span id="inputDate" style="margin-right: 10px;">시험 날짜</span><input type="text" id="datepicker" name="examDate"/>
-		<br><br><div>--------------------- 여기밑에부터 hidden ---------------------</div><br>
-		<span style="margin-right: 10px;">출제자</span><input type="text" name="userid" />
-		<span style="margin-right: 10px;">교과목시퀀스</span><input type="text" name="subSeq" />
+		<input type="hidden" name="userid" value="${paraMap.userid}"/>
+		<input type="hidden" name="subSeq" value="${paraMap.fk_subSeq}" />
 	</form>
 	
 	<div id="buttons">
-		<button type="button" onclick="goSubmit();">제출</button>
-		<button type="reset">취소</button>
+		<button type="button" onclick="goSubmit();">출제</button>
+		<button type="reset" onclick="goBack();">취소</button>
 	</div>
 	
 	<div style="clear: both; margin-bottom: 50px;"></div>

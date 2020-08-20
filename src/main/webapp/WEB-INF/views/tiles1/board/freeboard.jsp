@@ -7,20 +7,23 @@
 	String ctxPath = request.getContextPath();
 %>
 
+<link href="<c:url value="/resources/css/font.css" />" rel="stylesheet" type="text/css" />
+
 <style>
 	#container{
-		background-color: #fafafa;
+		/* background-color: #fafafa; */
 	}
 
 	#wholeNotice{
 		width: 1080px;
 		margin: 0 auto;
 		/* border: solid 1px black; */
-		background-color: #fafafa;
+		/* background-color: #fafafa; */
 	}
 	
 	table,tr,th,td{
-		border: solid 1px black;
+		border-top : solid 1px #ccc;
+		border-bottom : solid 1px #ccc;
 		border-collapse: collapse;
 		text-align: center;
 		padding: 20px;
@@ -102,33 +105,33 @@
 <div id ="container"><br>
 <div id="wholeNotice">
 
-	<div style="text-align: center;">
-		<h2 style="color: #00BCD4; font-weight: bold;">자유게시판</h2>
+	<div style=" width: 100%;">
+		<h2 id="freeboardfont" style="color: black; font-weight: bold; margin-left: 40px;">자유게시판</h2><span style="float: left; margin-left: 40px; font-weight: bold; color:black; ">자유롭게 의견을 나누는 공간 입니다.</span><br>
 	</div>	
 	<br>
 	
-	<span style="margin-left: 40px; color: black;">Total: ${totalCount}</span>
+	<div style="margin-left: 40px; margin-bottom:10px; color: black;">Total: ${totalCount}</div>
 	
 	<div>
 		<table style="margin: 0 auto; width: 1000px; background-color: white;">
-			<tr style="background-color: #f2f2f2">
-				<th>번호</th>
-				<th>제목</th>
-				<th>작성자</th>
-				<th>날짜</th>
-				<th>조회수</th>
-				<th>첨부파일</th>
+			<tr style="background-color: #f2f2f2; height: 10px;">
+				<th style="width: 40px;">NO</th>
+				<th style="width: 610px;">제목</th>
+				<th style="width: 70px;">작성자</th>
+				<th style="width: 120px;">날짜</th>
+				<th style="width: 70px;">조회수</th>
+				<th style="width: 90px;">첨부파일</th>
 			</tr>
 			
 				<c:forEach var="boardList" items="${freeboardList}" varStatus="status">
 					<tr>
 						<td align="center">${boardList.free_seq}</td>
-						<td align="left"><span class="title" onclick="goView('${boardList.free_seq}')">${boardList.title}</span></td>
+						<td align="left" style="text-align: left;"><span class="title" onclick="goView('${boardList.free_seq}')">${boardList.title}</span></td>
 						<td align="center">${boardList.name}</td>
 						<td align="center">${boardList.writedate}</td>
 						<td align="center">${boardList.viewcount}</td>
 						<c:if test="${not empty boardList.fileName}">
-							<td align="center"><img src="<c:url value="/resources/images/disk.gif" />"></td>
+							<td align="center"><img src="<c:url value="/resources/images/index/disk.gif" />"></td>
 						</c:if>
 						
 						<c:if test="${empty boardList.fileName}">
@@ -144,6 +147,14 @@
 		</div>
 			
 	</div>
+		
+	<div>
+	<c:if test="${not empty sessionScope.loginuser.userid}">
+		<span style="margin-left: 960px; border: solid 1px #f2f2f2; background-color: #f2f2f2; display:inline-block; width:80px; height: 30px; text-align: center; line-height: 30px; border-radius: 10px;">
+			<a href="<%=ctxPath%>/addfreeboard.up">글쓰기</a>
+		</span>	
+	</c:if>
+	</div>
 	
 	<form name="searchFrm" style="margin-top: 20px; margin-left: 40px;">
 		<select name="searchType" id="searchType" style="height: 26px;">
@@ -151,16 +162,10 @@
 			<option value="name">글쓴이</option>
 		</select>
 		<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" /> 
-		<button type="button" onclick="goSearch()">검색</button>
+		<span onclick="goSearch()" style="border: solid 1px #f2f2f2; background-color: #f2f2f2; display:inline-block; width:50px; height: 25px; text-align: center; line-height: 25px; border-radius: 10px;">검색</span>
 	</form>
 	
-	<div>
-	<c:if test="${not empty sessionScope.loginuser.userid}">
-		<button type="button" style="margin-left: 980px;">
-			<a href="<%=ctxPath%>/addfreeboard.up">글쓰기</a>
-		</button>
-	</c:if>
-	</div>	
+		
 	<br>
 	
 	<form name="goViewFrm">

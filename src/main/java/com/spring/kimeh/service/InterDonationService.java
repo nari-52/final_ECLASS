@@ -24,5 +24,15 @@ public interface InterDonationService {
 
 	List<DonStoryVO> donationSupporterMoreJSON(HashMap<String, String> paraMap); //서포터 더보기 페이징 
 
+	int donationStoryAdd(DonStoryVO donstoryvo);//후원하기 글 등록
+
+	int donationStoryAdd_withFile(DonStoryVO donstoryvo); //후원 글 (파일첨부 있는 경우)
+
+	DonStoryVO donationStoryEdit(String donseq); //글 수정하기 
+
+	int donationStoryEditEnd(DonStoryVO donstoryvo); //글수정 완료하기 
+
+	int donationStoryDel(String donseq); //글 삭제하기 
+
 	
 }
