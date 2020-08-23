@@ -323,6 +323,15 @@ public class EclassService implements InterEclassService {
 		return paymentvo;
 	}
 
+	// 비밀글 글쓴이 알아오기
+	@Override
+	public String getQnAid(String groupno) {
+		
+		String qnaid = dao.getQnAid(groupno);
+		
+		return qnaid;
+	}
+
 	
 	
 }

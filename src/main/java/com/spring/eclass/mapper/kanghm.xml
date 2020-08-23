@@ -15,25 +15,31 @@
 	        select rownum as rno,title,to_char(writedate,'yyyy-mm-dd') as writedate ,notice_seq
 	        from notice_board
 	        where status = 1 
-	        order by writedate desc   
+	        order by notice_seq desc   
 	    ) V
 	    where rno between 1 and 5		
 	</select>
 	
 	<!-- 메인페이지에서 후원순위 보여주기  -->
 	<select id="getindexdon" resultType="com.spring.kimeh.model.DonStoryVO">
-		select sumPayment, donseq, subject, name, point, noName, noDonpmt
-	    from 
+		 select rno, sumPayment ,name
+	    from
 	    (
-	    select rownum as rno,
-	         S.donseq, S.subject, S.donStatus, S.targetAmount,
-	         I.payment, I.name, I.point, I.noName, I.noDonpmt,
-	         (I.payment + I.point) as sumPayment
-	    from donStory S left join donPayment I
-	    on S.donseq = I.fk_donSeq
-	    )V
+			    select rownum as rno, sumPayment ,name
+			    from
+				    (
+				    select sum(sumPayment) as sumPayment ,name
+				    from
+					    (
+					    select I.name,(I.payment + I.point) as sumPayment            
+						    from donStory S left join donPayment I
+						    on S.donseq = I.fk_donSeq
+					    ) V 
+				    group by name
+			    order by sumPayment desc
+		    )
+	    )
 	    where rno between 1 and 5
-	    order by sumPayment desc
 	</select>
 	
 	<!-- 첨부파일이 존재하지 않는 자유게시판 글쓰기 -->
@@ -295,6 +301,23 @@
 		<if test='searchWord != ""'>
 			and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
 		</if>	
+	</select>
+	
+	<!-- Q&A 글쓴이 알아오기 -->
+	<select id="getQnAid" parameterType="String" resultType="String">
+		select name
+		    from
+			    (
+			    select rownum as rno,name
+			    from
+			    (
+			    select name,writedate
+			    from question_board
+			    where groupno = #{groupno}
+			    order by writedate
+			    )V
+		    )T
+	    where rno = 1
 	</select>
 	
 	

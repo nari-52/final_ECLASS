@@ -80,6 +80,7 @@ public class SmsController {
        mav.addObject("useridcheck", userid);
 	   mav.addObject("mobilecheck", mobile);
          
+       
        mav.setViewName("/login/pwdFind.tiles1");
        
        // return "member/number"; //문자 메시지 발송 성공했을때 number페이지로 이동함

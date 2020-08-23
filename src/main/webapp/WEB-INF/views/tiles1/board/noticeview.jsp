@@ -147,15 +147,15 @@
 	</div><br>
 	
 	<div id="updownView">
-		<ta"C:/Users/user1/Desktop/7de3bc0979694d3bb818da4cc3f86a06.jpg"ble>
+		<table>
 			<tr>
 				<th style="background-color: #e0e0e0; float: left; width: 200px;">이전글</th>
-				<td><span style="float: left;" onclick="javascript:location.href='<%=ctxPath%>/board/noticeview.up?notice_seq=${noticeboardvo.previousseq}'">${noticeboardvo.previoussubject}</span></td>
+				<td><span style="float: left; cursor: pointer;" onclick="javascript:location.href='<%=ctxPath%>/board/noticeview.up?notice_seq=${noticeboardvo.previousseq}'">${noticeboardvo.previoussubject}</span></td>
 			</tr>
 			
 			<tr>
 				<th style="background-color: #e0e0e0; float: left; width: 200px;">다음글</th>
-				<td><span style="float: left;" onclick="javascript:location.href='<%=ctxPath%>/board/noticeview.up?notice_seq=${noticeboardvo.nextseq}'">${noticeboardvo.nextsubject}</span></td>
+				<td><span style="float: left; cursor: pointer;" onclick="javascript:location.href='<%=ctxPath%>/board/noticeview.up?notice_seq=${noticeboardvo.nextseq}'">${noticeboardvo.nextsubject}</span></td>
 			</tr>
 		</table>
 	</div><br>

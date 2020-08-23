@@ -34,6 +34,7 @@
       select lecNum, attand
        from attand_tbl
        where fk_subseq = #{subjectSelect} and fk_userid = #{userid}
+       order by 1
    </select>
    
    <select id="getAttandOX" resultType="String" parameterType="HashMap">
@@ -110,7 +111,7 @@
    </update>
    
       <select id="AAA" parameterType="HashMap" resultType="String">
-       select A.attand
+       select distinct (A.attand)
        from myPForS_tbl M left join attand_tbl A
        on M.fk_userid = A.fk_userid
        where M.fk_subSeq = #{fk_subSeq}

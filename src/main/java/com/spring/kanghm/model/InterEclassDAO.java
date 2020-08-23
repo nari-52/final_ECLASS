@@ -113,5 +113,8 @@ public interface InterEclassDAO {
 	// 메인페이지에서 후원순위 보여주기	
 	List<DonStoryVO> getindexdon();
 
+	// 비밀글 글쓴이 알아오기
+	String getQnAid(String groupno);
+
 
 }

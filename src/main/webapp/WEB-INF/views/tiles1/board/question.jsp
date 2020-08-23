@@ -65,11 +65,13 @@
 			$("#searchWord").val("${paraMap.searchWord}");
 		}
 		
+		
+		
 	});// end of $(document).ready() -------------------------------------
 	
 
 	// 글을 보여주는 함수
-	function goView(question_seq){
+	function goView(question_seq,groupno){
 		 
 		 <%-- location.href="<%=ctxPath%>/view.action?seq="+seq; --%>
 
@@ -77,8 +79,12 @@
 	     // 		  사용자가 목록보기 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해
 	     //          현재 페이지 주소를 뷰단으로 넘겨준다.	 
 		 
+	   
+	     
 		 var frm = document.goViewFrm;
 		 frm.question_seq.value = question_seq;
+		 frm.groupno.value = groupno;
+		 
 		 
 			frm.method = "GET";
 			frm.action = "<%=ctxPath%>/board/questionview.up";
@@ -87,6 +93,9 @@
 	 }// end of goView(seq) ------------------------------------
 	
 	
+	 
+	 
+	 
 	// 글을 검색하는 함수
 	function goSearch() {
 			var frm = document.searchFrm;
@@ -127,12 +136,12 @@
 						
 						<!-- 원글인 경우 -->
 						<c:if test="${boardList.depthno == 0}">						
-							<span class="title" onclick="goView('${boardList.question_seq}')">${boardList.title}<c:if test="${boardList.secret == 1}">&nbsp;<img src="<c:url value="/resources/images/index/locker.png" />"></c:if> </span>
+							<span class="title" onclick="goView('${boardList.question_seq}','${boardList.groupno}')">${boardList.title}<c:if test="${boardList.secret == 1}">&nbsp;<img src="<c:url value="/resources/images/index/locker.png" />"></c:if> </span>
 						</c:if>
 						
 						<!-- 답변글인 경우  -->
 						<c:if test="${boardList.depthno > 0}">						
-							<span class="title" onclick="goView('${boardList.question_seq}')"><span style="color: red; font-style: italic; padding-left: ${boardvo.depthno*20}px;">└Re&nbsp;</span>  ${boardList.title}<c:if test="${boardList.secret == 1}"><span>&nbsp;[비밀글]</span></c:if> </span>
+							<span class="title" onclick="goView('${boardList.question_seq}','${boardList.groupno}')"><span style="color: red; font-style: italic; padding-left: ${boardvo.depthno*20}px;">└Re&nbsp;</span>  ${boardList.title}<c:if test="${boardList.secret == 1}"><img src="<c:url value="/resources/images/index/locker.png" />"></c:if> </span>
 						</c:if>
 								
 						</td>
@@ -173,7 +182,8 @@
 	
 	<form name="goViewFrm">
 		<input type="hidden" name="question_seq"/>
-		<input type="hidden" name="gobackURL" value="${gobackURL}"/>
+		<input type="hidden" name="gobackURL" value="${gobackURL}"/>	
+		<input type="hidden" name="groupno" value=""/>
 	</form>
 	
 	

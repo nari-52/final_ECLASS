@@ -549,7 +549,7 @@ public class MemberController {
 		mav.addObject("userid", userid);
 		mav.addObject("mobile", mobile);
 		mav.addObject("useridcheck", userid);
-		mav.addObject("mobilecheckVal", mobile);
+		mav.addObject("mobilecheck", mobile);
 		
 		mav.setViewName("/login/pwdFind_update.tiles1");
 		

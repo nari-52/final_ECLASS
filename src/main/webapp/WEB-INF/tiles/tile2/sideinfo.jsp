@@ -15,7 +15,7 @@
 	  display: inline-block;
 	  border: solid 0px blue;
 	  float: left;
-	  height: 550px;
+	  height: 700px;
 	}
 	
 	.sidenav a {

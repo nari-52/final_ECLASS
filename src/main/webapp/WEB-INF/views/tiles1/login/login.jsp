@@ -209,7 +209,8 @@
 						<a href="/eclass/login/idFind.up">아이디찾기</a><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
 						<a href="/eclass/login/pwdFind.up">비밀번호 찾기</a><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
 						<a href="/eclass/member/signup_step1.up?identity=1">학생 회원가입</a><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-						<a href="/eclass/member/signup_step1.up?identity=2">교수 회원가입</a>
+						<!-- <a href="/eclass/member/signup_step1.up?identity=2">교수 회원가입</a> -->
+						<a onclick="alert('현재 교수 회원가입은 불가능합니다.');">교수 회원가입</a>
 					</div>				
 				</div>
 			</form>

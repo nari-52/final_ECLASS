@@ -41,17 +41,23 @@
 				</tr>
 			</thead>
 			<tbody>
+			
+			<c:if test="${empty subjectList}"><tr class="lectureDetail"><td id="tbl-subName" class="num"><span style="color: gray; font-size: 12pt;">수강중인 강의가 없습니다.</span></td></tr></c:if>
+			<c:if test="${subjectList != null}">
 				<c:forEach var="sublist" items="${subjectList}">
 					<tr class="lectureDetail">
-						<td id="tbl-subName" class="num">
-							${sublist.subName}
+				<td id="tbl-subName" class="num">
+							
+							<c:if test="${not empty sublist.fk_subseq}">${sublist.subName}</c:if>
 						</td>
 						<td id="tbl-buttons">
 							<input type="button" class="button" value="강의목록" onclick="goView('${sublist.fk_subseq}')">
 							<input type="button" class="button" value="시험보기" onclick="goExam('${sublist.fk_subseq}')">
 						</td>
-					</tr>
+				</tr>	
 				</c:forEach>
+				</c:if>
+				
 			</tbody>
 		</table>
 	</div>

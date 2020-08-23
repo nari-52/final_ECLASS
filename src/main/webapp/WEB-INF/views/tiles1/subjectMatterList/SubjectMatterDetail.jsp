@@ -205,7 +205,7 @@
 			            <li><span style="font-weight: 700; margin-top:20px; font-size:16pt;">교과목명    </span>  <span style="font-size: 14pt;">${lmivOne.subName}</span> <br/></li>
 			            <li></li>
 						<li style=" font-weight:bold; font-size:16pt; ">강의소개<br/></li>
-						<li class="subContent" style="width: 450px; line-height:25px; height:150px; overflow:auto; margin-bottom:-30px;"> ${lmivOne.subContent} <br/></li>
+						<li class="subContent" style="width: 450px; line-height:25px; height:150px; overflow:auto; margin-bottom:30px;"> ${lmivOne.subContent} <br/></li>
 						
 						
 					</ul>

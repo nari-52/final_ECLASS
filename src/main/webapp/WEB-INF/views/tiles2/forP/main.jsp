@@ -20,6 +20,7 @@
 	background-color: #FAFAFA;
 	color: #00BCD4;
 	text-align: center;
+	width: 250px;
 }
 #namecss{
 	color: #00BCD4;

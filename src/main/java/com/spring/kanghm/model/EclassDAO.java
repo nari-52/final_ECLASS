@@ -324,5 +324,14 @@ public class EclassDAO implements InterEclassDAO{
 		
 		return paymentvo;
 	}
+
+	// 비밀글 글쓴이 알아오기
+	@Override
+	public String getQnAid(String groupno) {
+		
+		String qnaid = sqlsession.selectOne("kanghm.getQnAid", groupno);
+		
+		return qnaid;
+	}
 	
 }

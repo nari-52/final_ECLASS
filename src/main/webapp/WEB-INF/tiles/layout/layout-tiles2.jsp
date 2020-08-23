@@ -24,7 +24,7 @@
   		width: 1080px;
 		border: solid 0px purple;
 		margin: 0 auto;
-		height: 550px;
+		height: 700px;
   	}
   </style>
 </head>

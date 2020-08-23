@@ -154,7 +154,7 @@ public class EclassController {
 		    int loop = 1;
 		    int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
 		    
-		    String url = "/board/notice.up";
+		    String url = "notice.up";
 		    
 		    // === [이전] 만들기 ===
 		    if(pageNo != 1) {
@@ -1009,11 +1009,12 @@ public class EclassController {
 		    endRno = startRno + sizePerPage - 1; 
 
 		    paraMap.put("startRno", String.valueOf(startRno));
-		    paraMap.put("endRno", String.valueOf(endRno));
+		    paraMap.put("endRno", String.valueOf(endRno));		    
 		    
 		    
 		    // Q&A 게시판 목록 가져오기
 		    questionboardList = service.getQuestionboardList(paraMap);
+		    
 		    
 		    		    	    
 		    if(!"".equals(searchWord)) {
@@ -1027,7 +1028,7 @@ public class EclassController {
 		    int loop = 1;
 		    int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
 		    
-		    String url = "freeboard.up";
+		    String url = "question.up";
 		    
 		    // === [이전] 만들기 ===
 		    if(pageNo != 1) {
@@ -1178,6 +1179,10 @@ public class EclassController {
 		public ModelAndView questionview(HttpServletRequest request,ModelAndView mav) {
 			
 			String question_seq = request.getParameter("question_seq");
+			String groupno = request.getParameter("groupno");
+			
+			// 비밀글 글쓴이 알아오기
+			String qnaid = service.getQnAid(groupno);
 
 			String gobackURL = request.getParameter("gobackURL");
 			mav.addObject("gobackURL",gobackURL);
@@ -1186,11 +1191,13 @@ public class EclassController {
 			MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 			
 			String userid = "";
-			
+			String name = "";
 			if(loginuser != null) {
 				userid = loginuser.getUserid();
+				name  = loginuser.getName();
 				// userid 는 로그인 되어진 사용자의 userid 이다.
 			}
+		
 			
 			QuestionVO questionvo = null;
 			
@@ -1205,11 +1212,19 @@ public class EclassController {
 				questionvo = service.getQuestionViewNoAdd(question_seq);
 			}
 			
-			if("admin".equals(userid)) {
+			
+			///////////////////////////////////////////////////////////
+			
+			if("admin".equals(userid) || qnaid.equals(name) ) {
 				mav.addObject("questionvo",questionvo);
 				mav.setViewName("board/questionview.tiles1");
 			}
-			else if(!questionvo.getFk_userid().equals(userid) && "1".equals(questionvo.getSecret())) {				
+			/*else if(qnaid.equals(userid)) {
+				mav.addObject("questionvo",questionvo);
+				mav.setViewName("board/questionview.tiles1");
+				
+			}	*/
+			else if(!questionvo.getFk_userid().equals(userid) && "1".equals(questionvo.getSecret()) && !qnaid.equals(name)) {				
 				String msg = "비밀글처리 된 글입니다.";
 				String loc = "javascript:history.back()";
 				

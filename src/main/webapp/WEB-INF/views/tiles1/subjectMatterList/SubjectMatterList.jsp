@@ -231,15 +231,14 @@
     			$("#searchWord").val("${paraMap.searchWord}");
     		}
     		
-    		
-    		function goSearch() {
-    			var frm = document.searchFrm;
-    			frm.method = "GET";
-    			frm.action = "<%= ctxPath%>/SubjectMatterList.up";
-    			frm.submit();
-    		 }// end of function goSearch()-------------------------
-    		
     	});
+    	
+    	function goSearch() {
+			var frm = document.searchFrm;
+			frm.method = "GET";
+			frm.action = "<%= ctxPath%>/SubjectMatterList.up";
+			frm.submit();
+		 }// end of function goSearch()-------------------------
     
     </script>
    
@@ -322,7 +321,7 @@
 					<option value="subName">과목명</option>
 				</select>
 				<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" /> 
-				<button type="button" class="btn" onclick="goSearch()">검색</button>
+				<button type="button" class="btn" onclick="goSearch();">검색</button>
 			</form>
 			</div>
 			<%-- 
