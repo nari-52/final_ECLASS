@@ -216,7 +216,7 @@
 			if (pwd != pwdcheck) { // 암호가 정규표현식에 위배된 경우
 				$(this).parent().find(".error").show();
 				$("#pwdcheck").val("");
-				$("#pwdcheck").focus();
+				// $("#pwdcheck").focus();
 			}
 			else {
 				$(this).parent().find(".error").hide();
@@ -364,19 +364,55 @@
 		// 회원정보 수정 버튼을 눌렀을 경우
 		$("#goUpdateMember").click(function(){ 
 			
-			// 아이디 중복확인 클릭 여부 --------------------------------
-			if (bIdDuplicateCheck == false) {
-				alert("아이디 중복확인은 필수입니다!");
-				return;
+
+			// 비밀번호 공백 여부 --------------------------------
+			var pwdVal = $("#pwd").val().trim();
+			var pwdcheckVal = $("#pwdcheck").val().trim();
+			
+			if (pwdVal == "" || pwdcheckVal == "" ) {
+				alert("비밀번호를 입력해주세요!");
+				return false;
 			}
 			
-			// 휴대전화 중복확인 클릭 여부 --------------------------------
-			if (bMobileDuplicateCheck == false) {
+			// 대학명 공백 여부 --------------------------------
+			var universityVal = $("#university").val().trim();
+			
+			if (universityVal == "") {
+				alert("대학명을 입력해주세요!");
+				return false;
+			}
+			
+			// 학과명 공백 여부 --------------------------------
+			var majorVal = $("#major").val().trim();
+			
+			if (majorVal == "") {
+				alert("학과명을 입력해주세요!");
+				return false;
+			}
+			
+			// 학번 공백 여부 --------------------------------
+			var student_numVal = $("#student_num").val().trim();
+			
+			if (student_numVal == "") {
+				alert("학번을 입력해주세요!");
+				return false;
+			}
+			
+			// 휴대전화 공백 여부 --------------------------------
+			var mobileVal = $("#mobile").val().trim();
+			var mobileCheckVal = $("#mobileCheck").val().trim();
+			
+			if (mobileVal == "") {
+				alert("휴대전화를 입력해주세요!");
+				return false;
+			}
+			
+			else if (mobileVal != mobileCheckVal && bMobileDuplicateCheck == false) {
+				// 휴대전화를 변경했는데 중복확인을 하지 않은 경우
 				alert("휴대전화 중복확인은 필수입니다!");
-				return;
+				return false;
 			}
-			
-			
+
 			func_goUpdateRegister();
 			
 		});
@@ -499,7 +535,8 @@
 								휴대전화
 							</th>
 							<td>
-								<input type="text" name="mobile" id="mobile" value="${mvo.mobile}" class="requiredInfo inputbox_short" placeholder="숫자만 입력해 주세요." /> 
+								<input type="text" name="mobile" id="mobile" value="${mvo.mobile}" class="requiredInfo inputbox_short" placeholder="숫자만 입력해 주세요." />
+								<input type="text" name="mobileCheck" id="mobileCheck" value="${mvo.mobile}" class="requiredInfo inputbox_short" /> 
 								<span id="mobilecheck" class="pointer" style="display: inline-block; border: solid 1px #464646; width: 100px; line-height: 30pt; text-align: center; margin-left: 15px;">중복확인</span>
 								<span id="mobilecheckResult"></span>
 								<span class="error mberror">휴대전화 형식이 아닙니다.</span>

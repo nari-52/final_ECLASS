@@ -282,7 +282,6 @@
 					success: function(json) {						
 						if(json.isUse == null && useridVal != "" && bool ) {
 							$("#idcheckResult").html("사용가능합니다.").css({"color":"navy", "font-size":"9pt"});
-							
 						}
 						else if (useridVal != "" & bool) {
 							$("#idcheckResult").html($("#userid").val()+" 은 중복된 ID라 사용 불가능합니다.").css({"color":"red", "font-size":"9pt"});
@@ -322,7 +321,7 @@
 			if (pwd != pwdcheck) { // 암호가 정규표현식에 위배된 경우
 				$(this).parent().find(".error").show();
 				$("#pwdcheck").val("");
-				$("#pwdcheck").focus();
+				// $("#pwdcheck").focus(); // focus()시 비밀번호 새로 쓰기 불가능
 			}
 			else {
 				$(this).parent().find(".error").hide();
@@ -472,19 +471,60 @@
 			
 			if (useridVal == "") {
 				alert("아이디를 입력해주세요!");
-				return;
+				return false;
 			}
-			
+
 			// 아이디 중복확인 클릭 여부 --------------------------------
 			if (bIdDuplicateCheck == false) {
 				alert("아이디 중복확인은 필수입니다!");
-				return;
+				return false;
+			}
+			
+			// 비밀번호 공백 여부 --------------------------------
+			var pwdVal = $("#pwd").val().trim();
+			var pwdcheckVal = $("#pwdcheck").val().trim();
+			
+			if (pwdVal == "" || pwdcheckVal == "" ) {
+				alert("비밀번호를 입력해주세요!");
+				return false;
+			}
+			
+			// 대학명 공백 여부 --------------------------------
+			var universityVal = $("#university").val().trim();
+			
+			if (universityVal == "") {
+				alert("대학명을 입력해주세요!");
+				return false;
+			}
+			
+			// 학과명 공백 여부 --------------------------------
+			var majorVal = $("#major").val().trim();
+			
+			if (majorVal == "") {
+				alert("학과명을 입력해주세요!");
+				return false;
+			}
+			
+			// 학번 공백 여부 --------------------------------
+			var student_numVal = $("#student_num").val().trim();
+			
+			if (student_numVal == "") {
+				alert("학번을 입력해주세요!");
+				return false;
+			}
+			
+			// 휴대전화 공백 여부 --------------------------------
+			var mobileVal = $("#mobile").val().trim();
+			
+			if (mobileVal == "") {
+				alert("휴대전화를 입력해주세요!");
+				return false;
 			}
 			
 			// 휴대전화 중복확인 클릭 여부 --------------------------------
 			if (bMobileDuplicateCheck == false) {
 				alert("휴대전화 중복확인은 필수입니다!");
-				return;
+				return false;
 			}
 			
 			func_goRegister();
@@ -575,7 +615,7 @@
 								<span id="idcheckResult"></span>
 								<span class="error iderror">아이디는 필수입력 사항입니다.</span>
 								<span class="error idregex">아이디는 영소문자, 숫자를 포함하여 4~20글자로 입력해주세요.</span>
-								<div class="sub_text">아이디는 영소문자, 숫자를 포함하여 4~20글자로 입력해주세요. 중복확인을 눌러주세요. </div>
+								<div class="sub_text">아이디는 '영소문자' 또는 '영소문자 + 숫자'를 포함하여 4~20글자로 입력해주세요. 중복확인을 눌러주세요. </div>
 							</td>
 						</tr>
 						
