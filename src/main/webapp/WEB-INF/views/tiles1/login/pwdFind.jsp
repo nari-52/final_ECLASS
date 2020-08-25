@@ -126,7 +126,7 @@
 		$("#mobilebtn").click(function(){
 			
 			alert("인증번호가 발송되었습니다. 인증번호를 확인해주세요.");
-			alert("인증서비스 종료.");
+			// alert("인증서비스 종료.");
 			// 유효성 검사
 			var useridVal = $("#userid").val().trim();
 			var mobileVal = $("#mobile").val().trim();

@@ -734,8 +734,7 @@
 						
 						<input type="hidden" id="identity" name="identity" value="${identity}"/>
 						<input type="hidden" id="filename" name="filename" value="${filename}"/>
-						<input type="hidden" id="orgfilename" name="orgfilename" value="${orgfilename}"/>
-						
+						<input type="hidden" id="orgfilename" name="orgfilename" value="${orgfilename}"/>	
 					</table>
 					
 					<br/><br/><br/>
@@ -743,15 +742,10 @@
 						<button class="btnTnC agree pointer" id="goRegister">가입</button>
 						<button class="btnTnC reset pointer" onclick="alert('취소 (메인페이지로)')">취소</button>
 					</div>	
-						
-				
 				</form>
 			</div>
-		
 		</div>
-		
 	</div>
-
 
 </body>
 

@@ -82,6 +82,10 @@
     
     select *
     from eclass_member
+    where email = 'www676952@hanmail.net'
+    
+    delete eclass_member
+    where userid = 'nari52'
     
      -- 교과목 테이블
     create table subject_tbl

@@ -298,8 +298,6 @@
 			}
 		}); 
 		
-
-		
 		// 이메일 수정 불가 -------------------------------
 		$("#email").mouseover(function(){ 
 			$(this).parent().find(".error").show();
@@ -308,8 +306,6 @@
 		$("#email").mouseout(function(){ 
 			$(this).parent().find(".error").hide();
 		});
-		
-		
 		
 		// 주소 api
 		$("#zipcodeSearch").click(function(){
@@ -569,46 +565,24 @@
 								<span class="error"></span>
 							</td>
 						</tr>
-						
+	
 						<input type="hidden" id="identity" name="identity" value="${mvo.identity}"/>
 						<input type="hidden" id="filename" name="filename" value="${mvo.filename}"/>
 						<input type="hidden" id="orgfilename" name="orgfilename" value="${mvo.orgfilename}"/>
 						
 					</table>
-					
 					<br/><br/><br/>
 					<div id="buttonTnC">
 						<button class="btnTnC agree pointer" id="goUpdateMember">수정</button>
 						<button class="btnTnC reset pointer" onclick="alert('취소 (메인페이지로)')">취소</button>
 					</div>	
-						
-				
 				</form>
 			</div>
-		
 		</div>
-		
 	</div>
 
 
 </body>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
